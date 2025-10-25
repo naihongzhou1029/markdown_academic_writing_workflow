@@ -9,7 +9,7 @@ link-citations: true
 pdf-engine: xelatex
 CJKmainfont: "PingFang SC"
 header-includes:
-# - \pagenumbering{arabic}
+- \pagenumbering{arabic}
 - \setcounter{page}{1}
 - \usepackage{xeCJK}
 - \setCJKmainfont{PingFang SC}
