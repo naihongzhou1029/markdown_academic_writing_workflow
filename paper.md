@@ -9,10 +9,11 @@ link-citations: true
 pdf-engine: xelatex
 CJKmainfont: "PingFang SC"
 header-includes:
-- \pagenumbering{arabic}
+# - \pagenumbering{arabic}
 - \setcounter{page}{1}
 - \usepackage{xeCJK}
 - \setCJKmainfont{PingFang SC}
+- \usepackage[margin=1in]{geometry}
 figPrefix:
 -   "Figure"
 -   "Figures" 

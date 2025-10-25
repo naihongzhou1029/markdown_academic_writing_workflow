@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build Paper PDF",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/Makefile",
+            "console": "integratedTerminal",
+            "preLaunchTask": "make-paper"
+        }
+    ]
+}
