@@ -1,0 +1,106 @@
+[
+    {
+        "id": "healy2018plain",
+        "type": "article",
+        "title": "The Plain Person's Guide to Plain Text Social Science",
+        "author": [
+            {
+                "family": "Healy",
+                "given": "Kieran"
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                    [2018]
+                ]
+        },
+        "URL": "https://kieranhealy.org/files/papers/plain-text.pdf",
+        "container-title": "Unpublished Manuscript"
+    },
+    {
+        "id": "knuth1984tex",
+        "type": "book",
+        "title": "The TeXbook",
+        "author": [
+            {
+                "family": "Knuth",
+                "given": "Donald E."
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                    [1984]
+                ]
+        },
+        "publisher": "Addison-Wesley",
+        "publisher-place": "Reading, MA"
+    },
+    {
+        "id": "lamport1986latex",
+        "type": "book",
+        "title": "LaTeX: A Document Preparation System",
+        "author": [
+            {
+                "family": "Lamport",
+                "given": "Leslie"
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                    [1986]
+                ]
+        },
+        "publisher": "Addison-Wesley",
+        "publisher-place": "Reading, MA"
+    },
+    {
+        "id": "lierdakil2021crossref",
+        "type": "webpage",
+        "title": "pandoc-crossref: A pandoc filter for numbering figures, equations, tables and cross-references to them",
+        "author": [
+            {
+                "family": "Lierdakil"
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                    [2021]
+                ]
+        },
+        "URL": "https://github.com/lierdakil/pandoc-crossref"
+    },
+    {
+        "id": "macfarlane2022pandoc",
+        "type": "webpage",
+        "title": "Pandoc - A Universal Document Converter",
+        "author": [
+            {
+                "family": "MacFarlane",
+                "given": "John"
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                    [2022]
+                ]
+        },
+        "URL": "https://pandoc.org/"
+    },
+    {
+        "id": "wandmalfarbe2020eisvogel",
+        "type": "webpage",
+        "title": "Eisvogel: A clean pandoc LaTeX template to convert your markdown files to PDF or LaTeX",
+        "author": [
+            {
+                "family": "Wandmalfarbe",
+                "given": "Eisvogel"
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                    [2020]
+                ]
+        },
+        "URL": "https://github.com/Wandmalfarbe/pandoc-latex-template"
+    }
+]
