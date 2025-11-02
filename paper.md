@@ -3,7 +3,9 @@ title: "Sustainable Scholarship: A Robust Academic Workflow with Markdown, Pando
 author: An Old-Fashioned Researcher
 date: 2025-10-25
 abstract: This document serves as a complete, self-referential example of the Pandoc academic workflow. It demonstrates the use of a YAML metadata block for configuration, automated citations with pandoc-citeproc, cross-references for figures, tables, and equations with pandoc-crossref, and advanced customization for multilingual typesetting and page numbering through LaTeX.
-bibliography: references.json 
+bibliography:
+  - references.json
+  - "Graduate Paper.json" 
 csl: chicago-author-date.csl 
 link-citations: true
 pdf-engine: xelatex
@@ -141,4 +143,4 @@ The development of TeX by Knuth in the late 1970s and LaTeX by Lamport in the ea
 
 ## Section 9: Synthesis and Recommendations: Building Your Sustainable Workflow
 
-This report has detailed a comprehensive academic workflow. The very file you are reading is a tangible example of this process. By combining this Markdown file with the accompanying bibliography and `Makefile`, you can reproduce the final PDF with a single command. This demonstrates the power of a plain-text academic workflow: unparalleled control, robust versioning, seamless collaboration, and the assurance of future access to one's own work.
+This report has detailed a comprehensive academic workflow. The very file you are reading is a tangible example of this process. By combining this Markdown file with the accompanying bibliography and `Makefile`, you can reproduce the final PDF with a single command. This demonstrates the power of a plain-text academic workflow: unparalleled control, robust versioning, seamless collaboration, and the assurance of future access to one's own work [@rowleyWisdomHierarchyRepresentations2007].
