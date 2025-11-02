@@ -21,6 +21,7 @@ figPrefix:
 -   "Figures" 
 tblPrefix: "Tab."
 rangeDelim: "–"
+numbersections: true
 ---
 
 # Introduction: The Philosophy of Plain-Text Academia
