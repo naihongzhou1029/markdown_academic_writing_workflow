@@ -99,11 +99,9 @@ While vanilla Markdown lacks a native method for numbering and cross-referencing
 
 **Labeling and Referencing Syntax** The syntax for labeling and referencing elements is designed to be intuitive. For example, we can reference the table of tools from earlier: @tbl:workbench. We can also reference the plot in @fig:my-plot and the famous equation in @eq:relativity.
 
-E\=mc2
+$$E=mc^2$$ {#eq:relativity}
 
-{#eq:relativity}
-
-!(plot.png){#fig:my-plot}
+![pandoc.png](https://tarleb.com/posts/pandoc-resources/pandoc.png){#fig:my-plot width=20% height=20%}
 
 **Customization via YAML** The appearance of cross-references can be customized through YAML metadata variables, as demonstrated in the header of this file.
 
