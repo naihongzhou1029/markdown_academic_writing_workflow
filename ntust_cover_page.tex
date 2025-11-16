@@ -1,82 +1,101 @@
-% this file is encoded in utf-8
-% v1.7
+% NTUST-style thesis cover (A4), Traditional Chinese enabled via XeLaTeX
+% Compile with: xelatex ntust_cover_page.tex
+\documentclass[a4paper,12pt]{article}
 
-\documentclass[12pt, a4paper]{ntust_report} 
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{xeCJK}         % Traditional Chinese support (requires XeLaTeX)
+\usepackage{fontspec}
+\usepackage{indentfirst}
+\usepackage{ifthen}
 
-\usepackage{fontspec}   %加這個就可以設定字體 
-\usepackage{xeCJK}       %讓中英文字體分開設置 
-\usepackage[UTF8,heading = true]{ctex}
+% ----------------------------
+% Fonts (adjust to installed fonts on your system if needed)
+% Recommended: Noto Serif CJK TC / Noto Sans CJK TC
+\setmainfont{Times New Roman}
+% macOS built-in Traditional Chinese font; widely available
+\setCJKmainfont{PingFang TC}
+\setCJKsansfont{PingFang TC}
+% Define a CJK family alias used below
+\setCJKfamilyfont{song}{PingFang TC}
 
-%設定主要字型，也就是英文字型
-\setmainfont[Mapping=tex-text]{Times New Roman}            
+% ----------------------------
+% Metadata (edit these fields)
+\newcommand{\University}{國立台灣科技大學}
+\newcommand{\Department}{設計系}
+\newcommand{\DegreeName}{碩士學位論文}
+\newcommand{\StudentID}{M1915001}
+\newcommand{\TitleZh}{可驗證之安全系統的應用}
+\newcommand{\TitleEn}{A Verifiable Secure Protocol in a Secure System}
+\newcommand{\AuthorZh}{王　大　明}
+\newcommand{\AdvisorZh}{陳明明博士}
+\newcommand{\ROCDate}{中華民國一一一一年七月七日}
 
-%設定中文字型
-%參考 https://www.overleaf.com/learn/latex/Questions/What_OTF/TTF_fonts_are_supported_via_fontspec%3F#Chinese
-\setCJKmainfont[AutoFakeBold={4}]{cwTeXKai}
-
-\XeTeXlinebreaklocale "zh"                %這兩行一定要加，中文才能自動換行 
-\XeTeXlinebreakskip = 0pt plus 1pt       %這兩行一定要加，中文才能自動換行
-
-
-\setcounter{tocdepth}{3}
-\setcounter{secnumdepth}{3}
-
-\input{common_env}  %基本的環境設定  無需改變
+% ----------------------------
+% Simple helpers
+\newcommand{\HRule}{\noindent\rule{\textwidth}{0.6pt}}
 
 \begin{document}
+\thispagestyle{empty}
+\linespread{1.25}\selectfont
+
+\vspace*{12mm}
+
+% University emblem/logo
+\begin{center}
+  % Logo is optional. If file not present, leaves vertical space.
+  \IfFileExists{ntust_logo.jpg}{%
+    \includegraphics[width=28mm]{ntust_logo.jpg}%
+  }{%
+    \IfFileExists{ntust_logo.pdf}{%
+      \includegraphics[width=28mm]{ntust_logo.pdf}%
+    }{%
+      \IfFileExists{ntust_logo.png}{%
+        \includegraphics[width=28mm]{ntust_logo.png}%
+      }{%
+        \vspace{28mm}%
+      }%
+    }%
+  }%
+\end{center}
+
+% University / Department / Degree
+\vspace{8mm}
+\begin{center}
+  {\CJKfamily{song}\fontsize{20pt}{28pt}\selectfont \University}\\[4mm]
+  {\CJKfamily{song}\fontsize{18pt}{26pt}\selectfont \Department}\\[4mm]
+  {\CJKfamily{song}\fontsize{18pt}{26pt}\selectfont \DegreeName}
+\end{center}
+
+\vspace{6mm}
+\noindent\hfill {\CJKfamily{song}\normalsize 學號：\StudentID}
+
+\vspace{4mm}
+\HRule
+
+% Titles
+\vspace{28mm}
+\begin{center}
+  {\CJKfamily{song}\fontsize{18pt}{28pt}\selectfont \TitleZh}\\[10mm]
+  {\fontsize{16pt}{24pt}\selectfont \TitleEn}
+\end{center}
+
+% Author / Advisor
+\vspace{40mm}
+\begin{center}
+  {\CJKfamily{song}\fontsize{14pt}{22pt}\selectfont
+    研 究 生：\AuthorZh \\[6mm]
+    指導教授：\AdvisorZh
+  }
+\end{center}
+
+% Date
+\vfill
+\begin{center}
+  {\CJKfamily{song}\fontsize{14pt}{22pt}\selectfont \ROCDate}
+\end{center}
+
+\end{document}
 
 
-        
-	\input{chinese_trans} %在此檔案處定義文章中的中文名詞
-
-	%----------------------------------------------------------------------------------------------------------------------------------------------------------
-	%%% 以下是載入前頁、本文、後頁
-	% 此行請勿更動
-
-	%----------------------------------------------------------------------------------------------------------------------------------------------------------
-	% front matter 前頁
-	% 包括封面、書名頁、中文摘要、英文摘要、誌謝、目錄、表目錄、圖目錄、符號說明
-	% 在撰寫各章草稿時，可以把此部份「關掉」，以節省無謂的編譯時間。
-	% 實際內容由
-	%    my_names.tex, my_cabstract.tex, my_eabstract.tex, my_ackn.tex, my_symbols.tex
-	% 決定
-	% ntust_frontpages.tex 此檔只提供整體架構的定義，不需更動
-	% 在撰寫各章草稿時，可以把此部份「關掉」，以節省無謂的編譯時間。
-	
-	\input{frontpages/ntust_frontpages.tex} 
-
-
-
-
-	%----------------------------------------------------------------------------------------------------------------------------------------------------------
-	% main body 論文主體。建議以「章」為檔案分割的依據。
-	% 以下為建議的命名分類
-	%   introduction.tex   related_work.tex  protocol.tex  evaluation.tex  conclusion.tex
-	% 做為這幾個「章」的檔案名稱，並將檔案存放於資料夾 sections/ 下
-	% 實際命名方式可以隨你意
-	% 在撰寫各章草稿時，可以把其他章節關掉 (行首加百分號)
-	%\input{example/example_body.tex}  % 所附的範例
-
-	\input{sections/1_introduction.tex}
-	\input{sections/2_relative-work.tex}
-	\input{sections/3_method.tex}
-	\input{sections/4_result.tex}
-	\input{sections/5_discussion.tex}
-	\input{sections/6_conclusion.tex}
-
-	%----------------------------------------------------------------------------------------------------------------------------------------------------------
-	% back pages 後頁
-	% 包括參考文獻、附錄、自傳
-	% 實際內容由
-	%    my_bib.bib, my_appendix.tex, my_vita.tex
-	% 決定
-	% ntust_backpages.tex 此檔只提供整體架構的定義，不需更動
-	% 在撰寫各章草稿時，可以把此部份「關掉」，以節省無謂的編譯時間。
-	%\bibliographystyle{unsrt} 
-	\input{backpages/ntust_backpages.tex}
-	%\bibliographystyle{unsrt} 
-
-
-
-\end{document} 
- 
