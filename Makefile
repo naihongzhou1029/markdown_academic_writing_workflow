@@ -5,6 +5,7 @@ BIB = references.json
 CSL = chicago-author-date.csl
 COVER_TEX = ntust_cover_page.tex
 COVER_PDF = cover.pdf
+THESIS_PDF = thesis.pdf
 LOGO_FILE = ntust_logo.jpg
 LOGO_URL = https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg
 
@@ -39,18 +40,21 @@ $(LOGO_FILE):
 	@curl -fsSL -o $(LOGO_FILE) $(LOGO_URL)
 
 # Optionally create a single PDF with the cover in front (requires pdfunite from poppler)
-thesis: cover pdf
+$(THESIS_PDF): $(COVER_PDF) $(PDF)
 	@if command -v pdfunite >/dev/null 2>&1; then \
-		pdfunite $(COVER_PDF) $(PDF) thesis.pdf; \
-		echo "Created thesis.pdf (cover + paper) with pdfunite."; \
+		pdfunite $(COVER_PDF) $(PDF) $(THESIS_PDF); \
+		echo "Created $(THESIS_PDF) (cover + paper) with pdfunite."; \
 	elif command -v gs >/dev/null 2>&1; then \
-		gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=thesis.pdf $(COVER_PDF) $(PDF); \
-		echo "Created thesis.pdf (cover + paper) with Ghostscript (gs)."; \
+		gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$(THESIS_PDF) $(COVER_PDF) $(PDF); \
+		echo "Created $(THESIS_PDF) (cover + paper) with Ghostscript (gs)."; \
 	else \
 		echo "Neither pdfunite nor gs found. Install poppler (pdfunite) with 'brew install poppler'"; \
 		echo "or Ghostscript with 'brew install ghostscript' to enable 'make thesis'."; \
 		exit 1; \
 	fi
+
+thesis: $(THESIS_PDF)
+	@true
 
 # Install required external tools (macOS Homebrew)
 deps:
