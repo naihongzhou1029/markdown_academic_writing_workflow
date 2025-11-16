@@ -15,7 +15,7 @@ header-includes:
 - \setcounter{page}{1}
 - \usepackage{xeCJK}
 - \setCJKmainfont{PingFang SC}
-- \usepackage[margin=1in]{geometry}
+- \usepackage[a4paper,margin=1in]{geometry}
 figPrefix:
 -   "Figure"
 -   "Figures" 
