@@ -104,7 +104,7 @@ While vanilla Markdown lacks a native method for numbering and cross-referencing
 
 $$E=mc^2$$ {#eq:relativity}
 
-![pandoc.png](https://tarleb.com/posts/pandoc-resources/pandoc.png){#fig:my-plot width=20% height=20%}
+![Example plot](image/2025-11-17-19-47-43.png){#fig:my-plot width=20%}
 
 **Customization via YAML** The appearance of cross-references can be customized through YAML metadata variables, as demonstrated in the header of this file.
 
