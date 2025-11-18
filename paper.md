@@ -16,6 +16,8 @@ header-includes:
 - \usepackage{xeCJK}
 - \setCJKmainfont{PingFang SC}
 - \usepackage[a4paper,margin=1in]{geometry}
+- \AtBeginEnvironment{CSLReferences}{\newpage\section*{References}}
+- \makeatletter
 figPrefix:
 -   "Figure"
 -   "Figures" 
