@@ -5,14 +5,14 @@ BIB = references.json
 CSL = chicago-author-date.csl
 COVER_TEX = ntust_cover_page.tex
 COVER_PDF = cover.pdf
-THESIS_PDF = thesis.pdf
+PRINTED_PDF = printed.pdf
 LOGO_FILE = ntust_logo.jpg
 LOGO_URL = https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg
 TEMP_SRC = paper.tmp.md
 COVER_TEMP_TEX = ntust_cover_page.tmp.tex
 
-# Make 'thesis' the default goal
-.DEFAULT_GOAL := thesis
+# Make 'printed' the default goal
+.DEFAULT_GOAL := printed
 
 # Detect OS and set fonts accordingly
 UNAME_S := $(shell uname -s)
@@ -84,20 +84,20 @@ $(LOGO_FILE):
 	@curl -fsSL -o $(LOGO_FILE) $(LOGO_URL)
 
 # Optionally create a single PDF with the cover in front (requires pdfunite from poppler)
-$(THESIS_PDF): $(COVER_PDF) $(PDF)
+$(PRINTED_PDF): $(COVER_PDF) $(PDF)
 	@if command -v pdfunite >/dev/null 2>&1; then \
-		pdfunite $(COVER_PDF) $(PDF) $(THESIS_PDF); \
-		echo "Created $(THESIS_PDF) (cover + paper) with pdfunite."; \
+		pdfunite $(COVER_PDF) $(PDF) $(PRINTED_PDF); \
+		echo "Created $(PRINTED_PDF) (cover + paper) with pdfunite."; \
 	elif command -v gs >/dev/null 2>&1; then \
-		gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$(THESIS_PDF) $(COVER_PDF) $(PDF); \
-		echo "Created $(THESIS_PDF) (cover + paper) with Ghostscript (gs)."; \
+		gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$(PRINTED_PDF) $(COVER_PDF) $(PDF); \
+		echo "Created $(PRINTED_PDF) (cover + paper) with Ghostscript (gs)."; \
 	else \
 		echo "Neither pdfunite nor gs found. Install poppler (pdfunite) with 'brew install poppler'"; \
-		echo "or Ghostscript with 'brew install ghostscript' to enable 'make thesis'."; \
+		echo "or Ghostscript with 'brew install ghostscript' to enable 'make printed'."; \
 		exit 1; \
 	fi
 
-thesis: $(THESIS_PDF)
+printed: $(PRINTED_PDF)
 	@true
 
 # Install required external tools (macOS Homebrew)
@@ -155,7 +155,7 @@ deps_ubuntu:
 # A clean rule to remove the generated file
 clean:
 	rm -f $(PDF)
-	rm -f $(COVER_PDF) thesis.pdf
+	rm -f $(COVER_PDF) $(PRINTED_PDF)
 	rm -f $(TEMP_SRC) $(COVER_TEMP_TEX)
 	rm -f *.aux *.log *.out *.toc *.bbl *.blg *.bcf *.run.xml *.synctex.gz
 	rm -f *.fdb_latexmk *.fls *.xdv *.nav *.snm *.vrb *.lof *.lot *.loa *.lol
@@ -163,4 +163,4 @@ clean:
 	@echo "Cleaned build outputs and LaTeX intermediates."
 
 # Declare targets that are not files
-.PHONY: pdf cover thesis deps_macos deps_ubuntu clean
+.PHONY: pdf cover printed deps_macos deps_ubuntu clean

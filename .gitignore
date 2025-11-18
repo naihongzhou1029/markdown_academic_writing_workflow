@@ -4,7 +4,7 @@ diffs
 # Build outputs
 paper.pdf
 cover.pdf
-thesis.pdf
+printed.pdf
 
 # LaTeX intermediates
 *.aux
