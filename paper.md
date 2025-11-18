@@ -16,8 +16,15 @@ header-includes:
 - \usepackage{xeCJK}
 - \setCJKmainfont{PingFang SC}
 - \usepackage[a4paper,margin=1in]{geometry}
-- \AtBeginEnvironment{CSLReferences}{\newpage\section*{References}}
-- \makeatletter
+- |
+    \usepackage{etoolbox}
+    \AtBeginEnvironment{CSLReferences}{%
+      \newpage\section*{References}%
+      \begingroup%
+      \setlength{\parindent}{0pt}%
+      \everypar{\hangindent=\cslhangindent\hangafter=1\textbullet\ }%
+    }
+    \AtEndEnvironment{CSLReferences}{\endgroup}
 figPrefix:
 -   "Figure"
 -   "Figures" 
