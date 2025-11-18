@@ -22,8 +22,8 @@ ifeq ($(UNAME_S),Darwin)
 	MAIN_FONT := Times New Roman
 else ifeq ($(UNAME_S),Linux)
 	MAIN_FONT := Liberation Serif
-	# Try to detect available CJK fonts, prioritizing Noto (installed via deps_ubuntu)
-	# Note: Run 'make deps_ubuntu' to install fonts-noto-cjk package
+	# Try to detect available CJK fonts, prioritizing Noto (installed via deps)
+	# Note: Run 'make deps' to install fonts-noto-cjk package
 	# Check if Noto Sans CJK SC is available, fallback to commonly available fonts
 	CJK_FONT_SC := $(shell fc-list 2>/dev/null | grep -i "Noto Sans CJK SC" | head -1 | cut -d: -f2 | cut -d, -f1 | xargs)
 	ifeq ($(CJK_FONT_SC),)
@@ -100,57 +100,62 @@ $(PRINTED_PDF): $(COVER_PDF) $(PDF)
 printed: $(PRINTED_PDF)
 	@true
 
-# Install required external tools (macOS Homebrew)
-deps_macos:
-	@echo "Installing required CLI tools with Homebrew (if missing)..."
-	@if ! command -v brew >/dev/null 2>&1; then \
-		echo "Homebrew not found. Install it from https://brew.sh and re-run 'make deps_macos'."; \
-		exit 1; \
-	fi
-	@brew list --formula poppler >/dev/null 2>&1 || brew install poppler
-	@brew list --formula ghostscript >/dev/null 2>&1 || brew install ghostscript
-	@brew list --formula pandoc-crossref >/dev/null 2>&1 || brew install pandoc-crossref
-	@echo "All dependencies are installed."
-
-# Install required external tools (Ubuntu 20.04+)
-deps_ubuntu:
-	@echo "Installing required CLI tools with apt (if missing)..."
-	@if ! command -v apt-get >/dev/null 2>&1; then \
-		echo "apt-get not found. This target is for Ubuntu/Debian systems."; \
-		exit 1; \
-	fi
-	@sudo apt-get update
-	@dpkg -l | grep -q "^ii.*poppler-utils" || sudo apt-get install -y poppler-utils
-	@dpkg -l | grep -q "^ii.*ghostscript" || sudo apt-get install -y ghostscript
-	@dpkg -l | grep -q "^ii.*fonts-noto-cjk" || sudo apt-get install -y fonts-noto-cjk
-	@dpkg -l | grep -q "^ii.*fonts-liberation" || sudo apt-get install -y fonts-liberation
-	@if ! command -v pandoc-crossref >/dev/null 2>&1; then \
-		if command -v cabal >/dev/null 2>&1; then \
-			echo "Installing pandoc-crossref via cabal..."; \
-			cabal update && cabal install pandoc-crossref; \
-		else \
-			echo "pandoc-crossref not found. Install it via:"; \
-			echo "  sudo apt-get install -y cabal-install"; \
-			echo "  cabal update && cabal install pandoc-crossref"; \
-			echo "Or download a binary release from: https://github.com/lierdakil/pandoc-crossref/releases"; \
+# Install required external tools (auto-detects OS)
+deps:
+	@echo "Detected OS: $(UNAME_S)"
+	@if [ "$(UNAME_S)" = "Darwin" ]; then \
+		echo "Installing required CLI tools with Homebrew (if missing)..."; \
+		if ! command -v brew >/dev/null 2>&1; then \
+			echo "Homebrew not found. Install it from https://brew.sh and re-run 'make deps'."; \
 			exit 1; \
 		fi; \
-	else \
-		PANDOC_VER=$$(pandoc --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo ""); \
-		CROSSREF_VER=$$(pandoc-crossref --version 2>&1 | grep -oE 'Pandoc v[0-9]+\.[0-9]+\.[0-9]+' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo ""); \
-		if [ -n "$$PANDOC_VER" ] && [ -n "$$CROSSREF_VER" ] && [ "$$PANDOC_VER" != "$$CROSSREF_VER" ]; then \
-			echo "Warning: pandoc-crossref (built with pandoc $$CROSSREF_VER) doesn't match installed pandoc ($$PANDOC_VER)"; \
-			echo "Reinstalling pandoc-crossref to match pandoc version..."; \
+		brew list --formula poppler >/dev/null 2>&1 || brew install poppler; \
+		brew list --formula ghostscript >/dev/null 2>&1 || brew install ghostscript; \
+		brew list --formula pandoc-crossref >/dev/null 2>&1 || brew install pandoc-crossref; \
+		echo "All dependencies are installed."; \
+	elif [ "$(UNAME_S)" = "Linux" ]; then \
+		echo "Installing required CLI tools with apt (if missing)..."; \
+		if ! command -v apt-get >/dev/null 2>&1; then \
+			echo "apt-get not found. This target is for Ubuntu/Debian systems."; \
+			exit 1; \
+		fi; \
+		sudo apt-get update; \
+		dpkg -l | grep -q "^ii.*poppler-utils" || sudo apt-get install -y poppler-utils; \
+		dpkg -l | grep -q "^ii.*ghostscript" || sudo apt-get install -y ghostscript; \
+		dpkg -l | grep -q "^ii.*fonts-noto-cjk" || sudo apt-get install -y fonts-noto-cjk; \
+		dpkg -l | grep -q "^ii.*fonts-liberation" || sudo apt-get install -y fonts-liberation; \
+		if ! command -v pandoc-crossref >/dev/null 2>&1; then \
 			if command -v cabal >/dev/null 2>&1; then \
+				echo "Installing pandoc-crossref via cabal..."; \
 				cabal update && cabal install pandoc-crossref; \
 			else \
-				echo "cabal not found. Please install cabal-install and reinstall pandoc-crossref:"; \
+				echo "pandoc-crossref not found. Install it via:"; \
 				echo "  sudo apt-get install -y cabal-install"; \
 				echo "  cabal update && cabal install pandoc-crossref"; \
+				echo "Or download a binary release from: https://github.com/lierdakil/pandoc-crossref/releases"; \
+				exit 1; \
+			fi; \
+		else \
+			PANDOC_VER=$$(pandoc --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo ""); \
+			CROSSREF_VER=$$(pandoc-crossref --version 2>&1 | grep -oE 'Pandoc v[0-9]+\.[0-9]+\.[0-9]+' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo ""); \
+			if [ -n "$$PANDOC_VER" ] && [ -n "$$CROSSREF_VER" ] && [ "$$PANDOC_VER" != "$$CROSSREF_VER" ]; then \
+				echo "Warning: pandoc-crossref (built with pandoc $$CROSSREF_VER) doesn't match installed pandoc ($$PANDOC_VER)"; \
+				echo "Reinstalling pandoc-crossref to match pandoc version..."; \
+				if command -v cabal >/dev/null 2>&1; then \
+					cabal update && cabal install pandoc-crossref; \
+				else \
+					echo "cabal not found. Please install cabal-install and reinstall pandoc-crossref:"; \
+					echo "  sudo apt-get install -y cabal-install"; \
+					echo "  cabal update && cabal install pandoc-crossref"; \
+				fi; \
 			fi; \
 		fi; \
+		echo "All dependencies are installed."; \
+	else \
+		echo "Unsupported OS: $(UNAME_S)"; \
+		echo "Please install dependencies manually for your system."; \
+		exit 1; \
 	fi
-	@echo "All dependencies are installed."
 
 # A clean rule to remove the generated file
 clean:
@@ -163,4 +168,4 @@ clean:
 	@echo "Cleaned build outputs and LaTeX intermediates."
 
 # Declare targets that are not files
-.PHONY: pdf cover printed deps_macos deps_ubuntu clean
+.PHONY: pdf cover printed deps clean
