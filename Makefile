@@ -15,39 +15,51 @@ COVER_TEMP_TEX = ntust_cover_page.tmp.tex
 .DEFAULT_GOAL := printed
 
 # Detect OS and set fonts accordingly
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
-	CJK_FONT_SC := PingFang SC
-	CJK_FONT_TC := PingFang TC
-	MAIN_FONT := Times New Roman
+# First check if we're on Windows (via environment variables, uname, or cmd.exe)
+UNAME_S := $(shell uname -s 2>/dev/null || echo "Unknown")
+# Check for Windows: uname contains "NT", or Windows env vars exist, or cmd.exe is available
+IS_WINDOWS := $(shell if echo "$(UNAME_S)" | grep -qi "NT\|MINGW\|MSYS"; then echo "1"; elif [ -n "$$OS" ] && echo "$$OS" | grep -qi "windows"; then echo "1"; elif [ -n "$$COMSPEC" ] || [ -n "$$WINDIR" ]; then echo "1"; elif command -v cmd.exe >/dev/null 2>&1 || command -v cmd >/dev/null 2>&1; then echo "1"; else echo "0"; fi)
+
+ifeq ($(IS_WINDOWS),1)
+	OS_TYPE := Windows
+	FONT_DETECT_SCRIPT := tools/detect-fonts-windows.ps1
+else ifeq ($(UNAME_S),Darwin)
+	OS_TYPE := Darwin
+	FONT_DETECT_SCRIPT := tools/detect-fonts-darwin.sh
 else ifeq ($(UNAME_S),Linux)
-	MAIN_FONT := Liberation Serif
-	# Try to detect available CJK fonts, prioritizing Noto (installed via deps)
-	# Note: Run 'make deps' to install fonts-noto-cjk package
-	# Check if Noto Sans CJK SC is available, fallback to commonly available fonts
-	CJK_FONT_SC := $(shell fc-list 2>/dev/null | grep -i "Noto Sans CJK SC" | head -1 | cut -d: -f2 | cut -d, -f1 | xargs)
-	ifeq ($(CJK_FONT_SC),)
-		# Fallback: try to find any Simplified Chinese font
-		CJK_FONT_SC := $(shell fc-list :lang=zh-cn 2>/dev/null | head -1 | cut -d: -f2 | cut -d, -f1 | xargs)
-	endif
-	ifeq ($(CJK_FONT_SC),)
-		# Final fallback to commonly available font
-		CJK_FONT_SC := AR PL UMing CN
-	endif
-	# Same for Traditional Chinese
-	CJK_FONT_TC := $(shell fc-list 2>/dev/null | grep -i "Noto Sans CJK TC" | head -1 | cut -d: -f2 | cut -d, -f1 | xargs)
-	ifeq ($(CJK_FONT_TC),)
-		# Fallback: try to find any Traditional Chinese font
-		CJK_FONT_TC := $(shell fc-list :lang=zh-tw 2>/dev/null | head -1 | cut -d: -f2 | cut -d, -f1 | xargs)
-	endif
-	ifeq ($(CJK_FONT_TC),)
-		# Final fallback to commonly available font
-		CJK_FONT_TC := AR PL UMing TW
-	endif
+	OS_TYPE := Linux
+	FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
 else
+	OS_TYPE := Unix
+	FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
+endif
+
+# Detect fonts using OS-specific script
+ifeq ($(IS_WINDOWS),1)
+	CJK_FONT_SC := $(shell powershell -NoProfile -ExecutionPolicy Bypass -Command "& '$(FONT_DETECT_SCRIPT)'" 2>/dev/null | grep "^CJK_FONT_SC=" | cut -d= -f2)
+	CJK_FONT_TC := $(shell powershell -NoProfile -ExecutionPolicy Bypass -Command "& '$(FONT_DETECT_SCRIPT)'" 2>/dev/null | grep "^CJK_FONT_TC=" | cut -d= -f2)
+	MAIN_FONT := $(shell powershell -NoProfile -ExecutionPolicy Bypass -Command "& '$(FONT_DETECT_SCRIPT)'" 2>/dev/null | grep "^MAIN_FONT=" | cut -d= -f2)
+else
+	CJK_FONT_SC := $(shell bash $(FONT_DETECT_SCRIPT) 2>/dev/null | grep "^CJK_FONT_SC=" | cut -d= -f2)
+	CJK_FONT_TC := $(shell bash $(FONT_DETECT_SCRIPT) 2>/dev/null | grep "^CJK_FONT_TC=" | cut -d= -f2)
+	MAIN_FONT := $(shell bash $(FONT_DETECT_SCRIPT) 2>/dev/null | grep "^MAIN_FONT=" | cut -d= -f2)
+endif
+
+# Fallback values if script fails
+ifeq ($(CJK_FONT_SC),)
 	CJK_FONT_SC := AR PL UMing CN
+endif
+ifeq ($(CJK_FONT_TC),)
 	CJK_FONT_TC := AR PL UMing TW
-	MAIN_FONT := Liberation Serif
+endif
+ifeq ($(MAIN_FONT),)
+	ifeq ($(OS_TYPE),Windows)
+		MAIN_FONT := Times New Roman
+	else ifeq ($(OS_TYPE),Darwin)
+		MAIN_FONT := Times New Roman
+	else
+		MAIN_FONT := Liberation Serif
+	endif
 endif
 
 # The Pandoc command with all filters and options
@@ -64,108 +76,100 @@ PANDOC_CMD = pandoc $(TEMP_SRC) \
 pdf: $(PDF)
 
 $(PDF): $(SRC) $(BIB) $(CSL)
-	@echo "Detected OS: $(UNAME_S), using CJK font: $(CJK_FONT_SC)"
+	@echo "Detected OS: $(OS_TYPE), using CJK font: $(CJK_FONT_SC)"
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -Command "(Get-Content '$(SRC)') -replace 'PingFang SC', '$(CJK_FONT_SC)' | Set-Content '$(TEMP_SRC)'"
+else
 	@sed -e 's/PingFang SC/$(CJK_FONT_SC)/g' $(SRC) > $(TEMP_SRC)
-	@$(PANDOC_CMD)
+endif
+	@pandoc $(TEMP_SRC) --standalone --filter pandoc-crossref --citeproc -o paper.tex
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -Command "(Get-Content paper.tex) -replace '}\\% \\AtEndEnvironment{CSLReferences}', '}`n\AtEndEnvironment{CSLReferences}' | Set-Content paper.tex"
+else
+	@sed -i.bak 's/}\\% \\AtEndEnvironment{CSLReferences}/}\n\\AtEndEnvironment{CSLReferences}/' paper.tex && rm -f paper.tex.bak
+endif
+	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
+	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
+	@if [ -f paper.pdf ]; then mv paper.pdf $(PDF); else exit 1; fi
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -Command "Remove-Item -Force '$(TEMP_SRC)' -ErrorAction SilentlyContinue"
+else
 	@rm -f $(TEMP_SRC)
+endif
 
 # Build the cover page (XeLaTeX)
 cover: $(COVER_PDF)
 
 $(COVER_PDF): $(COVER_TEX) $(LOGO_FILE)
-	@echo "Detected OS: $(UNAME_S), using main font: $(MAIN_FONT), CJK font: $(CJK_FONT_TC)"
+	@echo "Detected OS: $(OS_TYPE), using main font: $(MAIN_FONT), CJK font: $(CJK_FONT_TC)"
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -Command "(Get-Content '$(COVER_TEX)') -replace 'Times New Roman', '$(MAIN_FONT)' -replace 'PingFang TC', '$(CJK_FONT_TC)' | Set-Content '$(COVER_TEMP_TEX)'"
+else
 	@sed -e 's/Times New Roman/$(MAIN_FONT)/g' -e 's/PingFang TC/$(CJK_FONT_TC)/g' $(COVER_TEX) > $(COVER_TEMP_TEX)
+endif
 	@xelatex -interaction=nonstopmode -jobname=cover $(COVER_TEMP_TEX)
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -Command "Remove-Item -Force '$(COVER_TEMP_TEX)' -ErrorAction SilentlyContinue"
+else
 	@rm -f $(COVER_TEMP_TEX)
+endif
 
 # Download NTUST logo if missing
 $(LOGO_FILE):
 	@echo "Fetching NTUST logo..."
-	@curl -fsSL -o $(LOGO_FILE) $(LOGO_URL)
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File tools/download-logo-windows.ps1 -LogoFile $(LOGO_FILE) -LogoUrl $(LOGO_URL)
+else ifeq ($(OS_TYPE),Darwin)
+	@bash tools/download-logo-darwin.sh $(LOGO_FILE) $(LOGO_URL)
+else ifeq ($(OS_TYPE),Linux)
+	@bash tools/download-logo-linux.sh $(LOGO_FILE) $(LOGO_URL)
+else
+	@echo "Unsupported OS for logo download. Please download manually from $(LOGO_URL)" >&2
+	@exit 1
+endif
 
 # Optionally create a single PDF with the cover in front (requires pdfunite from poppler)
 $(PRINTED_PDF): $(COVER_PDF) $(PDF)
-	@if command -v pdfunite >/dev/null 2>&1; then \
-		pdfunite $(COVER_PDF) $(PDF) $(PRINTED_PDF); \
-		echo "Created $(PRINTED_PDF) (cover + paper) with pdfunite."; \
-	elif command -v gs >/dev/null 2>&1; then \
-		gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$(PRINTED_PDF) $(COVER_PDF) $(PDF); \
-		echo "Created $(PRINTED_PDF) (cover + paper) with Ghostscript (gs)."; \
-	else \
-		echo "Neither pdfunite nor gs found. Install poppler (pdfunite) with 'brew install poppler'"; \
-		echo "or Ghostscript with 'brew install ghostscript' to enable 'make printed'."; \
-		exit 1; \
-	fi
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File tools/merge-pdfs-windows.ps1 -CoverPdf $(COVER_PDF) -PaperPdf $(PDF) -Output $(PRINTED_PDF)
+else ifeq ($(OS_TYPE),Darwin)
+	@bash tools/merge-pdfs-darwin.sh $(COVER_PDF) $(PDF) $(PRINTED_PDF)
+else ifeq ($(OS_TYPE),Linux)
+	@bash tools/merge-pdfs-linux.sh $(COVER_PDF) $(PDF) $(PRINTED_PDF)
+else
+	@echo "Unsupported OS for PDF merging." >&2
+	@exit 1
+endif
 
 printed: $(PRINTED_PDF)
 	@true
 
 # Install required external tools (auto-detects OS)
 deps:
-	@echo "Detected OS: $(UNAME_S)"
-	@if [ "$(UNAME_S)" = "Darwin" ]; then \
-		echo "Installing required CLI tools with Homebrew (if missing)..."; \
-		if ! command -v brew >/dev/null 2>&1; then \
-			echo "Homebrew not found. Install it from https://brew.sh and re-run 'make deps'."; \
-			exit 1; \
-		fi; \
-		brew list --formula poppler >/dev/null 2>&1 || brew install poppler; \
-		brew list --formula ghostscript >/dev/null 2>&1 || brew install ghostscript; \
-		brew list --formula pandoc-crossref >/dev/null 2>&1 || brew install pandoc-crossref; \
-		echo "All dependencies are installed."; \
-	elif [ "$(UNAME_S)" = "Linux" ]; then \
-		echo "Installing required CLI tools with apt (if missing)..."; \
-		if ! command -v apt-get >/dev/null 2>&1; then \
-			echo "apt-get not found. This target is for Ubuntu/Debian systems."; \
-			exit 1; \
-		fi; \
-		sudo apt-get update; \
-		dpkg -l | grep -q "^ii.*poppler-utils" || sudo apt-get install -y poppler-utils; \
-		dpkg -l | grep -q "^ii.*ghostscript" || sudo apt-get install -y ghostscript; \
-		dpkg -l | grep -q "^ii.*fonts-noto-cjk" || sudo apt-get install -y fonts-noto-cjk; \
-		dpkg -l | grep -q "^ii.*fonts-liberation" || sudo apt-get install -y fonts-liberation; \
-		if ! command -v pandoc-crossref >/dev/null 2>&1; then \
-			if command -v cabal >/dev/null 2>&1; then \
-				echo "Installing pandoc-crossref via cabal..."; \
-				cabal update && cabal install pandoc-crossref; \
-			else \
-				echo "pandoc-crossref not found. Install it via:"; \
-				echo "  sudo apt-get install -y cabal-install"; \
-				echo "  cabal update && cabal install pandoc-crossref"; \
-				echo "Or download a binary release from: https://github.com/lierdakil/pandoc-crossref/releases"; \
-				exit 1; \
-			fi; \
-		else \
-			PANDOC_VER=$$(pandoc --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo ""); \
-			CROSSREF_VER=$$(pandoc-crossref --version 2>&1 | grep -oE 'Pandoc v[0-9]+\.[0-9]+\.[0-9]+' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo ""); \
-			if [ -n "$$PANDOC_VER" ] && [ -n "$$CROSSREF_VER" ] && [ "$$PANDOC_VER" != "$$CROSSREF_VER" ]; then \
-				echo "Warning: pandoc-crossref (built with pandoc $$CROSSREF_VER) doesn't match installed pandoc ($$PANDOC_VER)"; \
-				echo "Reinstalling pandoc-crossref to match pandoc version..."; \
-				if command -v cabal >/dev/null 2>&1; then \
-					cabal update && cabal install pandoc-crossref; \
-				else \
-					echo "cabal not found. Please install cabal-install and reinstall pandoc-crossref:"; \
-					echo "  sudo apt-get install -y cabal-install"; \
-					echo "  cabal update && cabal install pandoc-crossref"; \
-				fi; \
-			fi; \
-		fi; \
-		echo "All dependencies are installed."; \
-	else \
-		echo "Unsupported OS: $(UNAME_S)"; \
-		echo "Please install dependencies manually for your system."; \
-		exit 1; \
-	fi
+	@echo "Detected OS: $(OS_TYPE)"
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File tools/deps-windows.ps1
+else ifeq ($(OS_TYPE),Darwin)
+	@bash tools/deps-darwin.sh
+else ifeq ($(OS_TYPE),Linux)
+	@bash tools/deps-linux.sh
+else
+	@echo "Unsupported OS: $(OS_TYPE)" >&2
+	@exit 1
+endif
 
 # A clean rule to remove the generated file
 clean:
-	rm -f $(PDF)
-	rm -f $(COVER_PDF) $(PRINTED_PDF)
-	rm -f $(TEMP_SRC) $(COVER_TEMP_TEX)
-	rm -f *.aux *.log *.out *.toc *.bbl *.blg *.bcf *.run.xml *.synctex.gz
-	rm -f *.fdb_latexmk *.fls *.xdv *.nav *.snm *.vrb *.lof *.lot *.loa *.lol
-	rm -rf _minted*
-	@echo "Cleaned build outputs and LaTeX intermediates."
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File tools/clean-windows.ps1 -Pdf $(PDF) -CoverPdf $(COVER_PDF) -PrintedPdf $(PRINTED_PDF) -TempSrc $(TEMP_SRC) -CoverTempTex $(COVER_TEMP_TEX)
+else ifeq ($(OS_TYPE),Darwin)
+	@bash tools/clean-darwin.sh $(PDF) $(COVER_PDF) $(PRINTED_PDF) $(TEMP_SRC) $(COVER_TEMP_TEX)
+else ifeq ($(OS_TYPE),Linux)
+	@bash tools/clean-linux.sh $(PDF) $(COVER_PDF) $(PRINTED_PDF) $(TEMP_SRC) $(COVER_TEMP_TEX)
+else
+	@echo "Unsupported OS for clean: $(OS_TYPE)" >&2
+	@exit 1
+endif
 
 # Declare targets that are not files
 .PHONY: pdf cover printed deps clean
