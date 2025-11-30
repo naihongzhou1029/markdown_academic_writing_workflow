@@ -6,6 +6,9 @@ paper.pdf
 cover.pdf
 printed.pdf
 
+# Translation outputs
+zh_tw/
+
 # LaTeX intermediates
 *.aux
 *.fdb_latexmk
