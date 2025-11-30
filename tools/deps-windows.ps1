@@ -20,6 +20,11 @@ if (Get-Command choco -ErrorAction SilentlyContinue) {
     exit 1
 }
 
+# Check for curl (usually pre-installed on Windows 10/11)
+if (-not (Get-Command curl -ErrorAction SilentlyContinue)) {
+    Write-Host "curl not found. It will be installed if a package manager is available." -ForegroundColor Yellow
+}
+
 # Install packages
 if ($packageManager -eq "choco") {
     # Check if running as administrator
@@ -32,6 +37,16 @@ if ($packageManager -eq "choco") {
     choco install poppler --yes --no-progress
     choco install ghostscript --yes --no-progress
     
+    # Install curl if not available
+    if (-not (Get-Command curl -ErrorAction SilentlyContinue)) {
+        choco install curl --yes --no-progress
+    }
+    
+    # Install jq (optional, PowerShell uses built-in JSON parsing, but useful for other tools)
+    if (-not (Get-Command jq -ErrorAction SilentlyContinue)) {
+        choco install jq --yes --no-progress
+    }
+    
     # pandoc-crossref might not be available in Chocolatey, provide instructions
     if (-not (Get-Command pandoc-crossref -ErrorAction SilentlyContinue)) {
         Write-Host "pandoc-crossref not found. Install it via:" -ForegroundColor Yellow
@@ -41,6 +56,16 @@ if ($packageManager -eq "choco") {
 } elseif ($packageManager -eq "winget") {
     winget install --id Poppler.Poppler --accept-package-agreements --accept-source-agreements --silent
     winget install --id ArtifexSoftware.Ghostscript --accept-package-agreements --accept-source-agreements --silent
+    
+    # Install curl if not available
+    if (-not (Get-Command curl -ErrorAction SilentlyContinue)) {
+        winget install --id cURL.cURL --accept-package-agreements --accept-source-agreements --silent
+    }
+    
+    # Install jq (optional, PowerShell uses built-in JSON parsing, but useful for other tools)
+    if (-not (Get-Command jq -ErrorAction SilentlyContinue)) {
+        winget install --id stedolan.jq --accept-package-agreements --accept-source-agreements --silent
+    }
     
     # pandoc-crossref might not be available in winget, provide instructions
     if (-not (Get-Command pandoc-crossref -ErrorAction SilentlyContinue)) {

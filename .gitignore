@@ -40,3 +40,6 @@ ntust_logo.jpg
 .idea/
 .vscode/
 .cache/
+
+# API keys
+.api_key
