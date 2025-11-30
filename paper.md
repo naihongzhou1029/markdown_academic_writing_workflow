@@ -20,11 +20,8 @@ header-includes:
     \usepackage{etoolbox}
     \AtBeginEnvironment{CSLReferences}{%
       \newpage\section*{References}%
-      \begingroup%
       \setlength{\parindent}{0pt}%
-      \everypar{\hangindent=\cslhangindent\hangafter=1\textbullet\ }%
     }
-    \AtEndEnvironment{CSLReferences}{\endgroup}
 figPrefix:
 -   "Figure"
 -   "Figures" 
@@ -113,7 +110,7 @@ While vanilla Markdown lacks a native method for numbering and cross-referencing
 
 $$E=mc^2$$ {#eq:relativity}
 
-![Example plot](image/2025-11-17-19-47-43.png){#fig:my-plot width=20%}
+![Example plot](images/2025-11-17-19-47-43.png){#fig:my-plot width=20%}
 
 **Customization via YAML** The appearance of cross-references can be customized through YAML metadata variables, as demonstrated in the header of this file.
 
