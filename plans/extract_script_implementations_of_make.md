@@ -73,16 +73,105 @@ This document tracks the progress of extracting shell script implementations fro
 - Handles LaTeX intermediate files with wildcards
 - Removes `_minted*` directories recursively
 
-### ✅ 8. Makefile Updates
-- Replaced inline shell scripts with calls to extracted scripts
-- Added OS detection to call appropriate script
+### ✅ 8. Font Replacement Scripts
+- `tools/replace-fonts-darwin.sh` - macOS font replacement ✅
+- `tools/replace-fonts-linux.sh` - Linux font replacement ✅
+- `tools/replace-fonts-windows.ps1` - Windows PowerShell font replacement ✅ **NEW**
+
+**Purpose:** Replace font names in markdown/LaTeX files (e.g., "PingFang SC" → detected font)
+
+### ✅ 9. LaTeX CSLReferences Fix Scripts
+- `tools/fix-latex-csl-darwin.sh` - macOS LaTeX CSL fix ✅
+- `tools/fix-latex-csl-linux.sh` - Linux LaTeX CSL fix ✅
+- `tools/fix-latex-csl-windows.ps1` - Windows PowerShell LaTeX CSL fix ✅ **NEW**
+
+**Purpose:** Fix LaTeX formatting issue with CSLReferences environment
+
+### ✅ 10. Create Symlinks Scripts
+- `tools/create-symlinks-darwin.sh` - macOS symlink creation ✅
+- `tools/create-symlinks-linux.sh` - Linux symlink creation ✅
+- `tools/create-symlinks-windows.ps1` - Windows PowerShell symlink creation ✅ **NEW**
+
+**Purpose:** Create symbolic links for dependencies in target directory
+
+### ✅ 11. Copy Logo Scripts
+- `tools/copy-logo-darwin.sh` - macOS logo copy/symlink ✅
+- `tools/copy-logo-linux.sh` - Linux logo copy/symlink ✅
+- `tools/copy-logo-windows.ps1` - Windows PowerShell logo copy/symlink ✅ **NEW**
+
+**Purpose:** Copy or create symlink for logo file in target directory
+
+### ✅ 12. Translation Scripts
+- `tools/translate-darwin.sh` - macOS translation (Gemini API) ✅
+- `tools/translate-linux.sh` - Linux translation (Gemini API) ✅
+- `tools/translate-windows.ps1` - Windows PowerShell translation (Gemini API) ✅ **NEW**
+
+**Purpose:** Translate markdown and LaTeX files from English to Traditional Chinese using Gemini LLM API
+
+**Recent Improvements:**
+- Enhanced prompts for LaTeX files to explicitly instruct translation of ALL English text
+- Prompts now specifically mention translating content inside `\newcommand` definitions, labels, and all natural language text
+- Better handling of LaTeX command structure preservation while ensuring complete translation
+
+### ✅ 13. Post-process Translated Markdown Scripts
+- `tools/postprocess-translated-md-darwin.sh` - macOS post-processing ✅
+- `tools/postprocess-translated-md-linux.sh` - Linux post-processing ✅
+- `tools/postprocess-translated-md-windows.ps1` - Windows PowerShell post-processing ✅ **NEW**
+
+**Purpose:** Post-process translated markdown with font replacements, label translations, and indentation fixes
+
+**Recent Improvements:**
+- Fixed Python unicode escape issues (using raw strings for regex patterns)
+- Enhanced indentation fixing for LaTeX code blocks
+
+### ✅ 14. Post-process Translated LaTeX Scripts
+- `tools/postprocess-translated-tex-darwin.sh` - macOS post-processing ✅
+- `tools/postprocess-translated-tex-linux.sh` - Linux post-processing ✅
+- `tools/postprocess-translated-tex-windows.ps1` - Windows PowerShell post-processing ✅ **NEW**
+
+**Purpose:** Replace font names in translated LaTeX files and check for untranslated content
+
+**Recent Improvements:**
+- Removed substitution logic (translation is handled by LLM, not post-processing)
+- Added warning checks for potentially untranslated content
+- Fixed regex escaping issues with proper error handling
+
+### ✅ 15. Cleanup Temp Files Scripts
+- `tools/cleanup-temp-darwin.sh` - macOS temp file cleanup ✅
+- `tools/cleanup-temp-linux.sh` - Linux temp file cleanup ✅
+- `tools/cleanup-temp-windows.ps1` - Windows PowerShell temp file cleanup ✅ **NEW**
+
+**Purpose:** Remove temporary files created during build process
+
+### ✅ 16. Makefile Updates (Phase 2)
+- Replaced remaining inline shell scripts with calls to extracted scripts
+- Added script variable definitions for all new scripts
+- Updated PDF generation target to use replace-fonts and fix-latex-csl scripts
+- Updated cover generation target to use replace-fonts script
+- Updated zh_tw PDF generation to use create-symlinks, replace-fonts, and fix-latex-csl scripts
+- Updated zh_tw cover generation to use copy-logo and replace-fonts scripts
+- Updated translation post-processing to use postprocess-translated-md and postprocess-translated-tex scripts
+- Updated cleanup operations to use cleanup-temp script
 - Maintained backward compatibility with existing targets
-- Font detection now uses script output parsing
-- All targets now delegate to OS-specific scripts
+
+### ✅ 17. Recent Improvements and Fixes (Phase 3)
+- **Translation Enhancement:**
+  - Enhanced translation prompts in `translate-darwin.sh` and `translate-linux.sh` to explicitly instruct LLM to translate ALL English text, including content inside LaTeX `\newcommand` definitions and labels
+  - Translation prompts now specifically mention translating titles, names, labels, and text within command definitions
+
+- **Post-processing Refinements:**
+  - Removed substitution logic from `postprocess-translated-tex` scripts (translation should be done by LLM, not post-processing)
+  - Added warning checks to detect potentially untranslated content (title, labels)
+  - Fixed regex escaping issues with proper error handling
+
+- **Build Process Improvements:**
+  - Added images directory symlink creation in `zh_tw` PDF generation (fixes missing image files during build)
+  - Updated `clean` target to remove `zh_tw/` directory
+  - Fixed font variable quoting in Makefile to handle font names with spaces
 
 ## File Summary
 
-### Created Files (25 total)
+### Created Files (49 total - Phase 1: 25, Phase 2: 24)
 
 #### OS Detection (3 files)
 - `tools/detect-os.sh`
@@ -119,6 +208,46 @@ This document tracks the progress of extracting shell script implementations fro
 - `tools/clean-windows.ps1`
 - `tools/clean-windows.bat`
 
+#### Font Replacement (3 files) - Phase 2
+- `tools/replace-fonts-darwin.sh`
+- `tools/replace-fonts-linux.sh`
+- `tools/replace-fonts-windows.ps1`
+
+#### LaTeX CSLReferences Fix (3 files) - Phase 2
+- `tools/fix-latex-csl-darwin.sh`
+- `tools/fix-latex-csl-linux.sh`
+- `tools/fix-latex-csl-windows.ps1`
+
+#### Create Symlinks (3 files) - Phase 2
+- `tools/create-symlinks-darwin.sh`
+- `tools/create-symlinks-linux.sh`
+- `tools/create-symlinks-windows.ps1`
+
+#### Copy Logo (3 files) - Phase 2
+- `tools/copy-logo-darwin.sh`
+- `tools/copy-logo-linux.sh`
+- `tools/copy-logo-windows.ps1`
+
+#### Translation (3 files) - Phase 2
+- `tools/translate-darwin.sh`
+- `tools/translate-linux.sh`
+- `tools/translate-windows.ps1`
+
+#### Post-process Translated Markdown (3 files) - Phase 2
+- `tools/postprocess-translated-md-darwin.sh`
+- `tools/postprocess-translated-md-linux.sh`
+- `tools/postprocess-translated-md-windows.ps1`
+
+#### Post-process Translated LaTeX (3 files) - Phase 2
+- `tools/postprocess-translated-tex-darwin.sh`
+- `tools/postprocess-translated-tex-linux.sh`
+- `tools/postprocess-translated-tex-windows.ps1`
+
+#### Cleanup Temp Files (3 files) - Phase 2
+- `tools/cleanup-temp-darwin.sh`
+- `tools/cleanup-temp-linux.sh`
+- `tools/cleanup-temp-windows.ps1`
+
 #### Documentation (1 file)
 - `plans/extract_script_implementations_of_make.md` (this file)
 
@@ -153,5 +282,24 @@ All targets now have Windows support:
 
 ## Completion Date
 
-All tasks completed: 2025-01-27
+Phase 1 completed: 2025-01-27
+Phase 2 completed: 2025-01-27
+Phase 3 (Improvements & Fixes) completed: 2025-11-30
+
+## Recent Changes (2025-11-30)
+
+### Translation System Improvements
+- Enhanced LLM translation prompts to ensure comprehensive translation of LaTeX files
+- Removed post-processing substitutions in favor of proper LLM translation
+- Added validation checks to warn about potentially untranslated content
+
+### Build Process Fixes
+- Fixed missing images directory issue in `zh_tw` PDF generation
+- Improved font variable handling for names with spaces
+- Enhanced error handling in post-processing scripts
+
+### Code Quality
+- Fixed Python regex escaping issues
+- Improved error handling and warnings
+- Better separation of concerns (translation vs. post-processing)
 

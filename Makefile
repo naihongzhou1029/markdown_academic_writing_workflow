@@ -33,18 +33,46 @@ ifeq ($(IS_WINDOWS),1)
 	OS_TYPE := Windows
 	FONT_DETECT_SCRIPT := tools/detect-fonts-windows.ps1
 	TRANSLATE_SCRIPT := tools/translate-windows.ps1
+	REPLACE_FONTS_SCRIPT := tools/replace-fonts-windows.ps1
+	FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-windows.ps1
+	CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-windows.ps1
+	COPY_LOGO_SCRIPT := tools/copy-logo-windows.ps1
+	POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-windows.ps1
+	POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-windows.ps1
+	CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-windows.ps1
 else ifeq ($(UNAME_S),Darwin)
 	OS_TYPE := Darwin
 	FONT_DETECT_SCRIPT := tools/detect-fonts-darwin.sh
 	TRANSLATE_SCRIPT := tools/translate-darwin.sh
+	REPLACE_FONTS_SCRIPT := tools/replace-fonts-darwin.sh
+	FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-darwin.sh
+	CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-darwin.sh
+	COPY_LOGO_SCRIPT := tools/copy-logo-darwin.sh
+	POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-darwin.sh
+	POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-darwin.sh
+	CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-darwin.sh
 else ifeq ($(UNAME_S),Linux)
 	OS_TYPE := Linux
 	FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
 	TRANSLATE_SCRIPT := tools/translate-linux.sh
+	REPLACE_FONTS_SCRIPT := tools/replace-fonts-linux.sh
+	FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-linux.sh
+	CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-linux.sh
+	COPY_LOGO_SCRIPT := tools/copy-logo-linux.sh
+	POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-linux.sh
+	POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-linux.sh
+	CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-linux.sh
 else
 	OS_TYPE := Unix
 	FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
 	TRANSLATE_SCRIPT := tools/translate-linux.sh
+	REPLACE_FONTS_SCRIPT := tools/replace-fonts-linux.sh
+	FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-linux.sh
+	CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-linux.sh
+	COPY_LOGO_SCRIPT := tools/copy-logo-linux.sh
+	POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-linux.sh
+	POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-linux.sh
+	CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-linux.sh
 endif
 
 # Detect fonts using OS-specific script
@@ -91,23 +119,23 @@ pdf: $(PDF)
 $(PDF): $(SRC) $(BIB) $(CSL)
 	@echo "Detected OS: $(OS_TYPE), using CJK font: $(CJK_FONT_SC)"
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "(Get-Content '$(SRC)') -replace 'PingFang SC', '$(CJK_FONT_SC)' | Set-Content '$(TEMP_SRC)'"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(REPLACE_FONTS_SCRIPT) -InputFile $(SRC) -OutputFile $(TEMP_SRC) -Replacements "PingFang SC" "$(CJK_FONT_SC)"
 else
-	@sed -e 's/PingFang SC/$(CJK_FONT_SC)/g' $(SRC) > $(TEMP_SRC)
+	@bash $(REPLACE_FONTS_SCRIPT) $(SRC) $(TEMP_SRC) "PingFang SC" "$(CJK_FONT_SC)"
 endif
 	@pandoc $(TEMP_SRC) --standalone --filter pandoc-crossref --citeproc -o paper.tex
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "(Get-Content paper.tex) -replace '}\\% \\AtEndEnvironment{CSLReferences}', '}`n\AtEndEnvironment{CSLReferences}' | Set-Content paper.tex"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(FIX_LATEX_CSL_SCRIPT) -LatexFile paper.tex
 else
-	@sed -i.bak 's/}\\% \\AtEndEnvironment{CSLReferences}/}\n\\AtEndEnvironment{CSLReferences}/' paper.tex && rm -f paper.tex.bak
+	@bash $(FIX_LATEX_CSL_SCRIPT) paper.tex
 endif
 	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@if [ -f paper.pdf ]; then mv paper.pdf $(PDF); else exit 1; fi
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "Remove-Item -Force '$(TEMP_SRC)' -ErrorAction SilentlyContinue"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(TEMP_SRC)
 else
-	@rm -f $(TEMP_SRC)
+	@bash $(CLEANUP_TEMP_SCRIPT) $(TEMP_SRC)
 endif
 
 # Build the cover page (XeLaTeX)
@@ -116,15 +144,15 @@ cover: $(COVER_PDF)
 $(COVER_PDF): $(COVER_TEX) $(LOGO_FILE)
 	@echo "Detected OS: $(OS_TYPE), using main font: $(MAIN_FONT), CJK font: $(CJK_FONT_TC)"
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "(Get-Content '$(COVER_TEX)') -replace 'Times New Roman', '$(MAIN_FONT)' -replace 'PingFang TC', '$(CJK_FONT_TC)' | Set-Content '$(COVER_TEMP_TEX)'"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(REPLACE_FONTS_SCRIPT) -InputFile $(COVER_TEX) -OutputFile $(COVER_TEMP_TEX) -Replacements "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
 else
-	@sed -e 's/Times New Roman/$(MAIN_FONT)/g' -e 's/PingFang TC/$(CJK_FONT_TC)/g' $(COVER_TEX) > $(COVER_TEMP_TEX)
+	@bash $(REPLACE_FONTS_SCRIPT) $(COVER_TEX) $(COVER_TEMP_TEX) "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
 endif
 	@xelatex -interaction=nonstopmode -jobname=cover $(COVER_TEMP_TEX)
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "Remove-Item -Force '$(COVER_TEMP_TEX)' -ErrorAction SilentlyContinue"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(COVER_TEMP_TEX)
 else
-	@rm -f $(COVER_TEMP_TEX)
+	@bash $(CLEANUP_TEMP_SCRIPT) $(COVER_TEMP_TEX)
 endif
 
 # Download NTUST logo if missing
@@ -171,23 +199,38 @@ endif
 $(ZH_TW_PDF): $(ZH_TW_SRC) $(BIB) $(CSL)
 	@echo "Building PDF from translated markdown..."
 	@echo "Detected OS: $(OS_TYPE), using CJK font: $(CJK_FONT_TC)"
-	@cd $(ZH_TW_DIR) && if [ ! -f $(BIB) ]; then ln -sf ../$(BIB) .; fi
-	@cd $(ZH_TW_DIR) && if [ ! -f $(CSL) ]; then ln -sf ../$(CSL) .; fi
-	@cd $(ZH_TW_DIR) && if [ ! -f "Graduate Paper.json" ]; then ln -sf ../"Graduate Paper.json" . 2>/dev/null || true; fi
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "$$content = Get-Content '$(ZH_TW_SRC)' -Raw; $$content = $$content -replace 'PingFang SC', '$(CJK_FONT_TC)'; Set-Content -Path '$(ZH_TW_DIR)/paper.tmp.md' -Value $$content"
-	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc -o paper.tex
-	@powershell -NoProfile -Command "$$content = Get-Content '$(ZH_TW_DIR)/paper.tex' -Raw; $$content = $$content -replace '}\\% \\AtEndEnvironment{CSLReferences}', '}`n\AtEndEnvironment{CSLReferences}'; Set-Content -Path '$(ZH_TW_DIR)/paper.tex' -Value $$content"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CREATE_SYMLINKS_SCRIPT) -TargetDir $(ZH_TW_DIR) -Files $(BIB) $(CSL) "Graduate Paper.json"
+	@if (Test-Path images) { \
+		if (Test-Path $(ZH_TW_DIR)/images) { Remove-Item -Recurse -Force $(ZH_TW_DIR)/images }; \
+		cd $(ZH_TW_DIR); New-Item -ItemType SymbolicLink -Path images -Target ../images | Out-Null \
+	}
 else
-	@sed -e 's/PingFang SC/$(CJK_FONT_TC)/g' $(ZH_TW_SRC) > $(ZH_TW_DIR)/paper.tmp.md
+	@bash $(CREATE_SYMLINKS_SCRIPT) $(ZH_TW_DIR) $(BIB) $(CSL) "Graduate Paper.json"
+	@if [ -d images ]; then \
+		if [ -e $(ZH_TW_DIR)/images ]; then rm -rf $(ZH_TW_DIR)/images; fi; \
+		cd $(ZH_TW_DIR) && ln -sf ../images images; \
+	fi
+endif
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(REPLACE_FONTS_SCRIPT) -InputFile $(ZH_TW_SRC) -OutputFile $(ZH_TW_DIR)/paper.tmp.md -Replacements "PingFang SC" "$(CJK_FONT_TC)"
+else
+	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_SRC) $(ZH_TW_DIR)/paper.tmp.md "PingFang SC" "$(CJK_FONT_TC)"
+endif
 	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc -o paper.tex
-	@sed -i.bak 's/}\\% \\AtEndEnvironment{CSLReferences}/}\n\\AtEndEnvironment{CSLReferences}/' $(ZH_TW_DIR)/paper.tex && rm -f $(ZH_TW_DIR)/paper.tex.bak
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(FIX_LATEX_CSL_SCRIPT) -LatexFile $(ZH_TW_DIR)/paper.tex
+else
+	@bash $(FIX_LATEX_CSL_SCRIPT) $(ZH_TW_DIR)/paper.tex
 endif
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@if [ -f $(ZH_TW_DIR)/paper.pdf ]; then mv $(ZH_TW_DIR)/paper.pdf $(ZH_TW_PDF); else exit 1; fi
-	@rm -f $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log
-	@rm -f $(ZH_TW_SRC)
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log $(ZH_TW_SRC)
+else
+	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log $(ZH_TW_SRC)
+endif
 	@echo "Cleaned up intermediate translation files"
 
 # Build cover PDF from translated LaTeX
@@ -195,21 +238,21 @@ $(ZH_TW_COVER_PDF): $(ZH_TW_COVER) $(LOGO_FILE)
 	@echo "Building cover PDF from translated LaTeX..."
 	@echo "Detected OS: $(OS_TYPE), using main font: $(MAIN_FONT), CJK font: $(CJK_FONT_TC)"
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "if (-not (Test-Path '$(ZH_TW_DIR)/$(LOGO_FILE)')) { Copy-Item '$(LOGO_FILE)' '$(ZH_TW_DIR)/$(LOGO_FILE)' -ErrorAction SilentlyContinue }"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(COPY_LOGO_SCRIPT) -SourceLogo $(LOGO_FILE) -TargetDir $(ZH_TW_DIR)
 else
-	@cd $(ZH_TW_DIR) && if [ ! -f $(LOGO_FILE) ]; then ln -sf ../$(LOGO_FILE) . 2>/dev/null || cp ../$(LOGO_FILE) . 2>/dev/null || true; fi
+	@bash $(COPY_LOGO_SCRIPT) $(LOGO_FILE) $(ZH_TW_DIR)
 endif
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "$$content = Get-Content '$(ZH_TW_COVER)' -Raw; $$content = $$content -replace 'Times New Roman', '$(MAIN_FONT)' -replace 'PingFang TC', '$(CJK_FONT_TC)'; Set-Content -Path '$(ZH_TW_DIR)/ntust_cover_page.tmp.tex' -Value $$content"
-	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode -jobname=cover ntust_cover_page.tmp.tex
-	@powershell -NoProfile -Command "Remove-Item -Force '$(ZH_TW_DIR)/ntust_cover_page.tmp.tex' -ErrorAction SilentlyContinue"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(REPLACE_FONTS_SCRIPT) -InputFile $(ZH_TW_COVER) -OutputFile $(ZH_TW_DIR)/ntust_cover_page.tmp.tex -Replacements "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
 else
-	@sed -e 's/Times New Roman/$(MAIN_FONT)/g' -e 's/PingFang TC/$(CJK_FONT_TC)/g' $(ZH_TW_COVER) > $(ZH_TW_DIR)/ntust_cover_page.tmp.tex
-	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode -jobname=cover ntust_cover_page.tmp.tex
-	@rm -f $(ZH_TW_DIR)/ntust_cover_page.tmp.tex
+	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_COVER) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
 endif
-	@rm -f $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log
-	@rm -f $(ZH_TW_COVER)
+	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode -jobname=cover ntust_cover_page.tmp.tex
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(ZH_TW_DIR)/ntust_cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log $(ZH_TW_COVER)
+else
+	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log $(ZH_TW_COVER)
+endif
 	@echo "Cleaned up intermediate translation files"
 
 # Translate markdown file
@@ -223,37 +266,9 @@ else
 endif
 	@echo "Post-processing translated markdown..."
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "$$content = Get-Content '$(ZH_TW_SRC)' -Raw; $$content = $$content -replace 'CJKmainfont: \"PingFang SC\"', 'CJKmainfont: \"$(CJK_FONT_TC)\"'; $$content = $$content -replace 'setCJKmainfont\{PingFang SC\}', 'setCJKmainfont{$(CJK_FONT_TC)}'; $$content = $$content -replace '\"Figure\"', '\"圖\"'; $$content = $$content -replace '\"Figures\"', '\"圖\"'; $$content = $$content -replace '\"Tab\.\"', '\"表\"'; $$lines = $$content -split \"`r?`n\"; $$inMultiline = $$false; for ($$i = 0; $$i -lt $$lines.Length; $$i++) { if ($$lines[$$i] -match '^- \|$$') { $$inMultiline = $$true; } elseif ($$inMultiline -and $$lines[$$i] -match '^\\usepackage\{etoolbox\}') { $$lines[$$i] = '    ' + $$lines[$$i]; } elseif ($$inMultiline -and $$lines[$$i] -match '^\\AtBeginEnvironment\{CSLReferences\}') { $$lines[$$i] = '    ' + $$lines[$$i]; } elseif ($$inMultiline -and $$lines[$$i] -match '^\\newpage\\section\*\{References\}') { $$lines[$$i] = '      ' + $$lines[$$i]; } elseif ($$inMultiline -and $$lines[$$i] -match '^\\setlength\{') { $$lines[$$i] = '      ' + $$lines[$$i]; } elseif ($$inMultiline -and $$lines[$$i] -match '^\}$$') { $$lines[$$i] = '    ' + $$lines[$$i]; $$inMultiline = $$false; } }; $$content = $$lines -join \"`r`n\"; Set-Content -Path '$(ZH_TW_SRC)' -Value $$content"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(POSTPROCESS_MD_SCRIPT) -TranslatedMdFile $(ZH_TW_SRC) -CjkFont "$(CJK_FONT_TC)"
 else
-	@sed -i.bak -e 's/CJKmainfont: "PingFang SC"/CJKmainfont: "$(CJK_FONT_TC)"/' \
-		-e 's/setCJKmainfont{PingFang SC}/setCJKmainfont{$(CJK_FONT_TC)}/' \
-		-e 's/"Figure"/"圖"/' \
-		-e 's/"Figures"/"圖"/' \
-		-e 's/"Tab\."/"表"/' \
-		$(ZH_TW_SRC) && rm -f $(ZH_TW_SRC).bak
-	@python3 -c "import sys; \
-content = open('$(ZH_TW_SRC)', 'r', encoding='utf-8').read(); \
-lines = content.split('\n'); \
-in_block = False; \
-result = []; \
-for line in lines: \
-    if line.rstrip() == '- |': \
-        in_block = True; \
-        result.append(line); \
-    elif in_block and line.startswith('\\usepackage{etoolbox}'): \
-        result.append('    ' + line); \
-    elif in_block and line.startswith('\\AtBeginEnvironment{CSLReferences}'): \
-        result.append('    ' + line); \
-    elif in_block and line.startswith('\\newpage\\section*{References}'): \
-        result.append('      ' + line); \
-    elif in_block and line.startswith('\\setlength{'): \
-        result.append('      ' + line); \
-    elif in_block and line.rstrip() == '}': \
-        result.append('    ' + line); \
-        in_block = False; \
-    else: \
-        result.append(line); \
-open('$(ZH_TW_SRC)', 'w', encoding='utf-8').write('\n'.join(result));"
+	@bash $(POSTPROCESS_MD_SCRIPT) $(ZH_TW_SRC) "$(CJK_FONT_TC)"
 endif
 
 # Translate cover LaTeX file
@@ -267,9 +282,9 @@ else
 endif
 	@echo "Post-processing translated LaTeX..."
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -Command "$$content = Get-Content '$(ZH_TW_COVER)' -Raw; $$content = $$content -replace 'PingFang TC', '$(CJK_FONT_TC)'; Set-Content -Path '$(ZH_TW_COVER)' -Value $$content"
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(POSTPROCESS_TEX_SCRIPT) -LatexFile $(ZH_TW_COVER) -OldFont "PingFang TC" -NewFont "$(CJK_FONT_TC)"
 else
-	@sed -i.bak -e 's/PingFang TC/$(CJK_FONT_TC)/g' $(ZH_TW_COVER) && rm -f $(ZH_TW_COVER).bak
+	@bash $(POSTPROCESS_TEX_SCRIPT) $(ZH_TW_COVER) "PingFang TC" "$(CJK_FONT_TC)"
 endif
 
 # Install required external tools (auto-detects OS)
@@ -290,10 +305,13 @@ endif
 clean:
 ifeq ($(IS_WINDOWS),1)
 	@powershell -NoProfile -ExecutionPolicy Bypass -File tools/clean-windows.ps1 -Pdf $(PDF) -CoverPdf $(COVER_PDF) -PrintedPdf $(PRINTED_PDF) -TempSrc $(TEMP_SRC) -CoverTempTex $(COVER_TEMP_TEX)
+	@if exist $(ZH_TW_DIR) powershell -NoProfile -Command "Remove-Item -Recurse -Force '$(ZH_TW_DIR)'" 2>nul || true
 else ifeq ($(OS_TYPE),Darwin)
 	@bash tools/clean-darwin.sh $(PDF) $(COVER_PDF) $(PRINTED_PDF) $(TEMP_SRC) $(COVER_TEMP_TEX)
+	@rm -rf $(ZH_TW_DIR) 2>/dev/null || true
 else ifeq ($(OS_TYPE),Linux)
 	@bash tools/clean-linux.sh $(PDF) $(COVER_PDF) $(PRINTED_PDF) $(TEMP_SRC) $(COVER_TEMP_TEX)
+	@rm -rf $(ZH_TW_DIR) 2>/dev/null || true
 else
 	@echo "Unsupported OS for clean: $(OS_TYPE)" >&2
 	@exit 1
