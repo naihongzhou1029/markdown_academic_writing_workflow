@@ -22,11 +22,11 @@
   % xetex/luatex font selection
   \ifXeTeX
     \usepackage{xeCJK}
-    \setCJKmainfont[]{PingFang SC}
+    \setCJKmainfont[]{Microsoft YaHei}
   \fi
   \ifLuaTeX
     \usepackage[]{luatexja-fontspec}
-    \setmainjfont[]{PingFang SC}
+    \setmainjfont[]{Microsoft YaHei}
   \fi
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -46,6 +46,7 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -109,7 +110,7 @@
 \pagenumbering{arabic}
 \setcounter{page}{1}
 \usepackage{xeCJK}
-\setCJKmainfont{PingFang SC}
+\setCJKmainfont{Microsoft YaHei}
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{etoolbox}
 \AtBeginEnvironment{CSLReferences}{%
@@ -117,9 +118,9 @@
   \setlength{\parindent}{0pt}%
 }
 \makeatletter
-\@ifpackageloaded{subfig}{}{\usepackage{subfig}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
-\captionsetup[subfloat]{margin=0.5em}
+\captionsetup[subfigure]{margin=0.5em}
 \AtBeginDocument{%
 \renewcommand*\figurename{Figure}
 \renewcommand*\tablename{Table}
@@ -154,7 +155,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={Sustainable Scholarship: A Robust Academic Workflow with Markdown, Pandoc, and LaTeX},
+  pdftitle={Sustainable Scholarship: A Robust Academic Workflow with Markdown{,} Pandoc{,} and LaTeX},
   pdfauthor={An Old-Fashioned Researcher},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
@@ -279,8 +280,8 @@ The components are summarized in Tab.~\ref{tbl:workbench}.
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3128}}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1117}}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4749}}@{}}
-\caption{\label{tbl:workbench}The Digital Scholar's
-Workbench.}\tabularnewline
+\caption{The Digital Scholar's
+Workbench.}\label{tbl:workbench}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Component
@@ -489,7 +490,7 @@ Traditional Chinese characters. This is also done via a variable in the
 YAML block: \texttt{CJKmainfont:\ "Source\ Han\ Serif\ TC"}.
 
 This configuration allows for seamless typesetting of Traditional
-Chinese text, like this: 這是傳統中文的範例文字。
+Chinese text, like this: ?�是?�統中�??��?例�?字�?
 
 \subsection{Section 7: Granular Control over Page
 Numbering}\label{section-7-granular-control-over-page-numbering}

@@ -23,7 +23,8 @@ if ($Replacements.Count % 2 -ne 0) {
     exit 1
 }
 
-$content = Get-Content -Path $InputFile -Raw
+# Use UTF-8 explicitly to keep Pandoc-compatible encoding across platforms.
+$content = Get-Content -Path $InputFile -Raw -Encoding UTF8
 
 # Apply all replacements
 for ($i = 0; $i -lt $Replacements.Count; $i += 2) {
@@ -32,5 +33,12 @@ for ($i = 0; $i -lt $Replacements.Count; $i += 2) {
     $content = $content -replace [regex]::Escape($oldFont), $newFont
 }
 
-Set-Content -Path $OutputFile -Value $content -NoNewline
+Set-Content -Path $OutputFile -Value $content -NoNewline -Encoding UTF8
+
+# Reset ACLs on the generated file to avoid restrictive inherited permissions (e.g. NULL SID denies).
+try {
+    icacls $OutputFile /reset | Out-Null
+} catch {
+    # Non-fatal: continue even if ACL reset fails.
+}
 

@@ -13,6 +13,8 @@ fi
 sudo apt-get update
 dpkg -l | grep -q "^ii.*poppler-utils" || sudo apt-get install -y poppler-utils
 dpkg -l | grep -q "^ii.*ghostscript" || sudo apt-get install -y ghostscript
+# Core document conversion tool
+dpkg -l | grep -q "^ii.*pandoc" || sudo apt-get install -y pandoc
 dpkg -l | grep -q "^ii.*fonts-noto-cjk" || sudo apt-get install -y fonts-noto-cjk
 dpkg -l | grep -q "^ii.*fonts-liberation" || sudo apt-get install -y fonts-liberation
 

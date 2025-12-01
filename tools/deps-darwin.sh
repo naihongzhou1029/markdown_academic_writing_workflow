@@ -12,6 +12,8 @@ fi
 
 brew list --formula poppler >/dev/null 2>&1 || brew install poppler
 brew list --formula ghostscript >/dev/null 2>&1 || brew install ghostscript
+# Core document conversion tool
+brew list --formula pandoc >/dev/null 2>&1 || brew install pandoc
 brew list --formula pandoc-crossref >/dev/null 2>&1 || brew install pandoc-crossref
 
 echo "All dependencies are installed."

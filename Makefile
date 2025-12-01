@@ -24,12 +24,14 @@ ZH_TW_COVER_PDF = $(ZH_TW_DIR)/cover.pdf
 .DEFAULT_GOAL := printed
 
 # Detect OS and set fonts accordingly
-# First check if we're on Windows (via environment variables, uname, or cmd.exe)
-UNAME_S := $(shell uname -s 2>/dev/null || echo "Unknown")
-# Check for Windows: uname contains "NT", or Windows env vars exist, or cmd.exe is available
-IS_WINDOWS := $(shell if echo "$(UNAME_S)" | grep -qi "NT\|MINGW\|MSYS"; then echo "1"; elif [ -n "$$OS" ] && echo "$$OS" | grep -qi "windows"; then echo "1"; elif [ -n "$$COMSPEC" ] || [ -n "$$WINDIR" ]; then echo "1"; elif command -v cmd.exe >/dev/null 2>&1 || command -v cmd >/dev/null 2>&1; then echo "1"; else echo "0"; fi)
+# Prefer simple Make/Windows detection to avoid shell-specific logic.
 
-ifeq ($(IS_WINDOWS),1)
+# Default to "not Windows"; override below when we detect Windows.
+IS_WINDOWS := 0
+
+# On Windows with cmd/PowerShell, the standard env var is OS=Windows_NT.
+ifeq ($(OS),Windows_NT)
+	IS_WINDOWS := 1
 	OS_TYPE := Windows
 	FONT_DETECT_SCRIPT := tools/detect-fonts-windows.ps1
 	TRANSLATE_SCRIPT := tools/translate-windows.ps1
@@ -40,39 +42,45 @@ ifeq ($(IS_WINDOWS),1)
 	POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-windows.ps1
 	POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-windows.ps1
 	CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-windows.ps1
-else ifeq ($(UNAME_S),Darwin)
-	OS_TYPE := Darwin
-	FONT_DETECT_SCRIPT := tools/detect-fonts-darwin.sh
-	TRANSLATE_SCRIPT := tools/translate-darwin.sh
-	REPLACE_FONTS_SCRIPT := tools/replace-fonts-darwin.sh
-	FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-darwin.sh
-	CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-darwin.sh
-	COPY_LOGO_SCRIPT := tools/copy-logo-darwin.sh
-	POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-darwin.sh
-	POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-darwin.sh
-	CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-darwin.sh
-else ifeq ($(UNAME_S),Linux)
-	OS_TYPE := Linux
-	FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
-	TRANSLATE_SCRIPT := tools/translate-linux.sh
-	REPLACE_FONTS_SCRIPT := tools/replace-fonts-linux.sh
-	FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-linux.sh
-	CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-linux.sh
-	COPY_LOGO_SCRIPT := tools/copy-logo-linux.sh
-	POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-linux.sh
-	POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-linux.sh
-	CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-linux.sh
 else
-	OS_TYPE := Unix
-	FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
-	TRANSLATE_SCRIPT := tools/translate-linux.sh
-	REPLACE_FONTS_SCRIPT := tools/replace-fonts-linux.sh
-	FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-linux.sh
-	CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-linux.sh
-	COPY_LOGO_SCRIPT := tools/copy-logo-linux.sh
-	POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-linux.sh
-	POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-linux.sh
-	CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-linux.sh
+	# Non-Windows: we can safely call uname in a POSIX shell.
+	UNAME_S := $(shell uname -s 2>/dev/null || echo "Unknown")
+
+	ifeq ($(UNAME_S),Darwin)
+		OS_TYPE := Darwin
+		FONT_DETECT_SCRIPT := tools/detect-fonts-darwin.sh
+		TRANSLATE_SCRIPT := tools/translate-darwin.sh
+		REPLACE_FONTS_SCRIPT := tools/replace-fonts-darwin.sh
+		FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-darwin.sh
+		CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-darwin.sh
+		COPY_LOGO_SCRIPT := tools/copy-logo-darwin.sh
+		POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-darwin.sh
+		POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-darwin.sh
+		CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-darwin.sh
+	else ifeq ($(UNAME_S),Linux)
+		OS_TYPE := Linux
+		FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
+		TRANSLATE_SCRIPT := tools/translate-linux.sh
+		REPLACE_FONTS_SCRIPT := tools/replace-fonts-linux.sh
+		FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-linux.sh
+		CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-linux.sh
+		COPY_LOGO_SCRIPT := tools/copy-logo-linux.sh
+		POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-linux.sh
+		POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-linux.sh
+		CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-linux.sh
+	else
+		# Fallback for unknown Unix-like systems: reuse Linux tooling.
+		OS_TYPE := Unix
+		FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
+		TRANSLATE_SCRIPT := tools/translate-linux.sh
+		REPLACE_FONTS_SCRIPT := tools/replace-fonts-linux.sh
+		FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-linux.sh
+		CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-linux.sh
+		COPY_LOGO_SCRIPT := tools/copy-logo-linux.sh
+		POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-linux.sh
+		POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-linux.sh
+		CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-linux.sh
+	endif
 endif
 
 # Detect fonts using OS-specific script
@@ -86,12 +94,22 @@ else
 	MAIN_FONT := $(shell bash $(FONT_DETECT_SCRIPT) 2>/dev/null | grep "^MAIN_FONT=" | cut -d= -f2)
 endif
 
-# Fallback values if script fails
+# Fallback values if detection script fails
 ifeq ($(CJK_FONT_SC),)
-	CJK_FONT_SC := AR PL UMing CN
+	ifeq ($(OS_TYPE),Windows)
+		# Common Simplified Chinese UI font on Windows
+		CJK_FONT_SC := Microsoft YaHei
+	else
+		CJK_FONT_SC := AR PL UMing CN
+	endif
 endif
 ifeq ($(CJK_FONT_TC),)
-	CJK_FONT_TC := AR PL UMing TW
+	ifeq ($(OS_TYPE),Windows)
+		# Common Traditional Chinese UI font on Windows
+		CJK_FONT_TC := Microsoft JhengHei
+	else
+		CJK_FONT_TC := AR PL UMing TW
+	endif
 endif
 ifeq ($(MAIN_FONT),)
 	ifeq ($(OS_TYPE),Windows)
@@ -119,7 +137,7 @@ pdf: $(PDF)
 $(PDF): $(SRC) $(BIB) $(CSL)
 	@echo "Detected OS: $(OS_TYPE), using CJK font: $(CJK_FONT_SC)"
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -ExecutionPolicy Bypass -File $(REPLACE_FONTS_SCRIPT) -InputFile $(SRC) -OutputFile $(TEMP_SRC) -Replacements "PingFang SC" "$(CJK_FONT_SC)"
+	@powershell -NoProfile -ExecutionPolicy Bypass -Command "& '$(REPLACE_FONTS_SCRIPT)' -InputFile '$(SRC)' -OutputFile '$(TEMP_SRC)' -Replacements @('PingFang SC','$(CJK_FONT_SC)')"
 else
 	@bash $(REPLACE_FONTS_SCRIPT) $(SRC) $(TEMP_SRC) "PingFang SC" "$(CJK_FONT_SC)"
 endif
@@ -144,7 +162,7 @@ cover: $(COVER_PDF)
 $(COVER_PDF): $(COVER_TEX) $(LOGO_FILE)
 	@echo "Detected OS: $(OS_TYPE), using main font: $(MAIN_FONT), CJK font: $(CJK_FONT_TC)"
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -ExecutionPolicy Bypass -File $(REPLACE_FONTS_SCRIPT) -InputFile $(COVER_TEX) -OutputFile $(COVER_TEMP_TEX) -Replacements "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
+	@powershell -NoProfile -ExecutionPolicy Bypass -Command "& '$(REPLACE_FONTS_SCRIPT)' -InputFile '$(COVER_TEX)' -OutputFile '$(COVER_TEMP_TEX)' -Replacements @('Times New Roman','$(MAIN_FONT)','PingFang TC','$(CJK_FONT_TC)')"
 else
 	@bash $(REPLACE_FONTS_SCRIPT) $(COVER_TEX) $(COVER_TEMP_TEX) "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
 endif
@@ -213,7 +231,7 @@ else
 	fi
 endif
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -ExecutionPolicy Bypass -File $(REPLACE_FONTS_SCRIPT) -InputFile $(ZH_TW_SRC) -OutputFile $(ZH_TW_DIR)/paper.tmp.md -Replacements "PingFang SC" "$(CJK_FONT_TC)"
+	@powershell -NoProfile -ExecutionPolicy Bypass -Command "& '$(REPLACE_FONTS_SCRIPT)' -InputFile '$(ZH_TW_SRC)' -OutputFile '$(ZH_TW_DIR)/paper.tmp.md' -Replacements @('PingFang SC','$(CJK_FONT_TC)')"
 else
 	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_SRC) $(ZH_TW_DIR)/paper.tmp.md "PingFang SC" "$(CJK_FONT_TC)"
 endif
@@ -243,7 +261,7 @@ else
 	@bash $(COPY_LOGO_SCRIPT) $(LOGO_FILE) $(ZH_TW_DIR)
 endif
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -ExecutionPolicy Bypass -File $(REPLACE_FONTS_SCRIPT) -InputFile $(ZH_TW_COVER) -OutputFile $(ZH_TW_DIR)/ntust_cover_page.tmp.tex -Replacements "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
+	@powershell -NoProfile -ExecutionPolicy Bypass -Command "& '$(REPLACE_FONTS_SCRIPT)' -InputFile '$(ZH_TW_COVER)' -OutputFile '$(ZH_TW_DIR)/ntust_cover_page.tmp.tex' -Replacements @('Times New Roman','$(MAIN_FONT)','PingFang TC','$(CJK_FONT_TC)')"
 else
 	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_COVER) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
 endif
