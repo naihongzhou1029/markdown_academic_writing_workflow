@@ -149,7 +149,11 @@ else
 endif
 	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
-	@if [ -f paper.pdf ]; then mv paper.pdf $(PDF); else exit 1; fi
+	@if [ -f paper.pdf ]; then \
+		if [ "paper.pdf" != "$(PDF)" ]; then mv paper.pdf "$(PDF)"; fi; \
+	else \
+		exit 1; \
+	fi
 ifeq ($(IS_WINDOWS),1)
 	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(TEMP_SRC)
 else

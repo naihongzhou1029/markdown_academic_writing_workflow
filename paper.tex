@@ -2,11 +2,10 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{space}{xeCJK}
+%
 \documentclass[
 ]{article}
-\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{5}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -22,11 +21,11 @@
   % xetex/luatex font selection
   \ifXeTeX
     \usepackage{xeCJK}
-    \setCJKmainfont[]{Microsoft YaHei}
-  \fi
+    \setCJKmainfont[]{Noto Sans CJK SC}
+          \fi
   \ifLuaTeX
     \usepackage[]{luatexja-fontspec}
-    \setmainjfont[]{Microsoft YaHei}
+    \setmainjfont[]{Noto Sans CJK SC}
   \fi
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -45,8 +44,8 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
 \usepackage{longtable,booktabs,array}
-\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -58,59 +57,48 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-% definitions for citeproc citations
-\NewDocumentCommand\citeproctext{}{}
-\NewDocumentCommand\citeproc{mm}{%
-  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
-\makeatletter
- % allow citations to break across lines
- \let\@cite@ofmt\@firstofone
- % avoid brackets around text for \cite:
- \def\@biblabel#1{}
- \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
-\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
- {\begin{list}{}{%
-  \setlength{\itemindent}{0pt}
-  \setlength{\leftmargin}{0pt}
-  \setlength{\parsep}{0pt}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-   \setlength{\leftmargin}{\cslhangindent}
-   \setlength{\itemindent}{-1\cslhangindent}
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
   \fi
   % set entry spacing
-  \setlength{\itemsep}{#2\baselineskip}}}
- {\end{list}}
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \pagenumbering{arabic}
 \setcounter{page}{1}
 \usepackage{xeCJK}
-\setCJKmainfont{Microsoft YaHei}
+\setCJKmainfont{Noto Sans CJK SC}
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{etoolbox}
 \AtBeginEnvironment{CSLReferences}{%
@@ -118,9 +106,9 @@
   \setlength{\parindent}{0pt}%
 }
 \makeatletter
-\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\@ifpackageloaded{subfig}{}{\usepackage{subfig}}
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
-\captionsetup[subfigure]{margin=0.5em}
+\captionsetup[subfloat]{margin=0.5em}
 \AtBeginDocument{%
 \renewcommand*\figurename{Figure}
 \renewcommand*\tablename{Table}
@@ -151,11 +139,14 @@
 \floatname{codelisting}{Listing}
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \makeatother
-\usepackage{bookmark}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={Sustainable Scholarship: A Robust Academic Workflow with Markdown{,} Pandoc{,} and LaTeX},
+  pdftitle={Sustainable Scholarship: A Robust Academic Workflow with Markdown, Pandoc, and LaTeX},
   pdfauthor={An Old-Fashioned Researcher},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
@@ -176,17 +167,18 @@ pandoc-crossref, and advanced customization for multilingual typesetting
 and page numbering through LaTeX.
 \end{abstract}
 
+\hypertarget{introduction-the-philosophy-of-plain-text-academia}{%
 \section{Introduction: The Philosophy of Plain-Text
-Academia}\label{introduction-the-philosophy-of-plain-text-academia}
+Academia}\label{introduction-the-philosophy-of-plain-text-academia}}
 
 The choice of writing tools in academic work is not merely a matter of
 technical preference; it is a philosophical commitment to a particular
 mode of scholarship. The modern plain-text workflow, centered on
 Markdown, Pandoc, and LaTeX, represents a deliberate move towards a more
 robust, transparent, and durable scholarly practice
-(\citeproc{ref-healy2018plain}{Healy 2018}). This approach is founded on
-a set of core principles that stand in stark contrast to the opaque,
-proprietary nature of traditional word processors.
+(\protect\hyperlink{ref-healy2018plain}{Healy 2018}). This approach is
+founded on a set of core principles that stand in stark contrast to the
+opaque, proprietary nature of traditional word processors.
 
 At its heart is the principle of \textbf{sustainability}. Plain-text
 files, such as those written in Markdown, are the most resilient digital
@@ -194,11 +186,11 @@ format. Unlike the complex binary structures of \texttt{.docx} files,
 which can become corrupted or obsolete as software changes, plain text
 will remain readable and accessible for decades, ensuring the long-term
 viability of one's intellectual output
-(\citeproc{ref-healy2018plain}{Healy 2018};
-\citeproc{ref-macfarlane2022pandoc}{MacFarlane 2022}). This is coupled
-with the powerful concept of \textbf{separation of concerns}, where the
-semantic content of a document---the text, its structure, and its
-meaning---is written in Markdown, completely divorced from its final
+(\protect\hyperlink{ref-healy2018plain}{Healy 2018};
+\protect\hyperlink{ref-macfarlane2022pandoc}{MacFarlane 2022}). This is
+coupled with the powerful concept of \textbf{separation of concerns},
+where the semantic content of a document---the text, its structure, and
+its meaning---is written in Markdown, completely divorced from its final
 visual presentation, which is handled independently by LaTeX templates
 or other styling mechanisms. This modularity allows for radical changes
 in output format with zero alteration to the source manuscript.
@@ -209,10 +201,10 @@ of modern research. Plain-text files integrate seamlessly with
 of every change, non-destructive experimentation with drafts, and
 transparent collaboration among authors---a process notoriously fraught
 with difficulty when using binary files
-(\citeproc{ref-healy2018plain}{Healy 2018}). The entire process, from
-the initial draft to the final PDF, can be automated with simple
-scripts, ensuring perfect \textbf{reproducibility} at any point in the
-future, a cornerstone of scientific and scholarly integrity.
+(\protect\hyperlink{ref-healy2018plain}{Healy 2018}). The entire
+process, from the initial draft to the final PDF, can be automated with
+simple scripts, ensuring perfect \textbf{reproducibility} at any point
+in the future, a cornerstone of scientific and scholarly integrity.
 
 This system is best understood not as a collection of disparate tools,
 but as a linear, modular data processing pipeline. The raw manuscript
@@ -220,12 +212,12 @@ but as a linear, modular data processing pipeline. The raw manuscript
 serve as the initial inputs. These inputs are then passed through a
 chain of specialized filters and transformers: Zotero and its Better
 BibTeX extension manage and export bibliographic data; Pandoc parses the
-source text (\citeproc{ref-macfarlane2022pandoc}{MacFarlane 2022});
-\texttt{pandoc-citeproc} resolves citation markers;
+source text (\protect\hyperlink{ref-macfarlane2022pandoc}{MacFarlane
+2022}); \texttt{pandoc-citeproc} resolves citation markers;
 \texttt{pandoc-crossref} numbers figures and equations
-(\citeproc{ref-lierdakil2021crossref}{Lierdakil 2021}); and finally, a
-LaTeX engine like XeLaTeX performs the final typesetting to produce a
-PDF. Each stage is discrete and transparent. This contrasts
+(\protect\hyperlink{ref-lierdakil2021crossref}{Lierdakil 2021}); and
+finally, a LaTeX engine like XeLaTeX performs the final typesetting to
+produce a PDF. Each stage is discrete and transparent. This contrasts
 fundamentally with the monolithic, ``black box'' environment of a word
 processor, where these processes are intertwined and hidden from the
 user. The power of this workflow lies in the ability to control this
@@ -236,10 +228,12 @@ a LaTeX error. This level of control and transparency is the key to
 solving the complex, bespoke formatting challenges inherent in academic
 writing.
 
-\section{Part I: The Core Toolchain}\label{part-i-the-core-toolchain}
+\hypertarget{part-i-the-core-toolchain}{%
+\section{Part I: The Core Toolchain}\label{part-i-the-core-toolchain}}
 
+\hypertarget{section-1-assembling-your-digital-workbench}{%
 \subsection{Section 1: Assembling Your Digital
-Workbench}\label{section-1-assembling-your-digital-workbench}
+Workbench}\label{section-1-assembling-your-digital-workbench}}
 
 Before embarking on the plain-text writing process, a one-time setup of
 the core toolchain is required. This digital workbench forms the
@@ -248,7 +242,7 @@ foundation of the entire workflow.
 \textbf{Pandoc: The Universal Document Converter} At the heart of the
 workflow is Pandoc, a command-line utility often described as the
 ``swiss army knife'' for document conversion
-(\citeproc{ref-macfarlane2022pandoc}{MacFarlane 2022}). It is
+(\protect\hyperlink{ref-macfarlane2022pandoc}{MacFarlane 2022}). It is
 responsible for parsing the source Markdown file and orchestrating its
 transformation into the final output format.
 
@@ -276,12 +270,12 @@ file synchronized with the Zotero library.
 The components are summarized in Tab.~\ref{tbl:workbench}.
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1006}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3128}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1117}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4749}}@{}}
-\caption{The Digital Scholar's
-Workbench.}\label{tbl:workbench}\tabularnewline
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1006}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3128}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1117}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.4749}}@{}}
+\caption{\label{tbl:workbench}The Digital Scholar's
+Workbench.}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Component
@@ -322,8 +316,9 @@ Pandoc. & Zotero & Install the Better BibTeX for Zotero (BBT) extension
 for stable keys and auto-export. \\
 \end{longtable}
 
+\hypertarget{section-2-the-pandoc-conversion-engine-from-markdown-to-pdf}{%
 \subsection{Section 2: The Pandoc Conversion Engine: From Markdown to
-PDF}\label{section-2-the-pandoc-conversion-engine-from-markdown-to-pdf}
+PDF}\label{section-2-the-pandoc-conversion-engine-from-markdown-to-pdf}}
 
 With the toolchain installed, the conversion process is driven by the
 Pandoc command-line interface, configured primarily through a metadata
@@ -353,12 +348,14 @@ material---for example, the
 commands in LaTeX---to create a self-contained, compilable file rather
 than a mere fragment.
 
+\hypertarget{part-ii-managing-scholarly-apparatus}{%
 \section{Part II: Managing Scholarly
-Apparatus}\label{part-ii-managing-scholarly-apparatus}
+Apparatus}\label{part-ii-managing-scholarly-apparatus}}
 
+\hypertarget{section-3-automated-citations-and-bibliographies-with-pandoc-citeproc}{%
 \subsection{\texorpdfstring{Section 3: Automated Citations and
 Bibliographies with
-\texttt{pandoc-citeproc}}{Section 3: Automated Citations and Bibliographies with pandoc-citeproc}}\label{section-3-automated-citations-and-bibliographies-with-pandoc-citeproc}
+\texttt{pandoc-citeproc}}{Section 3: Automated Citations and Bibliographies with pandoc-citeproc}}\label{section-3-automated-citations-and-bibliographies-with-pandoc-citeproc}}
 
 A cornerstone of academic writing is the correct management of citations
 and bibliographies. The Pandoc workflow automates this process with
@@ -412,14 +409,15 @@ syntax supports a wide range of scholarly conventions.
   \texttt{{[}see\ @knuth1984tex,\ chap.\ 3{]}}.
 \end{itemize}
 
+\hypertarget{section-4-cross-referencing-figures-tables-and-equations-with-pandoc-crossref}{%
 \subsection{\texorpdfstring{Section 4: Cross-Referencing Figures,
 Tables, and Equations with
-\texttt{pandoc-crossref}}{Section 4: Cross-Referencing Figures, Tables, and Equations with pandoc-crossref}}\label{section-4-cross-referencing-figures-tables-and-equations-with-pandoc-crossref}
+\texttt{pandoc-crossref}}{Section 4: Cross-Referencing Figures, Tables, and Equations with pandoc-crossref}}\label{section-4-cross-referencing-figures-tables-and-equations-with-pandoc-crossref}}
 
 While vanilla Markdown lacks a native method for numbering and
 cross-referencing, this critical academic function is seamlessly added
 by using the \texttt{pandoc-crossref} filter
-(\citeproc{ref-lierdakil2021crossref}{Lierdakil 2021}).
+(\protect\hyperlink{ref-lierdakil2021crossref}{Lierdakil 2021}).
 
 \textbf{Installation and Activation} First, the \texttt{pandoc-crossref}
 executable must be installed. The filter is then activated by adding the
@@ -433,23 +431,27 @@ reference the table of tools from earlier: Tab.~\ref{tbl:workbench}. We
 can also reference the plot in Figure~\ref{fig:my-plot} and the famous
 equation in eq.~\ref{eq:relativity}.
 
-\begin{equation}\protect\phantomsection\label{eq:relativity}{E=mc^2}\end{equation}
+\begin{equation}\protect\hypertarget{eq:relativity}{}{E=mc^2}\end{equation}
 
 \begin{figure}
+\hypertarget{fig:my-plot}{%
 \centering
-\includegraphics[width=0.2\linewidth,height=\textheight,keepaspectratio,alt={Example plot}]{images/2025-11-17-19-47-43.png}
+\includegraphics[width=0.2\textwidth,height=\textheight]{images/2025-11-17-19-47-43.png}
 \caption{Example plot}\label{fig:my-plot}
+}
 \end{figure}
 
 \textbf{Customization via YAML} The appearance of cross-references can
 be customized through YAML metadata variables, as demonstrated in the
 header of this file.
 
+\hypertarget{part-iii-advanced-customization-and-multilingual-typesetting}{%
 \section{Part III: Advanced Customization and Multilingual
-Typesetting}\label{part-iii-advanced-customization-and-multilingual-typesetting}
+Typesetting}\label{part-iii-advanced-customization-and-multilingual-typesetting}}
 
+\hypertarget{section-5-mastering-document-appearance-with-latex-templates}{%
 \subsection{Section 5: Mastering Document Appearance with LaTeX
-Templates}\label{section-5-mastering-document-appearance-with-latex-templates}
+Templates}\label{section-5-mastering-document-appearance-with-latex-templates}}
 
 The visual appearance of the final PDF is controlled almost entirely by
 LaTeX. Pandoc provides a powerful and flexible system for interfacing
@@ -461,16 +463,18 @@ template is usually required. A custom template is specified using the
 \texttt{pandoc\ mydoc.md\ -o\ mydoc.pdf\ -\/-template=eisvogel}.
 High-quality templates can be found on publisher websites, in large
 community repositories like Overleaf, and on code-hosting platforms like
-GitHub (\citeproc{ref-wandmalfarbe2020eisvogel}{Wandmalfarbe 2020}).
+GitHub (\protect\hyperlink{ref-wandmalfarbe2020eisvogel}{Wandmalfarbe
+2020}).
 
 \textbf{Case Study: The Eisvogel Template for a Custom Cover Page} The
 popular Eisvogel template provides a clear example of how
 template-specific variables, set in the YAML block, can be used for deep
-customization (\citeproc{ref-wandmalfarbe2020eisvogel}{Wandmalfarbe
-2020}).
+customization
+(\protect\hyperlink{ref-wandmalfarbe2020eisvogel}{Wandmalfarbe 2020}).
 
+\hypertarget{section-6-a-guide-to-traditional-chinese-typesetting}{%
 \subsection{Section 6: A Guide to Traditional Chinese
-Typesetting}\label{section-6-a-guide-to-traditional-chinese-typesetting}
+Typesetting}\label{section-6-a-guide-to-traditional-chinese-typesetting}}
 
 Producing high-quality documents in Traditional Chinese requires
 specific configuration. The Pandoc and LaTeX toolchain is exceptionally
@@ -490,10 +494,11 @@ Traditional Chinese characters. This is also done via a variable in the
 YAML block: \texttt{CJKmainfont:\ "Source\ Han\ Serif\ TC"}.
 
 This configuration allows for seamless typesetting of Traditional
-Chinese text, like this: ?�是?�統中�??��?例�?字�?
+Chinese text, like this: 這是傳統中文的範例文字。
 
+\hypertarget{section-7-granular-control-over-page-numbering}{%
 \subsection{Section 7: Granular Control over Page
-Numbering}\label{section-7-granular-control-over-page-numbering}
+Numbering}\label{section-7-granular-control-over-page-numbering}}
 
 Page numbering is a feature of the final typeset document, and as such,
 its control resides entirely at the LaTeX level. Pandoc provides several
@@ -503,11 +508,13 @@ to the final compilation stage. The cleanest method is using the
 metadata, to inject raw LaTeX commands like
 \texttt{\textbackslash{}setcounter\{page\}\{1\}}.
 
+\hypertarget{part-iv-historical-context-and-modern-practice}{%
 \section{Part IV: Historical Context and Modern
-Practice}\label{part-iv-historical-context-and-modern-practice}
+Practice}\label{part-iv-historical-context-and-modern-practice}}
 
+\hypertarget{section-8-the-old-fashioned-workflow-from-hot-metal-to-typewriters}{%
 \subsection{Section 8: The `Old-Fashioned' Workflow: From Hot Metal to
-Typewriters}\label{section-8-the-old-fashioned-workflow-from-hot-metal-to-typewriters}
+Typewriters}\label{section-8-the-old-fashioned-workflow-from-hot-metal-to-typewriters}}
 
 Understanding the power of the modern plain-text workflow is enhanced by
 appreciating the profound technical challenges it solves. Before the
@@ -519,16 +526,17 @@ produce complex documents.
 
 The development of TeX by Knuth in the late 1970s and LaTeX by Lamport
 in the early 1980s marked a revolutionary shift
-(\citeproc{ref-knuth1984tex}{Knuth 1984};
-\citeproc{ref-lamport1986latex}{Lamport 1986}). They introduced the
-concept of programmatic, algorithmic typesetting based on semantic
+(\protect\hyperlink{ref-knuth1984tex}{Knuth 1984};
+\protect\hyperlink{ref-lamport1986latex}{Lamport 1986}). They introduced
+the concept of programmatic, algorithmic typesetting based on semantic
 commands. The modern Pandoc user operates at an even higher level of
 abstraction, using a simple, universal syntax that can be compiled to
 LaTeX or other formats entirely.
 
+\hypertarget{section-9-synthesis-and-recommendations-building-your-sustainable-workflow}{%
 \subsection{Section 9: Synthesis and Recommendations: Building Your
 Sustainable
-Workflow}\label{section-9-synthesis-and-recommendations-building-your-sustainable-workflow}
+Workflow}\label{section-9-synthesis-and-recommendations-building-your-sustainable-workflow}}
 
 This report has detailed a comprehensive academic workflow. The very
 file you are reading is a tangible example of this process. By combining
@@ -537,37 +545,38 @@ this Markdown file with the accompanying bibliography and
 command. This demonstrates the power of a plain-text academic workflow:
 unparalleled control, robust versioning, seamless collaboration, and the
 assurance of future access to one's own work
-(\citeproc{ref-rowleyWisdomHierarchyRepresentations2007}{Rowley 2007}).
+(\protect\hyperlink{ref-rowleyWisdomHierarchyRepresentations2007}{Rowley
+2007}).
 
-\protect\phantomsection\label{refs}
-\begin{CSLReferences}{1}{1}
-\bibitem[\citeproctext]{ref-healy2018plain}
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-healy2018plain}{}}%
 Healy, Kieran. 2018. {``The Plain Person's Guide to Plain Text Social
 Science.''} In \emph{Unpublished Manuscript}. Preprint.
 \url{https://kieranhealy.org/files/papers/plain-text.pdf}.
 
-\bibitem[\citeproctext]{ref-knuth1984tex}
+\leavevmode\vadjust pre{\hypertarget{ref-knuth1984tex}{}}%
 Knuth, Donald E. 1984. \emph{The TeXbook}. Reading, MA: Addison-Wesley.
 
-\bibitem[\citeproctext]{ref-lamport1986latex}
+\leavevmode\vadjust pre{\hypertarget{ref-lamport1986latex}{}}%
 Lamport, Leslie. 1986. \emph{LaTeX: A Document Preparation System}.
 Reading, MA: Addison-Wesley.
 
-\bibitem[\citeproctext]{ref-lierdakil2021crossref}
+\leavevmode\vadjust pre{\hypertarget{ref-lierdakil2021crossref}{}}%
 Lierdakil. 2021. {``Pandoc-Crossref: A Pandoc Filter for Numbering
 Figures, Equations, Tables and Cross-References to Them.''}
 \url{https://github.com/lierdakil/pandoc-crossref}.
 
-\bibitem[\citeproctext]{ref-macfarlane2022pandoc}
+\leavevmode\vadjust pre{\hypertarget{ref-macfarlane2022pandoc}{}}%
 MacFarlane, John. 2022. {``Pandoc - A Universal Document Converter.''}
 \url{https://pandoc.org/}.
 
-\bibitem[\citeproctext]{ref-rowleyWisdomHierarchyRepresentations2007}
+\leavevmode\vadjust pre{\hypertarget{ref-rowleyWisdomHierarchyRepresentations2007}{}}%
 Rowley, Jennifer. 2007. {``The Wisdom Hierarchy: Representations of the
 DIKW Hierarchy.''} \emph{Journal of Information Science} 33 (2):
 163--80. \url{https://doi.org/10.1177/0165551506070706}.
 
-\bibitem[\citeproctext]{ref-wandmalfarbe2020eisvogel}
+\leavevmode\vadjust pre{\hypertarget{ref-wandmalfarbe2020eisvogel}{}}%
 Wandmalfarbe, Eisvogel. 2020. {``Eisvogel: A Clean Pandoc LaTeX Template
 to Convert Your Markdown Files to PDF or LaTeX.''}
 \url{https://github.com/Wandmalfarbe/pandoc-latex-template}.
