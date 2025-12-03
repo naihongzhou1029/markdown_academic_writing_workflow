@@ -10,6 +10,10 @@ csl: chicago-author-date.csl
 link-citations: true
 pdf-engine: xelatex
 CJKmainfont: "PingFang SC"
+toc: true
+toc-depth: 2
+lof: true
+lot: true
 header-includes:
 - \pagenumbering{arabic}
 - \setcounter{page}{1}
@@ -22,6 +26,10 @@ header-includes:
       \newpage\section*{References}%
       \setlength{\parindent}{0pt}%
     }
+    \pretocmd{\tableofcontents}{\clearpage}{}{}
+    \pretocmd{\listoffigures}{\clearpage}{}{}
+    \pretocmd{\listoftables}{\clearpage}{}{}
+    \apptocmd{\listoftables}{\clearpage}{}{}
 figPrefix:
 -   "Figure"
 -   "Figures" 

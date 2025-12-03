@@ -39,6 +39,11 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
 - For **workflow changes**, favor solutions that:
   - Maintain plain-text, Git-friendly files.
   - Keep configuration in YAML and Make targets rather than ad-hoc shell commands.
+- For **dependency and version questions on Linux**, explain that:
+  - `make deps` will ensure required CLI tools are installed.
+  - `tools/deps-linux.sh` will **pin Pandoc to version 3.1.8** (via an official `.deb` for the current architecture) so it stays aligned with the `pandoc-crossref` filter used in this workflow.
+  - This pin is specifically to guarantee **correct cross‑referencing and page layout for the Table of Contents, List of Figures, and List of Tables**, which depend on `pandoc-crossref` behaving consistently with the Pandoc API.
+  - Changes to the pinned Pandoc version or filter expectations must be reflected in `README.md` and this guide.
 - For **new languages or targets**, mirror the existing `zh_tw` pattern (directory layout, Make targets, translation/post-processing steps) and update both `README.md` and this `AGENTS.md` accordingly.
 
 

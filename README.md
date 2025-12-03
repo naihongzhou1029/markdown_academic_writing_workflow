@@ -38,7 +38,9 @@ The project demonstrates how to produce a fully typeset scholarly PDF—complete
 
 ### Toolchain Requirements
 
-- **Pandoc** (recent version with built‑in `--citeproc`).
+- **Pandoc** (version **3.1.8** with built‑in `--citeproc`; on Linux, `make deps` will install or upgrade to this version).  
+  This project relies on `pandoc-crossref` not only for figures, tables, and equations, but also for a **stable, reproducible layout of the Table of Contents, List of Figures, and List of Tables**.  
+  Because `pandoc-crossref` is compiled against a specific Pandoc API version, we pin Pandoc to **3.1.8** so that cross‑references and the TOC/LoF/LoT layout remain consistent across machines.
 - **LaTeX distribution** (e.g., TeX Live) with XeLaTeX and standard packages installed.
 - **Zotero + Better BibTeX extension** for managing and exporting bibliographic data.
 - **CSL style file** matching your preferred citation format (e.g., Chicago author‑date).
@@ -46,7 +48,7 @@ The project demonstrates how to produce a fully typeset scholarly PDF—complete
 
 ### Basic Usage: Build the Example PDF
 
-From the repository root, a typical direct Pandoc invocation (assuming all dependencies and referenced files exist) would look similar to:
+From the repository root, a typical direct Pandoc invocation (assuming all dependencies and referenced files exist and Pandoc **3.1.8** is installed) would look similar to:
 
 ```bash
 pandoc paper.md \

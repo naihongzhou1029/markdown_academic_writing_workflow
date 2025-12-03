@@ -13,7 +13,7 @@ fi
 sudo apt-get update
 dpkg -l | grep -q "^ii.*poppler-utils" || sudo apt-get install -y poppler-utils
 dpkg -l | grep -q "^ii.*ghostscript" || sudo apt-get install -y ghostscript
-# Core document conversion tool
+# Core document conversion tool (Pandoc)
 dpkg -l | grep -q "^ii.*pandoc" || sudo apt-get install -y pandoc
 dpkg -l | grep -q "^ii\s\+fonts-noto-cjk\s" || sudo apt-get install -y fonts-noto-cjk
 dpkg -l | grep -q "^ii\s\+fonts-liberation\s" || sudo apt-get install -y fonts-liberation
@@ -23,13 +23,53 @@ if ! command -v jq >/dev/null 2>&1; then
     sudo apt-get install -y jq
 fi
 
+# Align Pandoc version with pandoc-crossref expectations for this repo.
+# We rely on pandoc-crossref for stable cross-references AND for a
+# reproducible layout of the Table of Contents, List of Figures, and
+# List of Tables. To avoid subtle breakage when Pandoc's API changes,
+# we pin Pandoc to a known-good version here.
+REQUIRED_PANDOC_VER="3.1.8"
+
+if command -v pandoc >/dev/null 2>&1; then
+    CURRENT_PANDOC_VER="$(pandoc --version 2>/dev/null | head -n1 | awk '{print $2}')"
+else
+    CURRENT_PANDOC_VER=""
+fi
+
+if [ "$CURRENT_PANDOC_VER" != "$REQUIRED_PANDOC_VER" ]; then
+    echo "Upgrading pandoc to version ${REQUIRED_PANDOC_VER} for this workflow..."
+    ARCH="$(dpkg --print-architecture)"
+    DEB_URL=""
+
+    case "$ARCH" in
+        amd64)
+            DEB_URL="https://github.com/jgm/pandoc/releases/download/${REQUIRED_PANDOC_VER}/pandoc-${REQUIRED_PANDOC_VER}-1-amd64.deb"
+            ;;
+        arm64|aarch64)
+            DEB_URL="https://github.com/jgm/pandoc/releases/download/${REQUIRED_PANDOC_VER}/pandoc-${REQUIRED_PANDOC_VER}-1-arm64.deb"
+            ;;
+        *)
+            echo "Unsupported architecture '$ARCH' for automatic pandoc ${REQUIRED_PANDOC_VER} install." >&2
+            echo "Please install pandoc ${REQUIRED_PANDOC_VER} manually from the official releases." >&2
+            DEB_URL=""
+            ;;
+    esac
+
+    if [ -n "$DEB_URL" ]; then
+        TMP_DEB="$(mktemp /tmp/pandoc-${REQUIRED_PANDOC_VER}-XXXXXX.deb)"
+        echo "Downloading pandoc from ${DEB_URL}..."
+        curl -L "$DEB_URL" -o "$TMP_DEB"
+        sudo dpkg -i "$TMP_DEB"
+        rm -f "$TMP_DEB"
+    fi
+fi
+
 # Ensure ~/.cabal/bin and ~/.local/bin are in PATH for this script
 export PATH="$HOME/.cabal/bin:$HOME/.local/bin:$PATH"
 
 if ! command -v pandoc-crossref >/dev/null 2>&1; then
-    # Only install pandoc-crossref if it's not already available in the system.
-    # We do NOT try to force version alignment with pandoc to avoid long rebuilds
-    # and to respect an existing system-wide installation.
+    # Install pandoc-crossref only when missing; the binary released for
+    # pandoc ${REQUIRED_PANDOC_VER} is expected to work with that pandoc.
     if command -v cabal >/dev/null 2>&1; then
         echo "Installing pandoc-crossref via cabal (not found in PATH)..."
         cabal update && cabal install pandoc-crossref --overwrite-policy=always
@@ -44,5 +84,5 @@ if ! command -v pandoc-crossref >/dev/null 2>&1; then
     fi
 fi
 
-echo "All dependencies are installed."
+echo "All dependencies (including pinned pandoc ${REQUIRED_PANDOC_VER}) are installed."
 
