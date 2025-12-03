@@ -19,6 +19,7 @@ ZH_TW_SRC = $(ZH_TW_DIR)/paper.md
 ZH_TW_COVER = $(ZH_TW_DIR)/ntust_cover_page.tex
 ZH_TW_PDF = $(ZH_TW_DIR)/paper.pdf
 ZH_TW_COVER_PDF = $(ZH_TW_DIR)/cover.pdf
+ZH_TW_PRINTED_PDF = $(ZH_TW_DIR)/printed.pdf
 
 # Make 'printed' the default goal
 .DEFAULT_GOAL := printed
@@ -208,7 +209,7 @@ printed: $(PRINTED_PDF)
 	@true
 
 # Translate to Traditional Chinese and build PDFs
-zh_tw: $(ZH_TW_PDF) $(ZH_TW_COVER_PDF)
+zh_tw: $(ZH_TW_PRINTED_PDF)
 	@echo "Translation to Traditional Chinese completed. PDFs generated in $(ZH_TW_DIR)/"
 	@echo "Updating progress tracking..."
 ifeq ($(IS_WINDOWS),1)
@@ -307,6 +308,19 @@ ifeq ($(IS_WINDOWS),1)
 	@powershell -NoProfile -ExecutionPolicy Bypass -File $(POSTPROCESS_TEX_SCRIPT) -LatexFile $(ZH_TW_COVER) -OldFont "PingFang TC" -NewFont "$(CJK_FONT_TC)"
 else
 	@bash $(POSTPROCESS_TEX_SCRIPT) $(ZH_TW_COVER) "PingFang TC" "$(CJK_FONT_TC)"
+endif
+
+# Merge cover and paper PDFs for Traditional Chinese version
+$(ZH_TW_PRINTED_PDF): $(ZH_TW_COVER_PDF) $(ZH_TW_PDF)
+ifeq ($(IS_WINDOWS),1)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File tools/merge-pdfs-windows.ps1 -CoverPdf $(ZH_TW_COVER_PDF) -PaperPdf $(ZH_TW_PDF) -Output $(ZH_TW_PRINTED_PDF)
+else ifeq ($(OS_TYPE),Darwin)
+	@bash tools/merge-pdfs-darwin.sh $(ZH_TW_COVER_PDF) $(ZH_TW_PDF) $(ZH_TW_PRINTED_PDF)
+else ifeq ($(OS_TYPE),Linux)
+	@bash tools/merge-pdfs-linux.sh $(ZH_TW_COVER_PDF) $(ZH_TW_PDF) $(ZH_TW_PRINTED_PDF)
+else
+	@echo "Unsupported OS for PDF merging." >&2
+	@exit 1
 endif
 
 # Install required external tools (auto-detects OS)
