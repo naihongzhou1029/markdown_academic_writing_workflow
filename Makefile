@@ -250,9 +250,9 @@ endif
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@if [ ! -f "$(ZH_TW_PDF)" ]; then exit 1; fi
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log $(ZH_TW_SRC)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log
 else
-	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log $(ZH_TW_SRC)
+	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log
 endif
 	@echo "Cleaned up intermediate translation files"
 
@@ -272,9 +272,9 @@ else
 endif
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode -jobname=cover ntust_cover_page.tmp.tex
 ifeq ($(IS_WINDOWS),1)
-	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(ZH_TW_DIR)/ntust_cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log $(ZH_TW_COVER)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File $(CLEANUP_TEMP_SCRIPT) -Files $(ZH_TW_DIR)/ntust_cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log
 else
-	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log $(ZH_TW_COVER)
+	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log
 endif
 	@echo "Cleaned up intermediate translation files"
 
