@@ -46,7 +46,29 @@ At its heart is the principle of **sustainability**. Plain-text files, such as t
 
 Furthermore, this workflow is uniquely suited for the rigorous demands of modern research. Plain-text files integrate seamlessly with **version control systems** like Git, enabling meticulous tracking of every change, non-destructive experimentation with drafts, and transparent collaboration among authors—a process notoriously fraught with difficulty when using binary files [@healy2018plain]. The entire process, from the initial draft to the final PDF, can be automated with simple scripts, ensuring perfect **reproducibility** at any point in the future, a cornerstone of scientific and scholarly integrity.
 
-This system is best understood not as a collection of disparate tools, but as a linear, modular data processing pipeline. The raw manuscript (`.md`) and bibliographic data (`.json` or `.bib`) serve as the initial inputs. These inputs are then passed through a chain of specialized filters and transformers: Zotero and its Better BibTeX extension manage and export bibliographic data; Pandoc parses the source text [@macfarlane2022pandoc]; `pandoc-citeproc` resolves citation markers; `pandoc-crossref` numbers figures and equations [@lierdakil2021crossref]; and finally, a LaTeX engine like XeLaTeX performs the final typesetting to produce a PDF. Each stage is discrete and transparent. This contrasts fundamentally with the monolithic, "black box" environment of a word processor, where these processes are intertwined and hidden from the user. The power of this workflow lies in the ability to control this pipeline, to swap out components, insert new processing stages, and debug any issue by inspecting the intermediate output at any point—for instance, by generating the intermediate `.tex` file to diagnose a LaTeX error. This level of control and transparency is the key to solving the complex, bespoke formatting challenges inherent in academic writing.
+This system is best understood not as a collection of disparate tools, but as a linear, modular data processing pipeline. The raw manuscript (`.md`) and bibliographic data (`.json` or `.bib`) serve as the initial inputs. These inputs are then passed through a chain of specialized filters and transformers: Zotero and its Better BibTeX extension manage and export bibliographic data; Pandoc parses the source text [@macfarlane2022pandoc]; `pandoc-citeproc` resolves citation markers; `pandoc-crossref` numbers figures and equations [@lierdakil2021crossref]; and finally, a LaTeX engine like XeLaTeX performs the final typesetting to produce a PDF.
+
+```mermaid
+flowchart LR
+    A[Raw Manuscript<br/>.md file] --> D[Pandoc<br/>Parser]
+    B[Bibliographic Data<br/>.json or .bib] --> C[Zotero/BBT<br/>Export & Manage]
+    C --> D
+    D --> E[pandoc-citeproc<br/>Resolve Citations]
+    E --> F[pandoc-crossref<br/>Number Figures/Tables/Equations]
+    F --> G[XeLaTeX<br/>Typesetting Engine]
+    G --> H[Final PDF<br/>Output]
+    
+    style A fill:#e1f5ff
+    style B fill:#e1f5ff
+    style C fill:#fff4e1
+    style D fill:#fff4e1
+    style E fill:#fff4e1
+    style F fill:#fff4e1
+    style G fill:#e1ffe1
+    style H fill:#ffe1f5
+```
+
+Each stage is discrete and transparent. This contrasts fundamentally with the monolithic, "black box" environment of a word processor, where these processes are intertwined and hidden from the user. The power of this workflow lies in the ability to control this pipeline, to swap out components, insert new processing stages, and debug any issue by inspecting the intermediate output at any point—for instance, by generating the intermediate `.tex` file to diagnose a LaTeX error. This level of control and transparency is the key to solving the complex, bespoke formatting challenges inherent in academic writing.
 
 # Part I: The Core Toolchain
 
