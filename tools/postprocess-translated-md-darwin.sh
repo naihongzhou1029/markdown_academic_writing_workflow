@@ -29,6 +29,7 @@ rm -f "${TRANSLATED_MD}.bak"
 # Apply Python-based indentation fixes
 python3 <<PYTHON_EOF
 import sys
+import re
 
 file_path = '$TRANSLATED_MD'
 
@@ -39,21 +40,29 @@ lines = content.split('\n')
 in_block = False
 result = []
 
-for line in lines:
+for i, line in enumerate(lines):
+    # Start of multi-line YAML block
     if line.rstrip() == '- |':
         in_block = True
         result.append(line)
-    elif in_block and line.startswith(r'\usepackage{etoolbox}'):
-        result.append('    ' + line)
-    elif in_block and line.startswith(r'\AtBeginEnvironment{CSLReferences}'):
-        result.append('    ' + line)
-    elif in_block and line.startswith(r'\newpage\section*{References}'):
-        result.append('      ' + line)
-    elif in_block and line.startswith(r'\setlength{'):
-        result.append('      ' + line)
-    elif in_block and line.rstrip() == '}':
-        result.append('    ' + line)
+    # End of block: next top-level YAML key (starts with letter, ends with colon, no leading spaces)
+    elif in_block and re.match(r'^[a-zA-Z].*:$', line.rstrip()):
         in_block = False
+        result.append(line)
+    # Inside block: fix indentation for LaTeX commands
+    elif in_block:
+        # Already properly indented (4+ spaces)
+        if line.startswith('    '):
+            result.append(line)
+        # LaTeX command that needs indentation
+        elif len(line) > 0 and line[0] == chr(92) and not line.startswith(' '):
+            result.append('    ' + line)
+        # Empty line - preserve as is
+        elif not line.strip():
+            result.append(line)
+        # Other content in block - indent if not already indented
+        else:
+            result.append('    ' + line if not line.startswith(' ') else line)
     else:
         result.append(line)
 

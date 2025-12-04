@@ -31,7 +31,8 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
 
 ### Commit Message Conventions for Agents
 
-- **Use nested lists in commit messages**: When generating commit messages, structure the body as nested lists (e.g., top-level bullets for major changes, indented sub-bullets for details or rationale) to keep the “what” and “why” clear and scannable.
+- **Use nested lists in commit messages**: When generating commit messages, structure the body as nested lists (e.g., top-level bullets for major changes, indented sub-bullets for details or rationale) to keep the "what" and "why" clear and scannable.
+- **Sync commit logs to `plans/changes.md` before presenting**: Before presenting commit messages to the developer, sync the commit logs to `plans/changes.md` with a timestamp. The timestamp should be a heading by day (format: `# YYYY/MM/DD`). Multiple commits on the same day should be merged semantically into the same date section rather than creating standalone paragraphs or separate sections for different dates.
 
 ### How to Help Users
 

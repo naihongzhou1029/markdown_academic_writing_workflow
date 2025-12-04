@@ -37,17 +37,29 @@ for ($i = 0; $i -lt $lines.Length; $i++) {
     if ($line -match '^- \|$') {
         $inMultiline = $true
         $result += $line
-    } elseif ($inMultiline -and $line -match '^\\usepackage\{etoolbox\}') {
-        $result += '    ' + $line
-    } elseif ($inMultiline -and $line -match '^\\AtBeginEnvironment\{CSLReferences\}') {
-        $result += '    ' + $line
-    } elseif ($inMultiline -and $line -match '^\\newpage\\section\*\{References\}') {
-        $result += '      ' + $line
-    } elseif ($inMultiline -and $line -match '^\\setlength\{') {
-        $result += '      ' + $line
-    } elseif ($inMultiline -and $line -match '^\}$') {
-        $result += '    ' + $line
+    } elseif ($inMultiline -and $line.Trim() -match '^[a-zA-Z].*:$') {
+        # End of block: next top-level YAML key
         $inMultiline = $false
+        $result += $line
+    } elseif ($inMultiline) {
+        # Inside block: fix indentation
+        if ($line -match '^    ') {
+            # Already properly indented
+            $result += $line
+        } elseif ($line -match '^\\' -and -not ($line -match '^\s')) {
+            # LaTeX command that needs indentation (starts with backslash, no leading spaces)
+            $result += '    ' + $line
+        } elseif (-not $line.Trim()) {
+            # Empty line - preserve as is
+            $result += $line
+        } else {
+            # Other content in block - indent if not already indented
+            if ($line -match '^\s') {
+                $result += $line
+            } else {
+                $result += '    ' + $line
+            }
+        }
     } else {
         $result += $line
     }
