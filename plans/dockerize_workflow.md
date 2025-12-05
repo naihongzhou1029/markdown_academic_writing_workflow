@@ -110,19 +110,15 @@ This document tracks the refactoring of the project to use Docker exclusively, r
 ### ✅ 4. Update Documentation
 
 **README.md Updates:**
-- Updated "Toolchain Requirements" section to document Docker-based approach
-- Removed OS-specific installation instructions
-- Updated "Basic Usage" section with Docker wrapper instructions
-- Added usage examples for all three wrapper scripts (`.sh`, `.bat`, `.ps1`)
-- Added note about WSL Docker credential configuration
-- Updated translation section to mention Docker container requirements
+- Documented derived image build/use: `pandocker-with-tools:latest` (built from `Dockerfile`, extends `dalibo/pandocker:latest-full`, pre-installs `jq` and `curl`).
+- Updated "Basic Usage" steps to mention base pull + derived image build on first run.
+- Updated direct Docker invocation to first build the derived image, then run with it.
+- Added note that translation scripts rely on `jq`/`curl` baked into the derived image.
+- Kept WSL credential note.
 
 **AGENTS.md Updates:**
-- Updated to reflect Docker-only approach
-- Removed OS-specific dependency guidance
-- Updated build command references to use `./make-docker.sh`
-- Added note about scripts running inside Docker container
-- Removed references to OS-specific installation
+- Noted wrapper scripts use the derived image built from `Dockerfile` with `jq`/`curl`.
+- Added dependency guidance about the derived image being auto-built on first use.
 
 ### ✅ 5. Additional Enhancements
 
@@ -159,7 +155,7 @@ This document tracks the refactoring of the project to use Docker exclusively, r
 
 ## Docker Container Details
 
-**Container Image:** `dalibo/pandocker:stable`
+**Container Image:** `pandocker-with-tools:latest` (derived from `dalibo/pandocker:latest-full`)
 
 **Includes:**
 - Pandoc with `--citeproc` support
@@ -167,7 +163,7 @@ This document tracks the refactoring of the project to use Docker exclusively, r
 - LaTeX distribution (TeX Live) with XeLaTeX
 - Make and other build utilities
 - All necessary fonts and dependencies
-- `curl` and `jq` for translation scripts
+- `curl` and `jq` for translation scripts (baked into derived image)
 
 **Container Behavior:**
 - Ephemeral containers (automatically removed after execution)

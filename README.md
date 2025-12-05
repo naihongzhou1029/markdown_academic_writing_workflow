@@ -73,23 +73,33 @@ make-docker.bat
 ```
 
 This will:
-1. Create an ephemeral Docker container from `dalibo/pandocker:stable`
-2. Mount the current directory into the container
-3. Run `make` inside the container
-4. Automatically remove the container after the build completes
+1. Check for the base image `dalibo/pandocker:latest-full` and pull it if needed
+2. Build a derived image `pandocker-with-tools:latest` (with `jq` and `curl` pre-installed) if it doesn't exist
+3. Create an ephemeral Docker container from the derived image
+4. Mount the current directory into the container
+5. Run `make` inside the container
+6. Automatically remove the container after the build completes
+
+**Note**: The first run will build the derived image, which may take a few minutes. Subsequent runs will use the cached image, making builds faster.
 
 **Note for WSL users**: If you encounter Docker credential errors (e.g., `docker-credential-desktop: executable file not found`), ensure Docker Desktop is running and properly configured for WSL integration. You may need to configure Docker credentials or use `docker login` if required.
 
 **Direct Docker invocation:**
 
-Alternatively, you can run make directly inside the container:
+Alternatively, you can run make directly inside the container. First, build the derived image:
+
+```bash
+docker build -t pandocker-with-tools:latest -f Dockerfile .
+```
+
+Then run make:
 
 ```bash
 docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v "$(pwd)":/workspace \
     -w /workspace \
-    dalibo/pandocker:stable \
+    pandocker-with-tools:latest \
     make
 ```
 
@@ -111,7 +121,7 @@ To run the full translation and build the Traditional Chinese PDFs (including me
 
 The resulting files are written under the `zh_tw/` directory, mirroring the structure of the original English workflow.
 
-**Note**: The translation scripts require `curl` and `jq` to be available in the container. The `dalibo/pandocker` image includes these tools.
+**Note**: The translation scripts require `curl` and `jq` to be available in the container. These tools are pre-installed in the derived image (`pandocker-with-tools:latest`) that is automatically built from the `Dockerfile` on first use.
 
 ### Conceptual Overview of the Workflow
 

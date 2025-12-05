@@ -1,6 +1,7 @@
 # Docker wrapper for make - runs make inside dalibo/pandocker container (PowerShell version)
 #
-# This script creates an ephemeral container that is automatically removed
+# This script uses a derived image with jq and curl pre-installed to avoid
+# installing them on every translation run. The container is automatically removed
 # after the build completes. All toolchains (pandoc, xelatex, make, etc.)
 # are available inside the container.
 
@@ -9,45 +10,54 @@ param(
     [string[]]$MakeArgs
 )
 
-# Image name and tag
-$ImageName = "dalibo/pandocker"
-$ImageTag = "latest-full"
-$Image = "${ImageName}:${ImageTag}"
+# Base image name and tag
+$BaseImageName = "dalibo/pandocker"
+$BaseImageTag = "latest-full"
+$BaseImage = "${BaseImageName}:${BaseImageTag}"
 
-# Check if the image exists locally
-$imageExists = docker images --format "{{.Repository}}:{{.Tag}}" | Select-String -Pattern "^${Image}$"
+# Derived image name (with jq and curl pre-installed)
+$DerivedImageName = "pandocker-with-tools"
+$DerivedImageTag = "latest"
+$DerivedImage = "${DerivedImageName}:${DerivedImageTag}"
 
-if (-not $imageExists) {
-    Write-Host "Checking for alternative ${ImageName} images..."
-    $availableImages = docker images --format "{{.Repository}}:{{.Tag}}" | Select-String -Pattern "^${ImageName}:"
-    
-    if ($availableImages) {
-        Write-Host ""
-        Write-Host "Warning: Image ${Image} not found locally."
-        Write-Host "Available ${ImageName} images:"
-        $availableImages | ForEach-Object { Write-Host "  $_" }
-        Write-Host ""
-        Write-Host "Pulling ${Image}..."
-        docker pull $Image
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "Error: Failed to pull ${Image}" -ForegroundColor Red
-            Write-Host "Please check your Docker connection and try again." -ForegroundColor Red
-            exit 1
-        }
-    } else {
-        Write-Host ""
-        Write-Host "Image ${Image} not found locally. Pulling..."
-        docker pull $Image
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "Error: Failed to pull ${Image}" -ForegroundColor Red
-            Write-Host "Please check your Docker connection and try again." -ForegroundColor Red
-            exit 1
-        }
+# Check if base image exists, pull if needed
+$baseImageExists = docker images --format "{{.Repository}}:{{.Tag}}" | Select-String -Pattern "^${BaseImage}$"
+
+if (-not $baseImageExists) {
+    Write-Host "Base image ${BaseImage} not found locally. Pulling..."
+    docker pull $BaseImage
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Error: Failed to pull ${BaseImage}" -ForegroundColor Red
+        Write-Host "Please check your Docker connection and try again." -ForegroundColor Red
+        exit 1
     }
 }
 
 # Get the current directory
 $WorkDir = (Get-Location).Path
+
+# Check if derived image exists, build if needed
+$derivedImageExists = docker images --format "{{.Repository}}:{{.Tag}}" | Select-String -Pattern "^${DerivedImage}$"
+
+if (-not $derivedImageExists) {
+    Write-Host "Derived image ${DerivedImage} not found. Building from Dockerfile..."
+    $dockerfilePath = Join-Path $WorkDir "Dockerfile"
+    if (-not (Test-Path $dockerfilePath)) {
+        Write-Host "Error: Dockerfile not found in $WorkDir" -ForegroundColor Red
+        Write-Host "Please create a Dockerfile that extends ${BaseImage} and installs jq and curl." -ForegroundColor Red
+        exit 1
+    }
+    docker build -t $DerivedImage -f $dockerfilePath $WorkDir
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Error: Failed to build derived image ${DerivedImage}" -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "Derived image built successfully."
+}
+
+# Use the derived image
+$Image = $DerivedImage
+
 $ApiKeyFile = Join-Path $WorkDir ".api_key"
 
 # Require API key file before running translation targets
@@ -62,14 +72,12 @@ if (-not (Test-Path $ApiKeyFile)) {
     }
 }
 
-# Run make inside the dalibo/pandocker container
+# Run make inside the container
 # --rm: automatically remove container after execution
 # --entrypoint="": override container entrypoint to run make directly
 # -v: mount current directory as /workspace in container
 # -w: set working directory in container
-# Install curl and jq if missing (required for translation scripts)
 $makeArgsStr = if ($MakeArgs.Count -gt 0) { $MakeArgs -join " " } else { "" }
-$bashCmd = "apt-get update -qq >/dev/null 2>&1 && (command -v curl >/dev/null 2>&1 || apt-get install -y -qq curl >/dev/null 2>&1) && (command -v jq >/dev/null 2>&1 || apt-get install -y -qq jq >/dev/null 2>&1) && /usr/bin/make $makeArgsStr"
 
 $dockerArgs = @(
     "run",
@@ -78,8 +86,12 @@ $dockerArgs = @(
     "-v", "${WorkDir}:/workspace",
     "-w", "/workspace",
     $Image,
-    "bash", "-c", $bashCmd
+    "/usr/bin/make"
 )
+
+if ($makeArgsStr) {
+    $dockerArgs += $makeArgsStr.Split(" ")
+}
 
 & docker $dockerArgs
 

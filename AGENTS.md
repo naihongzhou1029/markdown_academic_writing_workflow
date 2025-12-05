@@ -15,7 +15,7 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
   - Default target: `printed` (English cover + paper merged for printing).
   - Translation target: `zh_tw` (translates and builds the Traditional Chinese PDFs under `zh_tw/`).
 - **`tools/` scripts**: Linux-based helpers for font detection, translation, post-processing, logo download, PDF merging, and dependency installation. All scripts run inside the Docker container.
-- **`make-docker.sh`**: Docker wrapper script that runs `make` inside the `dalibo/pandocker` container.
+- **`make-docker.sh`**, **`make-docker.bat`**, **`make-docker.ps1`**: Docker wrapper scripts that run `make` inside a derived image (`pandocker-with-tools:latest`) built from `Dockerfile`, which extends `dalibo/pandocker:latest-full` with `jq` and `curl` pre-installed.
 
 ### Constraints and Conventions for Agents
 
@@ -44,9 +44,10 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
   - Keep configuration in YAML and Make targets rather than ad-hoc shell commands.
 - For **dependency and version questions**, explain that:
   - All toolchains (Pandoc, LaTeX, Make, etc.) are provided by the `dalibo/pandocker` Docker container.
+  - A derived image (`pandocker-with-tools:latest`) is automatically built from `Dockerfile` on first use, adding `jq` and `curl` for translation scripts.
   - No local installation is required; Docker handles all dependencies.
   - The `make deps` target is only for local development/testing and is not needed when using Docker.
-  - The container image includes all necessary tools pre-configured and ready to use.
+  - The container images include all necessary tools pre-configured and ready to use.
 - For **new languages or targets**, mirror the existing `zh_tw` pattern (directory layout, Make targets, translation/post-processing steps) and update both `README.md` and this `AGENTS.md` accordingly.
 
 
