@@ -9,6 +9,19 @@ setlocal
 
 REM Get the current directory
 set "WORK_DIR=%CD%"
+set "API_KEY_FILE=%WORK_DIR%\.api_key"
+
+REM Require API key file before running translation targets
+set "ARGS= %* "
+echo %ARGS% | findstr /I "zh_tw translate" >nul
+if %ERRORLEVEL%==0 (
+    if not exist "%API_KEY_FILE%" (
+        echo Error: API key file not found: %API_KEY_FILE%
+        echo Create it with your Gemini API key before running translation targets.
+        echo Example: echo ^<your-key^>^> "%API_KEY_FILE%"
+        exit /b 1
+    )
+)
 
 REM Image name and tag
 set "IMAGE_NAME=dalibo/pandocker"

@@ -16,27 +16,57 @@ if [ $# -ne 6 ]; then
     exit 1
 fi
 
-# Check if API key file exists, prompt if not
+# Check if API key file exists; fail fast in non-interactive mode
 if [ ! -f "$API_KEY_FILE" ]; then
-    echo "API key file not found: $API_KEY_FILE"
-    read -sp "Enter your Gemini API key: " API_KEY
-    echo ""
-    echo "$API_KEY" > "$API_KEY_FILE"
-    chmod 600 "$API_KEY_FILE"
-    echo "API key saved to $API_KEY_FILE"
-else
-    API_KEY=$(cat "$API_KEY_FILE")
+    echo "Error: API key file not found: $API_KEY_FILE" >&2
+    echo "Create this file with your Gemini API key before running translation." >&2
+    echo "Example: echo \"<your-key>\" > $API_KEY_FILE && chmod 600 $API_KEY_FILE" >&2
+    exit 1
 fi
 
-# Check for required tools
+API_KEY=$(cat "$API_KEY_FILE")
+
+# Check for required tools and install if missing (works for root or sudo)
 if ! command -v curl &> /dev/null; then
-    echo "Error: curl is required but not installed." >&2
-    exit 1
+    echo "curl not found. Installing curl..." >&2
+    if command -v apt-get &> /dev/null; then
+        if [ "$(id -u)" -eq 0 ]; then
+            apt-get update -qq >/dev/null 2>&1 && apt-get install -y -qq curl >/dev/null 2>&1
+        elif command -v sudo &> /dev/null; then
+            sudo apt-get update -qq >/dev/null 2>&1 && sudo apt-get install -y -qq curl >/dev/null 2>&1
+        else
+            echo "Error: curl is required but not installed. Running as non-root without sudo." >&2
+            exit 1
+        fi
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to install curl. Please install it manually." >&2
+            exit 1
+        fi
+    else
+        echo "Error: curl is required but not installed and apt-get is not available." >&2
+        exit 1
+    fi
 fi
 
 if ! command -v jq &> /dev/null; then
-    echo "Error: jq is required but not installed. Install via: sudo apt-get install jq" >&2
-    exit 1
+    echo "jq not found. Installing jq..." >&2
+    if command -v apt-get &> /dev/null; then
+        if [ "$(id -u)" -eq 0 ]; then
+            apt-get update -qq >/dev/null 2>&1 && apt-get install -y -qq jq >/dev/null 2>&1
+        elif command -v sudo &> /dev/null; then
+            sudo apt-get update -qq >/dev/null 2>&1 && sudo apt-get install -y -qq jq >/dev/null 2>&1
+        else
+            echo "Error: jq is required but not installed. Running as non-root without sudo." >&2
+            exit 1
+        fi
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to install jq. Please install it manually." >&2
+            exit 1
+        fi
+    else
+        echo "Error: jq is required but not installed and apt-get is not available." >&2
+        exit 1
+    fi
 fi
 
 # Read input file

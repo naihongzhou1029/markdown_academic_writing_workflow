@@ -48,6 +48,19 @@ if (-not $imageExists) {
 
 # Get the current directory
 $WorkDir = (Get-Location).Path
+$ApiKeyFile = Join-Path $WorkDir ".api_key"
+
+# Require API key file before running translation targets
+if (-not (Test-Path $ApiKeyFile)) {
+    # Detect if translation likely requested
+    $argsJoined = ($MakeArgs -join " ").ToLowerInvariant()
+    if ($argsJoined -match "zh_tw" -or $argsJoined -match "translate") {
+        Write-Host "Error: API key file not found: $ApiKeyFile" -ForegroundColor Red
+        Write-Host "Create it with your Gemini API key before running translation targets." -ForegroundColor Red
+        Write-Host "Example: echo '<your-key>' > $ApiKeyFile" -ForegroundColor Yellow
+        exit 1
+    }
+}
 
 # Run make inside the dalibo/pandocker container
 # --rm: automatically remove container after execution

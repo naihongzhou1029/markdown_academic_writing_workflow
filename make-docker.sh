@@ -44,6 +44,20 @@ fi
 
 # Get the absolute path of the current directory
 WORK_DIR=$(pwd)
+API_KEY_FILE="$WORK_DIR/.api_key"
+
+# Require API key file before running translation targets
+if [ ! -f "$API_KEY_FILE" ]; then
+    echo "Error: API key file not found: $API_KEY_FILE" >&2
+    echo "Create it with your Gemini API key before running translation targets." >&2
+    echo "Example: echo \"<your-key>\" > \"$API_KEY_FILE\" && chmod 600 \"$API_KEY_FILE\"" >&2
+    # Only fail if a translation target is requested
+    case " $* " in
+        *" zh_tw "*|*"$(ZH_TW_DIR)"*|*"translate"* )
+            exit 1;;
+        * ) ;;
+    esac
+fi
 
 # Run make inside the dalibo/pandocker container
 # --rm: automatically remove container after execution
