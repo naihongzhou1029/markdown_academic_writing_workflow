@@ -2,6 +2,15 @@
 
 ## Status: ✅ Completed
 
+### Recent Updates (API key & translations)
+- Added non-interactive API key handling:
+  - `.api_key` is required before running translation targets (`zh_tw`) in all wrappers (`make-docker.sh`, `.ps1`, `.bat`).
+  - Wrapper scripts now fail fast with clear instructions if `.api_key` is missing.
+- Translation script (`tools/translate-linux.sh`) no longer prompts for input:
+  - Fails fast when `.api_key` is absent, with creation instructions.
+  - Installs `curl` and `jq` at runtime; supports root or sudo, otherwise exits with guidance.
+- Result: no interactive hangs in containers; translations run once API key is present and the model/API is available.
+
 ## Overview
 
 This document tracks the refactoring of the project to use Docker exclusively, removing all OS-specific scripts for Windows and macOS, and simplifying the build system to assume all toolchains run inside the `dalibo/pandocker` Docker container.
