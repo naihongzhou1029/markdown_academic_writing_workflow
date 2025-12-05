@@ -115,7 +115,7 @@ $(ZH_TW_PDF): $(ZH_TW_SRC) $(BIB) $(CSL)
 		cd $(ZH_TW_DIR) && ln -sf ../images images; \
 	fi
 	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_SRC) $(ZH_TW_DIR)/paper.tmp.md "PingFang SC" "$(CJK_FONT_TC)"
-	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc -o paper.tex
+	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography="Graduate Paper.json" --csl=chicago-author-date.csl -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) $(ZH_TW_DIR)/paper.tex
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1

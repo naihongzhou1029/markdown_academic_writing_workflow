@@ -27,11 +27,13 @@ sed -i.bak \
 rm -f "${TRANSLATED_MD}.bak"
 
 # Apply Python-based fixes for YAML structure and indentation
-python3 <<PYTHON_EOF
+export TRANSLATED_MD_FILE="$TRANSLATED_MD"
+python3 <<'PYTHON_EOF'
 import sys
+import os
 import re
 
-file_path = '$TRANSLATED_MD'
+file_path = os.environ['TRANSLATED_MD_FILE']
 
 with open(file_path, 'r', encoding='utf-8') as f:
     content = f.read()
