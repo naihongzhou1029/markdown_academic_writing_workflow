@@ -6,6 +6,27 @@
 	],
 	"settings": {
 		"files.encoding": "utf8",
-		"makefile.configureOnOpen": false
+		"makefile.configureOnOpen": false,
+		"terminal.integrated.inheritEnv": true,
+		"terminal.integrated.profiles.windows": {
+			"Command Prompt": {
+				"path": [
+					"${env:windir}\\System32\\cmd.exe"
+				],
+				"icon": "terminal-cmd",
+				"args": ["/K", "chcp 65001 >nul"]
+			},
+			"PowerShell": {
+				"source": "PowerShell",
+				"icon": "terminal-powershell"
+			},
+			"WSL": {
+				"path": [
+					"C:\\Windows\\System32\\wsl.exe"
+				],
+				"icon": "terminal-linux"
+			}
+		},
+		"terminal.integrated.defaultProfile.windows": "Command Prompt"
 	}
 }

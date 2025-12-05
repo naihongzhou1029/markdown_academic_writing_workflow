@@ -38,48 +38,80 @@ The project demonstrates how to produce a fully typeset scholarly PDF—complete
 
 ### Toolchain Requirements
 
-- **Pandoc** (version **3.1.8** with built‑in `--citeproc`; on Linux, `make deps` will install or upgrade to this version).  
-  This project relies on `pandoc-crossref` not only for figures, tables, and equations, but also for a **stable, reproducible layout of the Table of Contents, List of Figures, and List of Tables**.  
-  Because `pandoc-crossref` is compiled against a specific Pandoc API version, we pin Pandoc to **3.1.8** so that cross‑references and the TOC/LoF/LoT layout remain consistent across machines.
-- **LaTeX distribution** (e.g., TeX Live) with XeLaTeX and standard packages installed.
-- **Zotero + Better BibTeX extension** for managing and exporting bibliographic data.
-- **CSL style file** matching your preferred citation format (e.g., Chicago author‑date).
-- A **plain‑text editor** and **Git** for version control.
+This project uses **Docker** to provide a consistent, reproducible build environment. All toolchains run inside the `dalibo/pandocker` container, which includes:
+
+- **Pandoc** (with built‑in `--citeproc`) and **pandoc-crossref** filter
+- **LaTeX distribution** (TeX Live) with XeLaTeX and standard packages
+- **Make** and other build utilities
+- All necessary fonts and dependencies
+
+**Prerequisites:**
+- **Docker** installed and running on your system
+- **Zotero + Better BibTeX extension** for managing and exporting bibliographic data (runs on your host machine)
+- **CSL style file** matching your preferred citation format (e.g., Chicago author‑date)
+- A **plain‑text editor** and **Git** for version control
 
 ### Basic Usage: Build the Example PDF
 
-From the repository root, a typical direct Pandoc invocation (assuming all dependencies and referenced files exist and Pandoc **3.1.8** is installed) would look similar to:
+This project uses Docker to ensure a consistent build environment. All toolchains (Pandoc, LaTeX, Make, etc.) run inside the `dalibo/pandocker` container.
+
+**Using the Docker wrapper (recommended):**
+
+- **Linux/macOS/WSL**: Use `./make-docker.sh`
+- **Windows CMD**: Use `make-docker.bat`
+- **Windows PowerShell**: Use `./make-docker.ps1`
 
 ```bash
-pandoc paper.md \
-  --citeproc \
-  --filter pandoc-crossref \
-  -o paper.pdf
+# Linux/macOS/WSL
+./make-docker.sh
+
+# Windows CMD
+make-docker.bat
+
+# Windows PowerShell
+./make-docker.ps1
 ```
 
-In practice, the project is designed so that most configuration is embedded in the YAML metadata of `paper.md`, minimizing the need for long command lines. A `Makefile` or script can be added to wrap the exact command you prefer, making the build step as simple as:
+This will:
+1. Create an ephemeral Docker container from `dalibo/pandocker:stable`
+2. Mount the current directory into the container
+3. Run `make` inside the container
+4. Automatically remove the container after the build completes
+
+**Note for WSL users**: If you encounter Docker credential errors (e.g., `docker-credential-desktop: executable file not found`), ensure Docker Desktop is running and properly configured for WSL integration. You may need to configure Docker credentials or use `docker login` if required.
+
+**Direct Docker invocation:**
+
+Alternatively, you can run make directly inside the container:
 
 ```bash
-make
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd)":/workspace \
+    -w /workspace \
+    dalibo/pandocker:stable \
+    make
 ```
 
-depending on how you choose to automate the pipeline.
+The `Makefile` handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `printed.pdf` (cover + paper merged).
 
 ### Optional: Translate to Traditional Chinese (`zh_tw` target)
 
 This project also demonstrates how to leverage an LLM-backed translation pipeline, driven entirely from the `Makefile`, to produce a Traditional Chinese version of the paper:
 
 - **Source**: The original English manuscript in `paper.md` and the NTUST cover page in `ntust_cover_page.tex`.
-- **LLM translation**: Make targets call OS-specific scripts (e.g., `tools/translate-linux.sh`) that invoke a large language model defined by `LLM_MODEL` (default `gemini-2.5-flash`) using an API key stored in `.api_key`. These scripts generate translated Markdown and LaTeX into the `zh_tw/` directory.
+- **LLM translation**: Make targets call translation scripts (`tools/translate-linux.sh`) that invoke a large language model defined by `LLM_MODEL` (default `gemini-2.5-flash`) using an API key stored in `.api_key`. These scripts generate translated Markdown and LaTeX into the `zh_tw/` directory.
 - **Post-processing and typesetting**: Additional scripts fix fonts and layout, then Pandoc and XeLaTeX compile the translated sources into fully typeset PDFs with cover pages.
 
 To run the full translation and build the Traditional Chinese PDFs (including merged cover+paper):
 
 ```bash
-make zh_tw
+./make-docker.sh zh_tw
 ```
 
 The resulting files are written under the `zh_tw/` directory, mirroring the structure of the original English workflow.
+
+**Note**: The translation scripts require `curl` and `jq` to be available in the container. The `dalibo/pandocker` image includes these tools.
 
 ### Conceptual Overview of the Workflow
 
