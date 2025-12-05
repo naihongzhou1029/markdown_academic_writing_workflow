@@ -26,7 +26,7 @@ sed -i.bak \
     "$TRANSLATED_MD"
 rm -f "${TRANSLATED_MD}.bak"
 
-# Apply Python-based indentation fixes
+# Apply Python-based fixes for YAML structure and indentation
 python3 <<PYTHON_EOF
 import sys
 import re
@@ -39,8 +39,35 @@ with open(file_path, 'r', encoding='utf-8') as f:
 lines = content.split('\n')
 in_block = False
 result = []
+i = 0
 
-for i, line in enumerate(lines):
+while i < len(lines):
+    line = lines[i]
+    
+    # Fix abstract: |- followed by single line (convert to quoted string)
+    if re.match(r'^abstract:\s+\|-$', line.rstrip()):
+        # Check if next line is content and line after that is a new YAML key
+        if i + 1 < len(lines):
+            content_line = lines[i + 1]
+            # If next line is content (not empty, not a YAML key, not indented)
+            if content_line.strip() and not re.match(r'^[a-zA-Z].*:$', content_line.rstrip()) and not content_line.startswith(' '):
+                # Check if line after content is a YAML key or end of YAML block
+                if i + 2 < len(lines):
+                    next_line = lines[i + 2]
+                    if re.match(r'^[a-zA-Z].*:$', next_line.rstrip()) or next_line.rstrip() == '---':
+                        # Convert to quoted string format
+                        # Properly escape for YAML: backslashes first, then quotes
+                        escaped_content = content_line.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
+                        result.append(f'abstract: "{escaped_content}"')
+                        i += 2  # Skip the |- line and content line
+                        continue
+                elif i + 2 == len(lines):
+                    # Last line case - treat as single line abstract
+                    escaped_content = content_line.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
+                    result.append(f'abstract: "{escaped_content}"')
+                    i += 2
+                    continue
+    
     # Start of multi-line YAML block
     if line.rstrip() == '- |':
         in_block = True
@@ -65,6 +92,8 @@ for i, line in enumerate(lines):
             result.append('    ' + line if not line.startswith(' ') else line)
     else:
         result.append(line)
+    
+    i += 1
 
 with open(file_path, 'w', encoding='utf-8') as f:
     f.write('\n'.join(result))

@@ -21,7 +21,7 @@ DERIVED_IMAGE="${DERIVED_IMAGE_NAME}:${DERIVED_IMAGE_TAG}"
 # Check if base image exists, pull if needed
 if ! docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^${BASE_IMAGE}$"; then
     echo "Base image ${BASE_IMAGE} not found locally. Pulling..."
-    docker pull "$BASE_IMAGE"
+    docker pull --platform linux/amd64 "$BASE_IMAGE"
     if [ $? -ne 0 ]; then
         echo "Error: Failed to pull ${BASE_IMAGE}" >&2
         echo "Please check your Docker connection and try again." >&2
@@ -40,7 +40,7 @@ if ! docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^${DERIVED_IMA
         echo "Please create a Dockerfile that extends ${BASE_IMAGE} and installs jq and curl." >&2
         exit 1
     fi
-    docker build -t "$DERIVED_IMAGE" -f "$WORK_DIR/Dockerfile" "$WORK_DIR"
+    docker build --platform linux/amd64 -t "$DERIVED_IMAGE" -f "$WORK_DIR/Dockerfile" "$WORK_DIR"
     if [ $? -ne 0 ]; then
         echo "Error: Failed to build derived image ${DERIVED_IMAGE}" >&2
         exit 1
