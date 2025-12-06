@@ -18,7 +18,7 @@ Created `tools/process-mermaid-linux.sh` that:
   - Extracts the Mermaid code content
   - Generates sequential filenames (e.g., `mermaid-1.png`, `mermaid-2.png`)
   - Saves the Mermaid code to a temporary `.mmd` file
-  - Runs `mmdc -i <temp.mmd> -o images/<filename>.png` to generate PNG
+  - Runs `mmdc -i <temp.mmd> -o images/<filename>.png -s 3` to generate high-resolution PNG (3x scale for crisp text)
   - Replaces the code block with `![Mermaid diagram](images/<filename>.png)`
 - Ensures the `images/` directory exists before processing
 - Handles errors gracefully: if `mmdc` fails, keeps the original code block and logs a warning
@@ -29,6 +29,7 @@ Created `tools/process-mermaid-linux.sh` that:
 - Error handling: preserves original code blocks if conversion fails
 - Linux-compatible: runs inside Docker container
 - Uses dark theme with transparent background for better PDF integration
+- High-resolution output: Uses `-s 3` scale factor (3x) for crisp text rendering in PDFs
 
 ### 2. Makefile Updates
 
@@ -158,6 +159,10 @@ The Dockerfile configures Puppeteer to work in a Docker environment:
    - **Cause**: Puppeteer expects specific browser version, system Chromium package didn't match
    - **Resolution**: Use Puppeteer's own browser installer (`npx puppeteer browsers install`) to get exact version needed
 
+4. **Fuzzy Text in Diagrams**
+   - **Cause**: Default PNG resolution from mermaid-cli was too low, causing text to appear blurry compared to vector-rendered LaTeX text
+   - **Resolution**: Added `-s 3` scale factor to `mmdc` command, generating 3x resolution images for crisp text rendering in PDFs
+
 ### Current Status
 
 ✅ **Resolved**: All issues have been addressed. The implementation:
@@ -173,11 +178,13 @@ The Dockerfile configures Puppeteer to work in a Docker environment:
 - Ensure generated images are cleaned up on `make clean`
 - Test with multiple Mermaid diagrams in a single document
 - Verify error handling when mermaid-cli is unavailable or fails
+- Verify text in diagrams is crisp and readable (3x scale factor should provide high-quality output)
 
 ## Completion Date
 
 - Initial implementation: 2025-01-27
 - Puppeteer/Chrome configuration finalized: 2025-01-27
+- Resolution/quality improvement (3x scale): 2025-01-27
 
 ## Summary
 

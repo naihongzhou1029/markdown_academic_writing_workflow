@@ -73,10 +73,10 @@ while IFS= read -r line || [ -n "$line" ]; do
             CLEANUP_PUPPETEER_CONFIG=1
         fi
         
-        # Convert Mermaid to PNG
+        # Convert Mermaid to PNG with higher resolution for crisp text
         ERROR_LOG=$(mktemp)
         if mmdc -i "$TEMP_MMD" -o "$IMAGE_PATH" -t dark -b transparent \
-           -p "$TEMP_PUPPETEER_CONFIG" > "$ERROR_LOG" 2>&1; then
+           -s 3 -p "$TEMP_PUPPETEER_CONFIG" > "$ERROR_LOG" 2>&1; then
             # Replace with image reference
             echo "![Mermaid diagram]($IMAGE_PATH)" >> "$TEMP_FILE"
             echo "" >> "$TEMP_FILE"
