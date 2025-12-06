@@ -58,14 +58,14 @@ flowchart LR
     F --> G[XeLaTeX<br/>Typesetting Engine]
     G --> H[Final PDF<br/>Output]
     
-    style A fill:#e1f5ff
-    style B fill:#e1f5ff
-    style C fill:#fff4e1
-    style D fill:#fff4e1
-    style E fill:#fff4e1
-    style F fill:#fff4e1
-    style G fill:#e1ffe1
-    style H fill:#ffe1f5
+    style A fill:#b3d9ff,stroke:#4a90e2,stroke-width:2px,color:#000000
+    style B fill:#b3d9ff,stroke:#4a90e2,stroke-width:2px,color:#000000
+    style C fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
+    style D fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
+    style E fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
+    style F fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
+    style G fill:#b3ffd9,stroke:#50c878,stroke-width:2px,color:#000000
+    style H fill:#ffb3d9,stroke:#e91e63,stroke-width:2px,color:#000000
 ```
 
 Each stage is discrete and transparent. This contrasts fundamentally with the monolithic, "black box" environment of a word processor, where these processes are intertwined and hidden from the user. The power of this workflow lies in the ability to control this pipeline, to swap out components, insert new processing stages, and debug any issue by inspecting the intermediate output at any point—for instance, by generating the intermediate `.tex` file to diagnose a LaTeX error. This level of control and transparency is the key to solving the complex, bespoke formatting challenges inherent in academic writing.
