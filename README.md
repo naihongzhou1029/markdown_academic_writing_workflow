@@ -115,6 +115,7 @@ This project also demonstrates how to leverage an LLM-backed translation pipelin
 
 - **Source**: The original English manuscript in `paper.md` and the NTUST cover page in `ntust_cover_page.tex`.
 - **LLM translation**: Make targets call translation scripts (`tools/translate.sh`) that invoke a large language model defined by `LLM_MODEL` (default `gemini-2.5-flash`) using an API key stored in `.api_key`. These scripts generate translated Markdown and LaTeX into the `zh_tw/` directory.
+- **AI-powered validation**: After initial translation, the `tools/validate-and-fix-translated-md.sh` script automatically reviews the translated Markdown for formatting errors (malformed tables, broken syntax, corrupted YAML) and fixes them while preserving the translated content.
 - **Post-processing and typesetting**: Additional scripts fix fonts and layout, then Pandoc and XeLaTeX compile the translated sources into fully typeset PDFs with cover pages.
 
 To run the full translation and build the Traditional Chinese PDFs (including merged cover+paper):

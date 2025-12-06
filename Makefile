@@ -28,6 +28,7 @@ ZH_TW_PRINTED_PDF = $(ZH_TW_DIR)/printed.pdf
 # Script paths (all Linux scripts, works in Docker container)
 FONT_DETECT_SCRIPT := tools/detect-fonts.sh
 TRANSLATE_SCRIPT := tools/translate.sh
+VALIDATE_TRANSLATED_MD_SCRIPT := tools/validate-and-fix-translated-md.sh
 REPLACE_FONTS_SCRIPT := tools/replace-fonts.sh
 FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl.sh
 CREATE_SYMLINKS_SCRIPT := tools/create-symlinks.sh
@@ -148,6 +149,8 @@ $(ZH_TW_SRC): $(SRC)
 	@echo "Translating $(SRC) to Traditional Chinese..."
 	@mkdir -p $(ZH_TW_DIR)
 	@bash $(TRANSLATE_SCRIPT) $(SRC) $(ZH_TW_SRC) "English" "Traditional Chinese" $(LLM_MODEL) $(API_KEY_FILE)
+	@echo "Validating and fixing formatting errors in translation..."
+	@bash $(VALIDATE_TRANSLATED_MD_SCRIPT) $(SRC) $(ZH_TW_SRC) $(LLM_MODEL) $(API_KEY_FILE)
 	@echo "Post-processing translated markdown..."
 	@bash $(POSTPROCESS_MD_SCRIPT) $(ZH_TW_SRC) "$(CJK_FONT_TC)"
 

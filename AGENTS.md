@@ -14,7 +14,8 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
 - **`Makefile`**:
   - Default target: `printed` (English cover + paper merged for printing).
   - Translation target: `zh_tw` (translates and builds the Traditional Chinese PDFs under `zh_tw/`).
-- **`tools/` scripts**: Linux-based helpers for font detection, translation, post-processing, logo download, PDF merging, and dependency installation. All scripts run inside the Docker container.
+- **`tools/` scripts**: Linux-based helpers for font detection, translation, validation, post-processing, logo download, PDF merging, and dependency installation. All scripts run inside the Docker container.
+  - **`validate-and-fix-translated-md.sh`**: AI-powered validation that reviews translated Markdown files for formatting errors (malformed tables, broken syntax, corrupted YAML) and automatically fixes them.
 - **`make-docker.sh`**, **`make-docker.bat`**, **`make-docker.ps1`**: Docker wrapper scripts that run `make` inside a derived image (`pandocker-with-tools:latest`) built from `Dockerfile`, which extends `dalibo/pandocker:latest-full` with `jq` and `curl` pre-installed.
 
 ### Constraints and Conventions for Agents
@@ -30,6 +31,7 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
   - Treat `.api_key` as a secret; don't hardcode keys or log them.
   - Keep language directions and font assumptions (e.g., Traditional Chinese fonts) correct when modifying scripts.
   - All scripts run inside the Docker container; ensure they use Linux-compatible commands (bash, standard Unix utilities).
+  - The translation pipeline includes automatic validation: after initial translation, the system uses AI to detect and fix formatting errors in the translated content while preserving the translation itself.
  - **Sync plan progress to Markdown plan files**: When using plan-style workflows or multi-step tasks, always include a final step to sync the plan’s current state into the relevant Markdown plan file (e.g., under a `plans/` directory), so that progress is persistently recorded outside the transient agent context.
 
 ### Commit Message Conventions for Agents
