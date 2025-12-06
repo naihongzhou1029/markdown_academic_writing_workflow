@@ -45,44 +45,6 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\newenvironment{Shaded}{}{}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
-\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
-\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{#1}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
@@ -274,27 +236,11 @@ source text (\citeproc{ref-macfarlane2022pandoc}{MacFarlane 2022});
 LaTeX engine like XeLaTeX performs the final typesetting to produce a
 PDF.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{flowchart LR}
-\NormalTok{    A[Raw Manuscript\textless{}br/\textgreater{}.md file] {-}{-}\textgreater{} D[Pandoc\textless{}br/\textgreater{}Parser]}
-\NormalTok{    B[Bibliographic Data\textless{}br/\textgreater{}.json or .bib] {-}{-}\textgreater{} C[Zotero/BBT\textless{}br/\textgreater{}Export \& Manage]}
-\NormalTok{    C {-}{-}\textgreater{} D}
-\NormalTok{    D {-}{-}\textgreater{} E[pandoc{-}citeproc\textless{}br/\textgreater{}Resolve Citations]}
-\NormalTok{    E {-}{-}\textgreater{} F[pandoc{-}crossref\textless{}br/\textgreater{}Number Figures/Tables/Equations]}
-\NormalTok{    F {-}{-}\textgreater{} G[XeLaTeX\textless{}br/\textgreater{}Typesetting Engine]}
-\NormalTok{    G {-}{-}\textgreater{} H[Final PDF\textless{}br/\textgreater{}Output]}
-    
-\NormalTok{    style A fill:\#e1f5ff}
-\NormalTok{    style B fill:\#e1f5ff}
-\NormalTok{    style C fill:\#fff4e1}
-\NormalTok{    style D fill:\#fff4e1}
-\NormalTok{    style E fill:\#fff4e1}
-\NormalTok{    style F fill:\#fff4e1}
-\NormalTok{    style G fill:\#e1ffe1}
-\NormalTok{    style H fill:\#ffe1f5}
-\end{Highlighting}
-\end{Shaded}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Mermaid diagram}]{images/mermaid-1.png}}
+\caption{Mermaid diagram}
+\end{figure}
 
 Each stage is discrete and transparent. This contrasts fundamentally
 with the monolithic, ``black box'' environment of a word processor,

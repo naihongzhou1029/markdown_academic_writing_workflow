@@ -3,7 +3,6 @@ FROM dalibo/pandocker:latest-full
 # Install jq and curl for translation scripts
 # Install Node.js and npm for mermaid-cli
 # Install basic dependencies for Puppeteer/Chrome (required by mermaid-cli)
-# Puppeteer will download its own Chromium, but needs some system libraries
 RUN apt-get update -qq && \
     apt-get install -y -qq --no-install-recommends \
         jq curl nodejs npm \
@@ -16,11 +15,24 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # Install mermaid-cli globally
-# Puppeteer will download its own Chromium automatically
 RUN npm install -g @mermaid-js/mermaid-cli
 
-# Create Puppeteer config file to run Chromium with --no-sandbox (required when running as root in Docker)
-RUN echo '{"args": ["--no-sandbox", "--disable-setuid-sandbox"]}' > /etc/puppeteer-config.json
+# Install Chrome headless shell that Puppeteer expects
+# Install it in a system-wide location accessible to all users
+RUN mkdir -p /opt/puppeteer-cache && \
+    chmod 777 /opt/puppeteer-cache && \
+    PUPPETEER_CACHE_DIR=/opt/puppeteer-cache npx --yes puppeteer browsers install chrome-headless-shell && \
+    chmod -R 777 /opt/puppeteer-cache && \
+    find /opt/puppeteer-cache -type f -exec chmod 755 {} \; && \
+    find /opt/puppeteer-cache -type d -exec chmod 755 {} \;
+
+# Set environment variables for Puppeteer
+ENV PUPPETEER_CACHE_DIR=/opt/puppeteer-cache
+
+# Resolve the installed Chrome executable path and write Puppeteer config
+RUN CHROME_PATH=$(find /opt/puppeteer-cache -name "chrome-headless-shell" -type f | head -1) && \
+    echo "{\"executablePath\": \"${CHROME_PATH}\", \"args\": [\"--no-sandbox\", \"--disable-setuid-sandbox\"]}" > /etc/puppeteer-config.json && \
+    chmod 644 /etc/puppeteer-config.json
 ENV PUPPETEER_CONFIG_FILE=/etc/puppeteer-config.json
 
 # Install libasound2 for Chromium (Ubuntu 24.04 uses libasound2t64)

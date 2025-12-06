@@ -9,6 +9,7 @@ PRINTED_PDF = printed.pdf
 LOGO_FILE = ntust_logo.jpg
 LOGO_URL = https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg
 TEMP_SRC = paper.tmp.md
+MERMAID_TEMP_SRC = paper.mermaid.tmp.md
 COVER_TEMP_TEX = ntust_cover_page.tmp.tex
 
 # Translation variables
@@ -34,6 +35,7 @@ COPY_LOGO_SCRIPT := tools/copy-logo-linux.sh
 POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-linux.sh
 POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-linux.sh
 CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-linux.sh
+PROCESS_MERMAID_SCRIPT := tools/process-mermaid-linux.sh
 
 # Detect fonts using Linux script (works in Docker container)
 CJK_FONT_SC := $(shell bash $(FONT_DETECT_SCRIPT) 2>/dev/null | grep "^CJK_FONT_SC=" | cut -d= -f2)
@@ -65,8 +67,11 @@ PANDOC_CMD = pandoc $(TEMP_SRC) \
 pdf: $(PDF)
 
 $(PDF): $(SRC) $(BIB) $(CSL)
+	@echo "Processing Mermaid diagrams..."
+	@mkdir -p images
+	@bash $(PROCESS_MERMAID_SCRIPT) $(SRC) $(MERMAID_TEMP_SRC) images
 	@echo "Using CJK font: $(CJK_FONT_SC)"
-	@bash $(REPLACE_FONTS_SCRIPT) $(SRC) $(TEMP_SRC) "PingFang SC" "$(CJK_FONT_SC)"
+	@bash $(REPLACE_FONTS_SCRIPT) $(MERMAID_TEMP_SRC) $(TEMP_SRC) "PingFang SC" "$(CJK_FONT_SC)"
 	@pandoc $(TEMP_SRC) --standalone --filter pandoc-crossref --citeproc -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) paper.tex
 	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
@@ -76,7 +81,7 @@ $(PDF): $(SRC) $(BIB) $(CSL)
 	else \
 		exit 1; \
 	fi
-	@bash $(CLEANUP_TEMP_SCRIPT) $(TEMP_SRC)
+	@bash $(CLEANUP_TEMP_SCRIPT) $(MERMAID_TEMP_SRC) $(TEMP_SRC)
 
 # Build the cover page (XeLaTeX)
 cover: $(COVER_PDF)
@@ -108,19 +113,22 @@ zh_tw: $(ZH_TW_PRINTED_PDF)
 # Build PDF from translated markdown
 $(ZH_TW_PDF): $(ZH_TW_SRC) $(BIB) $(CSL)
 	@echo "Building PDF from translated markdown..."
-	@echo "Using CJK font: $(CJK_FONT_TC)"
+	@echo "Processing Mermaid diagrams..."
+	@mkdir -p images
 	@bash $(CREATE_SYMLINKS_SCRIPT) $(ZH_TW_DIR) $(BIB) $(CSL) "Graduate Paper.json"
 	@if [ -d images ]; then \
 		if [ -e $(ZH_TW_DIR)/images ]; then rm -rf $(ZH_TW_DIR)/images; fi; \
 		cd $(ZH_TW_DIR) && ln -sf ../images images; \
 	fi
-	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_SRC) $(ZH_TW_DIR)/paper.tmp.md "PingFang SC" "$(CJK_FONT_TC)"
+	@bash $(PROCESS_MERMAID_SCRIPT) $(ZH_TW_SRC) $(ZH_TW_DIR)/paper.mermaid.tmp.md images
+	@echo "Using CJK font: $(CJK_FONT_TC)"
+	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_DIR)/paper.mermaid.tmp.md $(ZH_TW_DIR)/paper.tmp.md "PingFang SC" "$(CJK_FONT_TC)"
 	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography="Graduate Paper.json" --csl=chicago-author-date.csl -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) $(ZH_TW_DIR)/paper.tex
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@if [ ! -f "$(ZH_TW_PDF)" ]; then exit 1; fi
-	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log
+	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/paper.mermaid.tmp.md $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log
 	@echo "Cleaned up intermediate translation files"
 
 # Build cover PDF from translated LaTeX
@@ -161,6 +169,8 @@ deps:
 # A clean rule to remove the generated file
 clean:
 	@bash tools/clean-linux.sh $(PDF) $(COVER_PDF) $(PRINTED_PDF) $(TEMP_SRC) $(COVER_TEMP_TEX)
+	@rm -f images/mermaid-*.png 2>/dev/null || true
+	@rm -f $(MERMAID_TEMP_SRC) 2>/dev/null || true
 	@rm -rf $(ZH_TW_DIR) 2>/dev/null || true
 
 # Declare targets that are not files
