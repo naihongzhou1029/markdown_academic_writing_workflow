@@ -23,7 +23,7 @@ This document tracks the implementation of the `zh_tw` Makefile target that tran
 Created OS-specific translation helper scripts:
 
 - `tools/translate-darwin.sh` - macOS translation script using curl and jq
-- `tools/translate-linux.sh` - Linux translation script using curl and jq
+- `tools/translate.sh` - Linux translation script using curl and jq
 - `tools/translate-windows.ps1` - Windows PowerShell translation script using curl and PowerShell's built-in JSON parsing
 
 **Key Features:**
@@ -87,7 +87,7 @@ Updated `tools/deps-windows.ps1` to include:
 ├── .api_key (created interactively, gitignored)
 ├── tools/
 │   ├── translate-darwin.sh (new)
-│   ├── translate-linux.sh (new)
+│   ├── translate.sh (new)
 │   ├── translate-windows.ps1 (new)
 │   └── deps-windows.ps1 (modified)
 ├── zh_tw/ (created by target)

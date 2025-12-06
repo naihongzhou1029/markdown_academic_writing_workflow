@@ -6,7 +6,7 @@
 - Added non-interactive API key handling:
   - `.api_key` is required before running translation targets (`zh_tw`) in all wrappers (`make-docker.sh`, `.ps1`, `.bat`).
   - Wrapper scripts now fail fast with clear instructions if `.api_key` is missing.
-- Translation script (`tools/translate-linux.sh`) no longer prompts for input:
+- Translation script (`tools/translate.sh`) no longer prompts for input:
   - Fails fast when `.api_key` is absent, with creation instructions.
   - Installs `curl` and `jq` at runtime; supports root or sudo, otherwise exits with guidance.
 - Result: no interactive hangs in containers; translations run once API key is present and the model/API is available.
@@ -55,7 +55,7 @@ This document tracks the refactoring of the project to use Docker exclusively, r
 - `tools/pandoc-crossref.exe` (Windows binary)
 
 **Remaining Scripts:**
-- All Linux scripts (`tools/*-linux.sh`) remain, as they work inside Docker containers
+- All Linux scripts (`tools/*.sh`) remain, as they work inside Docker containers
 
 ### ✅ 2. Simplify Makefile
 
@@ -151,7 +151,7 @@ This document tracks the refactoring of the project to use Docker exclusively, r
 - `markdown_academic_writing_workflow.code-workspace` - Added terminal profiles
 
 ### Remaining Files
-- All `tools/*-linux.sh` scripts (13 files) - Work inside Docker containers
+- All `tools/*.sh` scripts (13 files) - Work inside Docker containers
 
 ## Docker Container Details
 

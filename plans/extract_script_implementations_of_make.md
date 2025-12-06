@@ -19,7 +19,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 3. Dependency Installation Scripts
 - `tools/deps-darwin.sh` - macOS (Homebrew) ✅
-- `tools/deps-linux.sh` - Linux (apt-get) ✅
+- `tools/deps.sh` - Linux (apt-get) ✅
 - `tools/deps-windows.ps1` - Windows (Chocolatey/winget) ✅ **NEW**
 - `tools/deps-windows.bat` - Windows Batch version ✅ **NEW**
 
@@ -30,7 +30,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 4. Font Detection Scripts
 - `tools/detect-fonts-darwin.sh` - macOS font detection ✅
-- `tools/detect-fonts-linux.sh` - Linux font detection (fc-list) ✅
+- `tools/detect-fonts.sh` - Linux font detection (fc-list) ✅
 - `tools/detect-fonts-windows.ps1` - Windows PowerShell font detection ✅ **NEW**
 - `tools/detect-fonts-windows.bat` - Windows Batch font detection ✅ **NEW**
 
@@ -42,7 +42,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 5. PDF Merging Scripts
 - `tools/merge-pdfs-darwin.sh` - macOS (pdfunite/gs) ✅
-- `tools/merge-pdfs-linux.sh` - Linux (pdfunite/gs) ✅
+- `tools/merge-pdfs.sh` - Linux (pdfunite/gs) ✅
 - `tools/merge-pdfs-windows.ps1` - Windows PowerShell (gs/pdftk/pdfunite) ✅ **NEW**
 - `tools/merge-pdfs-windows.bat` - Windows Batch (gs/pdftk/pdfunite) ✅ **NEW**
 
@@ -54,7 +54,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 6. Logo Download Scripts
 - `tools/download-logo-darwin.sh` - macOS (curl) ✅
-- `tools/download-logo-linux.sh` - Linux (curl) ✅
+- `tools/download-logo.sh` - Linux (curl) ✅
 - `tools/download-logo-windows.ps1` - Windows PowerShell (Invoke-WebRequest) ✅ **NEW**
 - `tools/download-logo-windows.bat` - Windows Batch (PowerShell/curl) ✅ **NEW**
 
@@ -64,7 +64,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 7. Clean Scripts
 - `tools/clean-darwin.sh` - macOS cleanup ✅
-- `tools/clean-linux.sh` - Linux cleanup ✅
+- `tools/clean.sh` - Linux cleanup ✅
 - `tools/clean-windows.ps1` - Windows PowerShell cleanup ✅ **NEW**
 - `tools/clean-windows.bat` - Windows Batch cleanup ✅ **NEW**
 
@@ -75,35 +75,35 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 8. Font Replacement Scripts
 - `tools/replace-fonts-darwin.sh` - macOS font replacement ✅
-- `tools/replace-fonts-linux.sh` - Linux font replacement ✅
+- `tools/replace-fonts.sh` - Linux font replacement ✅
 - `tools/replace-fonts-windows.ps1` - Windows PowerShell font replacement ✅ **NEW**
 
 **Purpose:** Replace font names in markdown/LaTeX files (e.g., "PingFang SC" → detected font)
 
 ### ✅ 9. LaTeX CSLReferences Fix Scripts
 - `tools/fix-latex-csl-darwin.sh` - macOS LaTeX CSL fix ✅
-- `tools/fix-latex-csl-linux.sh` - Linux LaTeX CSL fix ✅
+- `tools/fix-latex-csl.sh` - Linux LaTeX CSL fix ✅
 - `tools/fix-latex-csl-windows.ps1` - Windows PowerShell LaTeX CSL fix ✅ **NEW**
 
 **Purpose:** Fix LaTeX formatting issue with CSLReferences environment
 
 ### ✅ 10. Create Symlinks Scripts
 - `tools/create-symlinks-darwin.sh` - macOS symlink creation ✅
-- `tools/create-symlinks-linux.sh` - Linux symlink creation ✅
+- `tools/create-symlinks.sh` - Linux symlink creation ✅
 - `tools/create-symlinks-windows.ps1` - Windows PowerShell symlink creation ✅ **NEW**
 
 **Purpose:** Create symbolic links for dependencies in target directory
 
 ### ✅ 11. Copy Logo Scripts
 - `tools/copy-logo-darwin.sh` - macOS logo copy/symlink ✅
-- `tools/copy-logo-linux.sh` - Linux logo copy/symlink ✅
+- `tools/copy-logo.sh` - Linux logo copy/symlink ✅
 - `tools/copy-logo-windows.ps1` - Windows PowerShell logo copy/symlink ✅ **NEW**
 
 **Purpose:** Copy or create symlink for logo file in target directory
 
 ### ✅ 12. Translation Scripts
 - `tools/translate-darwin.sh` - macOS translation (Gemini API) ✅
-- `tools/translate-linux.sh` - Linux translation (Gemini API) ✅
+- `tools/translate.sh` - Linux translation (Gemini API) ✅
 - `tools/translate-windows.ps1` - Windows PowerShell translation (Gemini API) ✅ **NEW**
 
 **Purpose:** Translate markdown and LaTeX files from English to Traditional Chinese using Gemini LLM API
@@ -115,7 +115,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 13. Post-process Translated Markdown Scripts
 - `tools/postprocess-translated-md-darwin.sh` - macOS post-processing ✅
-- `tools/postprocess-translated-md-linux.sh` - Linux post-processing ✅
+- `tools/postprocess-translated-md.sh` - Linux post-processing ✅
 - `tools/postprocess-translated-md-windows.ps1` - Windows PowerShell post-processing ✅ **NEW**
 
 **Purpose:** Post-process translated markdown with font replacements, label translations, and indentation fixes
@@ -126,7 +126,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 14. Post-process Translated LaTeX Scripts
 - `tools/postprocess-translated-tex-darwin.sh` - macOS post-processing ✅
-- `tools/postprocess-translated-tex-linux.sh` - Linux post-processing ✅
+- `tools/postprocess-translated-tex.sh` - Linux post-processing ✅
 - `tools/postprocess-translated-tex-windows.ps1` - Windows PowerShell post-processing ✅ **NEW**
 
 **Purpose:** Replace font names in translated LaTeX files and check for untranslated content
@@ -138,7 +138,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 15. Cleanup Temp Files Scripts
 - `tools/cleanup-temp-darwin.sh` - macOS temp file cleanup ✅
-- `tools/cleanup-temp-linux.sh` - Linux temp file cleanup ✅
+- `tools/cleanup-temp.sh` - Linux temp file cleanup ✅
 - `tools/cleanup-temp-windows.ps1` - Windows PowerShell temp file cleanup ✅ **NEW**
 
 **Purpose:** Remove temporary files created during build process
@@ -156,7 +156,7 @@ This document tracks the progress of extracting shell script implementations fro
 
 ### ✅ 17. Recent Improvements and Fixes (Phase 3)
 - **Translation Enhancement:**
-  - Enhanced translation prompts in `translate-darwin.sh` and `translate-linux.sh` to explicitly instruct LLM to translate ALL English text, including content inside LaTeX `\newcommand` definitions and labels
+  - Enhanced translation prompts in `translate-darwin.sh` and `translate.sh` to explicitly instruct LLM to translate ALL English text, including content inside LaTeX `\newcommand` definitions and labels
   - Translation prompts now specifically mention translating titles, names, labels, and text within command definitions
 
 - **Post-processing Refinements:**
@@ -180,72 +180,72 @@ This document tracks the progress of extracting shell script implementations fro
 
 #### Dependency Installation (4 files)
 - `tools/deps-darwin.sh`
-- `tools/deps-linux.sh`
+- `tools/deps.sh`
 - `tools/deps-windows.ps1`
 - `tools/deps-windows.bat`
 
 #### Font Detection (4 files)
 - `tools/detect-fonts-darwin.sh`
-- `tools/detect-fonts-linux.sh`
+- `tools/detect-fonts.sh`
 - `tools/detect-fonts-windows.ps1`
 - `tools/detect-fonts-windows.bat`
 
 #### PDF Merging (4 files)
 - `tools/merge-pdfs-darwin.sh`
-- `tools/merge-pdfs-linux.sh`
+- `tools/merge-pdfs.sh`
 - `tools/merge-pdfs-windows.ps1`
 - `tools/merge-pdfs-windows.bat`
 
 #### Logo Download (4 files)
 - `tools/download-logo-darwin.sh`
-- `tools/download-logo-linux.sh`
+- `tools/download-logo.sh`
 - `tools/download-logo-windows.ps1`
 - `tools/download-logo-windows.bat`
 
 #### Clean Scripts (4 files)
 - `tools/clean-darwin.sh`
-- `tools/clean-linux.sh`
+- `tools/clean.sh`
 - `tools/clean-windows.ps1`
 - `tools/clean-windows.bat`
 
 #### Font Replacement (3 files) - Phase 2
 - `tools/replace-fonts-darwin.sh`
-- `tools/replace-fonts-linux.sh`
+- `tools/replace-fonts.sh`
 - `tools/replace-fonts-windows.ps1`
 
 #### LaTeX CSLReferences Fix (3 files) - Phase 2
 - `tools/fix-latex-csl-darwin.sh`
-- `tools/fix-latex-csl-linux.sh`
+- `tools/fix-latex-csl.sh`
 - `tools/fix-latex-csl-windows.ps1`
 
 #### Create Symlinks (3 files) - Phase 2
 - `tools/create-symlinks-darwin.sh`
-- `tools/create-symlinks-linux.sh`
+- `tools/create-symlinks.sh`
 - `tools/create-symlinks-windows.ps1`
 
 #### Copy Logo (3 files) - Phase 2
 - `tools/copy-logo-darwin.sh`
-- `tools/copy-logo-linux.sh`
+- `tools/copy-logo.sh`
 - `tools/copy-logo-windows.ps1`
 
 #### Translation (3 files) - Phase 2
 - `tools/translate-darwin.sh`
-- `tools/translate-linux.sh`
+- `tools/translate.sh`
 - `tools/translate-windows.ps1`
 
 #### Post-process Translated Markdown (3 files) - Phase 2
 - `tools/postprocess-translated-md-darwin.sh`
-- `tools/postprocess-translated-md-linux.sh`
+- `tools/postprocess-translated-md.sh`
 - `tools/postprocess-translated-md-windows.ps1`
 
 #### Post-process Translated LaTeX (3 files) - Phase 2
 - `tools/postprocess-translated-tex-darwin.sh`
-- `tools/postprocess-translated-tex-linux.sh`
+- `tools/postprocess-translated-tex.sh`
 - `tools/postprocess-translated-tex-windows.ps1`
 
 #### Cleanup Temp Files (3 files) - Phase 2
 - `tools/cleanup-temp-darwin.sh`
-- `tools/cleanup-temp-linux.sh`
+- `tools/cleanup-temp.sh`
 - `tools/cleanup-temp-windows.ps1`
 
 #### Documentation (1 file)

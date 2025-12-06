@@ -10,7 +10,7 @@ This document tracks the implementation of Mermaid diagram rendering support in 
 
 ### 1. Mermaid Processing Script
 
-Created `tools/process-mermaid-linux.sh` that:
+Created `tools/process-mermaid.sh` that:
 - Takes input and output Markdown file paths as arguments
 - Optionally accepts an images directory path (defaults to `images/`)
 - Parses Markdown to find all ` ```mermaid ... ``` ` code blocks
@@ -34,7 +34,7 @@ Created `tools/process-mermaid-linux.sh` that:
 ### 2. Makefile Updates
 
 #### Variables Added
-- `PROCESS_MERMAID_SCRIPT := tools/process-mermaid-linux.sh` - Path to Mermaid processing script
+- `PROCESS_MERMAID_SCRIPT := tools/process-mermaid.sh` - Path to Mermaid processing script
 - `MERMAID_TEMP_SRC = paper.mermaid.tmp.md` - Intermediate file for Mermaid-processed Markdown
 
 #### English Build (`$(PDF)` target)
@@ -77,7 +77,7 @@ Updated to remove:
 ├── Dockerfile (modified - adds Puppeteer/Chrome setup)
 ├── Makefile (modified - adds Mermaid processing step)
 ├── tools/
-│   └── process-mermaid-linux.sh (new - Mermaid processing script)
+│   └── process-mermaid.sh (new - Mermaid processing script)
 ├── images/
 │   └── mermaid-*.png (generated during build)
 └── plans/

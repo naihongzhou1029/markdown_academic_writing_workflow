@@ -110,7 +110,7 @@ The `Makefile` handles all the Pandoc and LaTeX commands, with configuration emb
 This project also demonstrates how to leverage an LLM-backed translation pipeline, driven entirely from the `Makefile`, to produce a Traditional Chinese version of the paper:
 
 - **Source**: The original English manuscript in `paper.md` and the NTUST cover page in `ntust_cover_page.tex`.
-- **LLM translation**: Make targets call translation scripts (`tools/translate-linux.sh`) that invoke a large language model defined by `LLM_MODEL` (default `gemini-2.5-flash`) using an API key stored in `.api_key`. These scripts generate translated Markdown and LaTeX into the `zh_tw/` directory.
+- **LLM translation**: Make targets call translation scripts (`tools/translate.sh`) that invoke a large language model defined by `LLM_MODEL` (default `gemini-2.5-flash`) using an API key stored in `.api_key`. These scripts generate translated Markdown and LaTeX into the `zh_tw/` directory.
 - **Post-processing and typesetting**: Additional scripts fix fonts and layout, then Pandoc and XeLaTeX compile the translated sources into fully typeset PDFs with cover pages.
 
 To run the full translation and build the Traditional Chinese PDFs (including merged cover+paper):

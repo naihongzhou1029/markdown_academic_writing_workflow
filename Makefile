@@ -26,16 +26,16 @@ ZH_TW_PRINTED_PDF = $(ZH_TW_DIR)/printed.pdf
 .DEFAULT_GOAL := printed
 
 # Script paths (all Linux scripts, works in Docker container)
-FONT_DETECT_SCRIPT := tools/detect-fonts-linux.sh
-TRANSLATE_SCRIPT := tools/translate-linux.sh
-REPLACE_FONTS_SCRIPT := tools/replace-fonts-linux.sh
-FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl-linux.sh
-CREATE_SYMLINKS_SCRIPT := tools/create-symlinks-linux.sh
-COPY_LOGO_SCRIPT := tools/copy-logo-linux.sh
-POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md-linux.sh
-POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex-linux.sh
-CLEANUP_TEMP_SCRIPT := tools/cleanup-temp-linux.sh
-PROCESS_MERMAID_SCRIPT := tools/process-mermaid-linux.sh
+FONT_DETECT_SCRIPT := tools/detect-fonts.sh
+TRANSLATE_SCRIPT := tools/translate.sh
+REPLACE_FONTS_SCRIPT := tools/replace-fonts.sh
+FIX_LATEX_CSL_SCRIPT := tools/fix-latex-csl.sh
+CREATE_SYMLINKS_SCRIPT := tools/create-symlinks.sh
+COPY_LOGO_SCRIPT := tools/copy-logo.sh
+POSTPROCESS_MD_SCRIPT := tools/postprocess-translated-md.sh
+POSTPROCESS_TEX_SCRIPT := tools/postprocess-translated-tex.sh
+CLEANUP_TEMP_SCRIPT := tools/cleanup-temp.sh
+PROCESS_MERMAID_SCRIPT := tools/process-mermaid.sh
 
 # Detect fonts using Linux script (works in Docker container)
 CJK_FONT_SC := $(shell bash $(FONT_DETECT_SCRIPT) 2>/dev/null | grep "^CJK_FONT_SC=" | cut -d= -f2)
@@ -95,11 +95,11 @@ $(COVER_PDF): $(COVER_TEX) $(LOGO_FILE)
 # Download NTUST logo if missing
 $(LOGO_FILE):
 	@echo "Fetching NTUST logo..."
-	@bash tools/download-logo-linux.sh $(LOGO_FILE) $(LOGO_URL)
+	@bash tools/download-logo.sh $(LOGO_FILE) $(LOGO_URL)
 
 # Optionally create a single PDF with the cover in front (requires pdfunite from poppler)
 $(PRINTED_PDF): $(COVER_PDF) $(PDF)
-	@bash tools/merge-pdfs-linux.sh $(COVER_PDF) $(PDF) $(PRINTED_PDF)
+	@bash tools/merge-pdfs.sh $(COVER_PDF) $(PDF) $(PRINTED_PDF)
 
 printed: $(PRINTED_PDF)
 	@true
@@ -159,16 +159,16 @@ $(ZH_TW_COVER): $(COVER_TEX)
 
 # Merge cover and paper PDFs for Traditional Chinese version
 $(ZH_TW_PRINTED_PDF): $(ZH_TW_COVER_PDF) $(ZH_TW_PDF)
-	@bash tools/merge-pdfs-linux.sh $(ZH_TW_COVER_PDF) $(ZH_TW_PDF) $(ZH_TW_PRINTED_PDF)
+	@bash tools/merge-pdfs.sh $(ZH_TW_COVER_PDF) $(ZH_TW_PDF) $(ZH_TW_PRINTED_PDF)
 
 # Install required external tools (for local development; not needed in Docker)
 deps:
 	@echo "Note: This target is for local development. In Docker, all tools are pre-installed."
-	@bash tools/deps-linux.sh
+	@bash tools/deps.sh
 
 # A clean rule to remove the generated file
 clean:
-	@bash tools/clean-linux.sh $(PDF) $(COVER_PDF) $(PRINTED_PDF) $(TEMP_SRC) $(COVER_TEMP_TEX)
+	@bash tools/clean.sh $(PDF) $(COVER_PDF) $(PRINTED_PDF) $(TEMP_SRC) $(COVER_TEMP_TEX)
 	@rm -f images/mermaid-*.png 2>/dev/null || true
 	@rm -f $(MERMAID_TEMP_SRC) 2>/dev/null || true
 	@rm -rf $(ZH_TW_DIR) 2>/dev/null || true
