@@ -1,7 +1,6 @@
 ---
 title: "Sustainable Scholarship: A Robust Academic Workflow with Markdown, Pandoc, and LaTeX"
 author: An Old-Fashioned Researcher
-date: 2025-10-25
 abstract: This document serves as a complete, self-referential example of the Pandoc academic workflow. It demonstrates the use of a YAML metadata block for configuration, automated citations with pandoc-citeproc, cross-references for figures, tables, and equations with pandoc-crossref, and advanced customization for multilingual typesetting and page numbering through LaTeX. Furthermore, it details recent extensions to the system, including a Docker-based reproducible build environment, programmatic diagramming with Mermaid, and an automated LLM-powered translation pipeline for multilingual publishing.
 bibliography:
   - references.json

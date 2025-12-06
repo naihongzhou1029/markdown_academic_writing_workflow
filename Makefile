@@ -72,7 +72,7 @@ $(PDF): $(SRC) $(BIB) $(CSL)
 	@bash $(PROCESS_MERMAID_SCRIPT) $(SRC) $(MERMAID_TEMP_SRC) images
 	@echo "Using CJK font: $(CJK_FONT_SC)"
 	@bash $(REPLACE_FONTS_SCRIPT) $(MERMAID_TEMP_SRC) $(TEMP_SRC) "PingFang SC" "$(CJK_FONT_SC)"
-	@pandoc $(TEMP_SRC) --standalone --filter pandoc-crossref --citeproc -o paper.tex
+	@pandoc $(TEMP_SRC) --standalone --filter pandoc-crossref --citeproc -V date=$(shell date +%Y-%m-%d) -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) paper.tex
 	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
@@ -89,6 +89,7 @@ cover: $(COVER_PDF)
 $(COVER_PDF): $(COVER_TEX) $(LOGO_FILE)
 	@echo "Using main font: $(MAIN_FONT), CJK font: $(CJK_FONT_TC)"
 	@bash $(REPLACE_FONTS_SCRIPT) $(COVER_TEX) $(COVER_TEMP_TEX) "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
+	@bash tools/inject-date.sh $(COVER_TEMP_TEX)
 	@xelatex -interaction=nonstopmode -jobname=cover $(COVER_TEMP_TEX)
 	@bash $(CLEANUP_TEMP_SCRIPT) $(COVER_TEMP_TEX)
 
@@ -123,7 +124,7 @@ $(ZH_TW_PDF): $(ZH_TW_SRC) $(BIB) $(CSL)
 	@bash $(PROCESS_MERMAID_SCRIPT) $(ZH_TW_SRC) $(ZH_TW_DIR)/paper.mermaid.tmp.md images
 	@echo "Using CJK font: $(CJK_FONT_TC)"
 	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_DIR)/paper.mermaid.tmp.md $(ZH_TW_DIR)/paper.tmp.md "PingFang SC" "$(CJK_FONT_TC)"
-	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography="Graduate Paper.json" --csl=chicago-author-date.csl -o paper.tex
+	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography="Graduate Paper.json" --csl=chicago-author-date.csl -V date=$(shell date +%Y-%m-%d) -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) $(ZH_TW_DIR)/paper.tex
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
@@ -137,6 +138,7 @@ $(ZH_TW_COVER_PDF): $(ZH_TW_COVER) $(LOGO_FILE)
 	@echo "Using main font: $(MAIN_FONT), CJK font: $(CJK_FONT_TC)"
 	@bash $(COPY_LOGO_SCRIPT) $(LOGO_FILE) $(ZH_TW_DIR)
 	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_COVER) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
+	@bash tools/inject-date.sh $(ZH_TW_DIR)/ntust_cover_page.tmp.tex
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode -jobname=cover ntust_cover_page.tmp.tex
 	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log
 	@echo "Cleaned up intermediate translation files"
