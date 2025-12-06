@@ -26,15 +26,19 @@ The project demonstrates how to produce a fully typeset scholarly PDF—complete
 ### Features Illustrated
 
 - **YAML metadata block as control panel**: At the top of `paper.md`, a rich YAML header configures:
-  - Document metadata (title, author, date, abstract).
+  - Document metadata (title, author, abstract).
   - Bibliography files and CSL style.
   - PDF engine (`xelatex`) and LaTeX header includes (`header-includes`).
   - Cross‑reference prefixes and formatting conventions.
   - Section numbering and page numbering behavior.
-- **Automated citations**: In‑text citations use Pandoc’s syntax (e.g., `[@key]`, `@key`, `[-@key]`) and are resolved into a formatted bibliography.
+- **Automated citations**: In‑text citations use Pandoc's syntax (e.g., `[@key]`, `@key`, `[-@key]`) and are resolved into a formatted bibliography.
 - **Tables and cross‑references**: Semantic labels (e.g., `{#tbl:workbench}`, `{#fig:my-plot}`, `{#eq:relativity}`) plus `pandoc-crossref` enable automatic numbering and internal references like `@tbl:workbench`.
 - **Multilingual typesetting**: Using XeLaTeX and CJK font settings allows high‑quality Traditional Chinese text alongside English in the same document.
 - **Custom appearance and templates**: The text discusses how to hook Pandoc into LaTeX templates (e.g., Eisvogel) to control cover pages and layout variables entirely from YAML.
+- **Dynamic date injection**: Dates are automatically injected at build time rather than hardcoded in source files:
+  - Paper PDFs use the current date in `YYYY-MM-DD` format (injected via Pandoc's `-V date` flag).
+  - Cover PDFs use the current date in `Month DD, YYYY` format (injected via `tools/inject-date.sh` script).
+  - This ensures documents always reflect their build date without manual updates to `paper.md` or `ntust_cover_page.tex`.
 
 ### Toolchain Requirements
 

@@ -46,8 +46,8 @@ i = 0
 while i < len(lines):
     line = lines[i]
     
-    # Fix abstract: |- followed by single line (convert to quoted string)
-    if re.match(r'^abstract:\s+\|-$', line.rstrip()):
+    # Fix abstract: | or abstract: |- with unindented content
+    if re.match(r'^abstract:\s+\|', line.rstrip()):
         # Check if next line is content and line after that is a new YAML key
         if i + 1 < len(lines):
             content_line = lines[i + 1]
@@ -61,7 +61,7 @@ while i < len(lines):
                         # Properly escape for YAML: backslashes first, then quotes
                         escaped_content = content_line.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
                         result.append(f'abstract: "{escaped_content}"')
-                        i += 2  # Skip the |- line and content line
+                        i += 2  # Skip the | line and content line
                         continue
                 elif i + 2 == len(lines):
                     # Last line case - treat as single line abstract
@@ -69,6 +69,16 @@ while i < len(lines):
                     result.append(f'abstract: "{escaped_content}"')
                     i += 2
                     continue
+        # If we get here, we have abstract: | with multiline - ensure content is indented
+        result.append(line)
+        i += 1
+        # Indent the next line if it's not already indented
+        if i < len(lines):
+            content_line = lines[i]
+            if content_line.strip() and not content_line.startswith(' '):
+                result.append('  ' + content_line)
+                i += 1
+        continue
     
     # Start of multi-line YAML block
     if line.rstrip() == '- |':
