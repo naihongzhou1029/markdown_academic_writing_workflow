@@ -281,10 +281,44 @@ class GoogleDocsHTMLParser:
                 elif item.name == 'a':
                     href = item.get('href', '')
                     link_text = item.get_text(strip=True)
-                    text += f"[{link_text}]({href})"
+                    # Check if link contains a Pandoc citation (starts with [@)
+                    # If so, extract just the citation and skip the link wrapper
+                    if link_text.strip().startswith('[@') and ']' in link_text:
+                        # Extract citation from link text
+                        citation_match = re.search(r'\[@[^\]]+\]', link_text)
+                        if citation_match:
+                            text += citation_match.group(0)
+                        else:
+                            text += link_text
+                    # Check if link is a Zotero/google-docs citation URL
+                    # In this case, the link text might be the citation, so use it directly
+                    elif 'zotero.org' in href or 'google-docs' in href:
+                        # If link text looks like a citation, use it; otherwise skip the link
+                        if link_text.strip().startswith('[@') or '(' in link_text:
+                            text += link_text
+                        else:
+                            text += f"[{link_text}]({href})"
+                    else:
+                        text += f"[{link_text}]({href})"
                     
         # Convert citations
         text = self._convert_citations(text)
+        # Remove duplicate citations with links: [[@citation]](url)[@citation] -> [@citation]
+        text = re.sub(r'\[\[(@[^\]]+)\]\]\([^\)]+\)\[@[^\]]+\]', r'[\1]', text)
+        # Remove consecutive duplicate citations: [@citation][@citation] -> [@citation]
+        text = re.sub(r'(\[@[^\]]+\])\1', r'\1', text)
+        # Remove duplicate author-date citations with links: [(Author, Year)](url)(Author, Year) -> (Author, Year)
+        text = re.sub(r'\[\(([^)]+)\)\]\([^\)]+\)\1', r'(\1)', text)
+        # Remove consecutive duplicate author-date citations: (Author, Year)(Author, Year) -> (Author, Year)
+        text = re.sub(r'(\([^)]*(?:et al\.|&|,)\s*(?:19|20)\d{2}[^)]*\))\1', r'\1', text)
+        # Remove empty citation pattern: []()
+        text = re.sub(r'\[\]\(\)', '', text)
+        # Remove duplicate figure/table references: [「圖N」](#link)「圖N」 -> [「圖N」](#link)
+        text = re.sub(r'(\[「(圖|表)\d+」\]\([^\)]+\))「\2\d+」', r'\1', text)
+        # Remove duplicate figure/table references: [圖N：](#link)圖N：： -> [圖N：](#link)
+        text = re.sub(r'(\[(圖|表)\d+：\]\([^\)]+\))\2\d+：：', r'\1', text)
+        # Remove duplicate table references: [表N：](#link)表N：： -> [表N：](#link)
+        text = re.sub(r'(\[表\d+：\]\([^\)]+\))表\d+：：', r'\1', text)
         return text.strip()
         
     def _convert_citations(self, text: str) -> str:
@@ -323,11 +357,29 @@ class GoogleDocsHTMLParser:
         is_ordered = list_elem.name == 'ol'
         
         for i, item in enumerate(items, 1):
-            item_text = item.get_text(strip=True)
-            if is_ordered:
-                self.content.append(f"{i}. {item_text}\n")
+            # Check if list item contains a heading
+            heading = item.find(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+            if heading:
+                # Extract heading level and text
+                level = int(heading.name[1])
+                heading_text = heading.get_text(strip=True)
+                # Convert heading to Markdown
+                self.content.append(f"\n{'#' * level} {heading_text}\n\n")
+                # Get remaining text in list item (excluding heading)
+                # Create a copy to avoid modifying the original
+                item_copy = BeautifulSoup(str(item), 'html.parser')
+                heading_copy = item_copy.find(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+                if heading_copy:
+                    heading_copy.decompose()
+                remaining_text = item_copy.get_text(strip=True)
+                if remaining_text:
+                    self.content.append(f"{remaining_text}\n\n")
             else:
-                self.content.append(f"- {item_text}\n")
+                item_text = item.get_text(strip=True)
+                if is_ordered:
+                    self.content.append(f"{i}. {item_text}\n")
+                else:
+                    self.content.append(f"- {item_text}\n")
         self.content.append("\n")
         
     def _convert_table(self, table_elem):
@@ -408,6 +460,23 @@ class GoogleDocsHTMLParser:
         
         # Convert citations
         html_content = self._convert_citations(html_content)
+        
+        # Remove duplicate citations with links: [[@citation]](url)[@citation] -> [@citation]
+        html_content = re.sub(r'\[\[(@[^\]]+)\]\]\([^\)]+\)\[@[^\]]+\]', r'[\1]', html_content)
+        # Remove consecutive duplicate citations: [@citation][@citation] -> [@citation]
+        html_content = re.sub(r'(\[@[^\]]+\])\1', r'\1', html_content)
+        # Remove duplicate author-date citations with links: [(Author, Year)](url)(Author, Year) -> (Author, Year)
+        html_content = re.sub(r'\[\(([^)]+)\)\]\([^\)]+\)\1', r'(\1)', html_content)
+        # Remove consecutive duplicate author-date citations: (Author, Year)(Author, Year) -> (Author, Year)
+        html_content = re.sub(r'(\([^)]*(?:et al\.|&|,)\s*(?:19|20)\d{2}[^)]*\))\1', r'\1', html_content)
+        # Remove empty citation pattern: []()
+        html_content = re.sub(r'\[\]\(\)', '', html_content)
+        # Remove duplicate figure/table references: [「圖N」](#link)「圖N」 -> [「圖N」](#link)
+        html_content = re.sub(r'(\[「(圖|表)\d+」\]\([^\)]+\))「\2\d+」', r'\1', html_content)
+        # Remove duplicate figure/table references: [圖N：](#link)圖N：： -> [圖N：](#link)
+        html_content = re.sub(r'(\[(圖|表)\d+：\]\([^\)]+\))\2\d+：：', r'\1', html_content)
+        # Remove duplicate table references: [表N：](#link)表N：： -> [表N：](#link)
+        html_content = re.sub(r'(\[表\d+：\]\([^\)]+\))表\d+：：', r'\1', html_content)
         
         # Clean up HTML entities
         html_content = html.unescape(html_content)
@@ -605,8 +674,8 @@ def generate_cover_tex(project_root: Path, metadata: Dict):
 % University / Department / Degree
 \\vspace{{8mm}}
 \\begin{{center}}
-  {{\\CJKfamily{{song}}\\fontsize{{20pt}}{{28pt}}\\selectfont \\University}}\\[4mm]
-  {{\\CJKfamily{{song}}\\fontsize{{18pt}}{{26pt}}\\selectfont \\Department}}\\[4mm]
+  {{\\CJKfamily{{song}}\\fontsize{{20pt}}{{28pt}}\\selectfont \\University}}\\\\[4mm]
+  {{\\CJKfamily{{song}}\\fontsize{{18pt}}{{26pt}}\\selectfont \\Department}}\\\\[4mm]
   {{\\CJKfamily{{song}}\\fontsize{{18pt}}{{26pt}}\\selectfont \\DegreeName}}
 \\end{{center}}
 
@@ -626,7 +695,7 @@ def generate_cover_tex(project_root: Path, metadata: Dict):
 \\vspace{{28mm}}
 \\begin{{center}}
   {{\\CJKfamily{{song}}\\fontsize{{14pt}}{{22pt}}\\selectfont
-    Student: \\Author \\[6mm]
+    Student: \\Author \\\\[6mm]
     Advisor: \\Advisor
   }}
 \\end{{center}}
