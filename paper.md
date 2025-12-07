@@ -4,7 +4,7 @@ author: An Old-Fashioned Researcher
 abstract: This document serves as a complete, self-referential example of the Pandoc academic workflow. It demonstrates the use of a YAML metadata block for configuration, automated citations with pandoc-citeproc, cross-references for figures, tables, and equations with pandoc-crossref, and advanced customization for multilingual typesetting and page numbering through LaTeX. Furthermore, it details recent extensions to the system, including a Docker-based reproducible build environment, programmatic diagramming with Mermaid, and an automated LLM-powered translation pipeline for multilingual publishing.
 bibliography:
   - references.json
-  - "Graduate Paper.json" 
+  - "bibliography.json" 
 csl: chicago-author-date.csl 
 link-citations: true
 pdf-engine: xelatex

@@ -7,7 +7,7 @@ PDF="${1:-paper.pdf}"
 COVER_PDF="${2:-cover.pdf}"
 PRINTED_PDF="${3:-printed.pdf}"
 TEMP_SRC="${4:-paper.tmp.md}"
-COVER_TEMP_TEX="${5:-ntust_cover_page.tmp.tex}"
+COVER_TEMP_TEX="${5:-cover_page.tmp.tex}"
 
 rm -f "$PDF"
 rm -f "$COVER_PDF" "$PRINTED_PDF"

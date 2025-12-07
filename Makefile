@@ -3,21 +3,21 @@ PDF = paper.pdf
 SRC = paper.md
 BIB = references.json
 CSL = chicago-author-date.csl
-COVER_TEX = ntust_cover_page.tex
+COVER_TEX = cover_page.tex
 COVER_PDF = cover.pdf
 PRINTED_PDF = printed.pdf
 LOGO_FILE = ntust_logo.jpg
 LOGO_URL = https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg
 TEMP_SRC = paper.tmp.md
 MERMAID_TEMP_SRC = paper.mermaid.tmp.md
-COVER_TEMP_TEX = ntust_cover_page.tmp.tex
+COVER_TEMP_TEX = cover_page.tmp.tex
 
 # Translation variables
 LLM_MODEL = gemini-2.5-flash
 API_KEY_FILE = .api_key
 ZH_TW_DIR = zh_tw
 ZH_TW_SRC = $(ZH_TW_DIR)/paper.md
-ZH_TW_COVER = $(ZH_TW_DIR)/ntust_cover_page.tex
+ZH_TW_COVER = $(ZH_TW_DIR)/cover_page.tex
 ZH_TW_PDF = $(ZH_TW_DIR)/paper.pdf
 ZH_TW_COVER_PDF = $(ZH_TW_DIR)/cover.pdf
 ZH_TW_PRINTED_PDF = $(ZH_TW_DIR)/printed.pdf
@@ -117,7 +117,7 @@ $(ZH_TW_PDF): $(ZH_TW_SRC) $(BIB) $(CSL)
 	@echo "Building PDF from translated markdown..."
 	@echo "Processing Mermaid diagrams..."
 	@mkdir -p images
-	@bash $(CREATE_SYMLINKS_SCRIPT) $(ZH_TW_DIR) $(BIB) $(CSL) "Graduate Paper.json"
+	@bash $(CREATE_SYMLINKS_SCRIPT) $(ZH_TW_DIR) $(BIB) $(CSL) "bibliography.json"
 	@if [ -d images ]; then \
 		if [ -e $(ZH_TW_DIR)/images ]; then rm -rf $(ZH_TW_DIR)/images; fi; \
 		cd $(ZH_TW_DIR) && ln -sf ../images images; \
@@ -125,7 +125,7 @@ $(ZH_TW_PDF): $(ZH_TW_SRC) $(BIB) $(CSL)
 	@bash $(PROCESS_MERMAID_SCRIPT) $(ZH_TW_SRC) $(ZH_TW_DIR)/paper.mermaid.tmp.md images
 	@echo "Using CJK font: $(CJK_FONT_TC)"
 	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_DIR)/paper.mermaid.tmp.md $(ZH_TW_DIR)/paper.tmp.md "PingFang SC" "$(CJK_FONT_TC)"
-	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography="Graduate Paper.json" --csl=chicago-author-date.csl -V date=$(shell date +%Y-%m-%d) -o paper.tex
+	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography="bibliography.json" --csl=chicago-author-date.csl -V date=$(shell date +%Y-%m-%d) -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) $(ZH_TW_DIR)/paper.tex
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
 	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
@@ -138,10 +138,10 @@ $(ZH_TW_COVER_PDF): $(ZH_TW_COVER) $(LOGO_FILE)
 	@echo "Building cover PDF from translated LaTeX..."
 	@echo "Using main font: $(MAIN_FONT), CJK font: $(CJK_FONT_TC)"
 	@bash $(COPY_LOGO_SCRIPT) $(LOGO_FILE) $(ZH_TW_DIR)
-	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_COVER) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
-	@bash tools/inject-date.sh $(ZH_TW_DIR)/ntust_cover_page.tmp.tex
-	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode -jobname=cover ntust_cover_page.tmp.tex
-	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/ntust_cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log
+	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_COVER) $(ZH_TW_DIR)/cover_page.tmp.tex "Times New Roman" "$(MAIN_FONT)" "PingFang TC" "$(CJK_FONT_TC)"
+	@bash tools/inject-date.sh $(ZH_TW_DIR)/cover_page.tmp.tex
+	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode -jobname=cover cover_page.tmp.tex
+	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/cover_page.tmp.tex $(ZH_TW_DIR)/cover.aux $(ZH_TW_DIR)/cover.log
 	@echo "Cleaned up intermediate translation files"
 
 # Translate markdown file

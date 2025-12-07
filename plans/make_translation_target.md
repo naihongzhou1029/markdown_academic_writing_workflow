@@ -41,7 +41,7 @@ Created OS-specific translation helper scripts:
 1. **Translation Phase:**
    - Creates `zh_tw/` directory if it doesn't exist
    - Translates `paper.md` → `zh_tw/paper.md` using Gemini API
-   - Translates `ntust_cover_page.tex` → `zh_tw/ntust_cover_page.tex` using Gemini API
+   - Translates `cover_page.tex` → `zh_tw/cover_page.tex` using Gemini API
 
 2. **Post-Processing Phase:**
    - Updates YAML metadata in translated markdown:
@@ -56,7 +56,7 @@ Created OS-specific translation helper scripts:
    - Creates symbolic links for bibliography and CSL files in `zh_tw/` directory
 
 4. **Cleanup Phase:**
-   - Removes intermediate translation files (`zh_tw/paper.md`, `zh_tw/ntust_cover_page.tex`)
+   - Removes intermediate translation files (`zh_tw/paper.md`, `zh_tw/cover_page.tex`)
    - Removes LaTeX intermediate files (`.aux`, `.log`, `.tex` files)
    - Only final PDFs remain in `zh_tw/` directory
 
@@ -117,7 +117,7 @@ make zh_tw
 ```
 
 This will:
-1. Translate `paper.md` and `ntust_cover_page.tex` to Traditional Chinese
+1. Translate `paper.md` and `cover_page.tex` to Traditional Chinese
 2. Build PDFs from the translated files
 3. Clean up intermediate translation files
 4. Output final PDFs in `zh_tw/` directory

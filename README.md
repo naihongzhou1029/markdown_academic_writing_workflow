@@ -17,7 +17,7 @@ The project demonstrates how to produce a fully typeset scholarly PDF—complete
 - **Pandoc**: The central document converter, used to transform `paper.md` into LaTeX and then to PDF.
 - **LaTeX distribution (e.g., TeX Live)**: Provides the typesetting engine (XeLaTeX in this example) and packages needed for advanced layouts and multilingual text.
 - **Plain‑text editor**: Any modern editor (VS Code, Zettlr, etc.) is used for writing and editing the Markdown source.
-- **Zotero + Better BibTeX**: Manages bibliographic data and exports it automatically (e.g., `references.json`, `Graduate Paper.json`) for Pandoc to consume.
+- **Zotero + Better BibTeX**: Manages bibliographic data and exports it automatically (e.g., `references.json`, `bibliography.json`) for Pandoc to consume.
 - **CSL styles**: A citation style definition (e.g., `chicago-author-date.csl`) controls how citations and the bibliography are rendered.
 - **Pandoc filters**:
   - `--citeproc` for automated citation processing and bibliography generation.
@@ -38,7 +38,7 @@ The project demonstrates how to produce a fully typeset scholarly PDF—complete
 - **Dynamic date injection**: Dates are automatically injected at build time rather than hardcoded in source files:
   - Paper PDFs use the current date in `YYYY-MM-DD` format (injected via Pandoc's `-V date` flag).
   - Cover PDFs use the current date in `Month DD, YYYY` format (injected via `tools/inject-date.sh` script).
-  - This ensures documents always reflect their build date without manual updates to `paper.md` or `ntust_cover_page.tex`.
+  - This ensures documents always reflect their build date without manual updates to `paper.md` or `cover_page.tex`.
 
 ### Toolchain Requirements
 
@@ -113,7 +113,7 @@ The `Makefile` handles all the Pandoc and LaTeX commands, with configuration emb
 
 This project also demonstrates how to leverage an LLM-backed translation pipeline, driven entirely from the `Makefile`, to produce a Traditional Chinese version of the paper:
 
-- **Source**: The original English manuscript in `paper.md` and the NTUST cover page in `ntust_cover_page.tex`.
+- **Source**: The original English manuscript in `paper.md` and the NTUST cover page in `cover_page.tex`.
 - **LLM translation**: Make targets call translation scripts (`tools/translate.sh`) that invoke a large language model defined by `LLM_MODEL` (default `gemini-2.5-flash`) using an API key stored in `.api_key`. These scripts generate translated Markdown and LaTeX into the `zh_tw/` directory.
 - **AI-powered validation**: After initial translation, the `tools/validate-and-fix-translated-md.sh` script automatically reviews the translated Markdown for formatting errors (malformed tables, broken syntax, corrupted YAML) and fixes them while preserving the translated content.
 - **Post-processing and typesetting**: Additional scripts fix fonts and layout, then Pandoc and XeLaTeX compile the translated sources into fully typeset PDFs with cover pages.
