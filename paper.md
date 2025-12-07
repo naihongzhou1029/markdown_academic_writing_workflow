@@ -1,14 +1,13 @@
 ---
-title: "Sustainable Scholarship: A Robust Academic Workflow with Markdown, Pandoc, and LaTeX"
-author: An Old-Fashioned Researcher
-abstract: This document serves as a complete, self-referential example of the Pandoc academic workflow. It demonstrates the use of a YAML metadata block for configuration, automated citations with pandoc-citeproc, cross-references for figures, tables, and equations with pandoc-crossref, and advanced customization for multilingual typesetting and page numbering through LaTeX. Furthermore, it details recent extensions to the system, including a Docker-based reproducible build environment, programmatic diagramming with Mermaid, and an automated LLM-powered translation pipeline for multilingual publishing.
+title: "利用生成式人工智慧從遊戲設計流程中的規格書進行知識萃取——以遊戲研發公司為例 / Leveraging Generative AI for Knowledge Extraction from Design Specs in the Game Design Process: A Case Study in a Game Development Company"
+author: "周乃宏"
+abstract: "遊戲產品在開發的過程中，遊戲規格書(Game Design Specs)幾乎就是整個產品所有研發人員智慧及經驗的結晶。然而，開發的過程所有人員脈絡清楚，許多內隱知識往往不會特別寫進去。開發期可能不會是問題，但若是經過一段時間再回頭檢視，隨著記憶和脈絡資訊的遺失，規格書內含的知識，卻再也無法讓讀者繼續傳承重要的內隱知識。明明文件滿地都是，但卻都像是”乾涸”無用的庫存文件，往往導致新人只好從頭學習摸索，花費無謂的試錯成本，無法有更多的空間進行新規格的思考及試錯。 2023年開始，生成式人工智慧(Generative Artificial Intelligence, GenAI)技術爆發式成長，透過預訓練(Pre-Trained)的大語言模型(Large Language Model, LLM)能以超高效率理解和輸出文字。這為「活化規格書」開啟了新的可能：我們能否讓GenAI代替我們理解規格書？又能否讓GenAI補充規格書缺失的脈絡？因此本論文將深入研究，GenAI是否能解答上述問題，放大既有創意資產的優勢。"
 bibliography:
-  - references.json
-  - "bibliography.json" 
-csl: chicago-author-date.csl 
+  - bibliography.json
+csl: chicago-author-date.csl
 link-citations: true
 pdf-engine: xelatex
-CJKmainfont: "PingFang SC"
+CJKmainfont: "PingFang TC"
 toc: true
 toc-depth: 2
 lof: true
@@ -17,11 +16,11 @@ header-includes:
 - \pagenumbering{arabic}
 - \setcounter{page}{1}
 - \usepackage{xeCJK}
-- \setCJKmainfont{PingFang SC}
+- \setCJKmainfont{Noto Sans CJK TC}
 - \usepackage[a4paper,margin=1in]{geometry}
 - |
     \usepackage{etoolbox}
-    \AtBeginEnvironment{CSLReferences}{%
+    \AtBeginEnvironment{CSLReferences}{
       \newpage\section*{References}%
       \setlength{\parindent}{0pt}%
     }
@@ -29,172 +28,697 @@ header-includes:
     \pretocmd{\listoffigures}{\clearpage}{}{}
     \pretocmd{\listoftables}{\clearpage}{}{}
     \apptocmd{\listoftables}{\clearpage}{}{}
-figPrefix:
--   "Figure"
--   "Figures" 
-tblPrefix: "Tab."
+figPrefix: "圖"
+tblPrefix: "表"
 rangeDelim: "–"
 numbersections: true
 ---
 
-# Introduction: The Philosophy of Plain-Text Academia
+摘要
 
-The choice of writing tools in academic work is not merely a matter of technical preference; it is a philosophical commitment to a particular mode of scholarship. The modern plain-text workflow, centered on Markdown, Pandoc, and LaTeX, represents a deliberate move towards a more robust, transparent, and durable scholarly practice [@healy2018plain]. This approach is founded on a set of core principles that stand in stark contrast to the opaque, proprietary nature of traditional word processors.
+遊戲產品在開發的過程中，遊戲規格書(Game Design Specs)幾乎就是整個產品所有研發人員智慧及經驗的結晶。然而，開發的過程所有人員脈絡清楚，許多內隱知識往往不會特別寫進去。開發期可能不會是問題，但若是經過一段時間再回頭檢視，隨著記憶和脈絡資訊的遺失，規格書內含的知識，卻再也無法讓讀者繼續傳承重要的內隱知識。明明文件滿地都是，但卻都像是”乾涸”無用的庫存文件，往往導致新人只好從頭學習摸索，花費無謂的試錯成本，無法有更多的空間進行新規格的思考及試錯。
 
-At its heart is the principle of **sustainability**. Plain-text files, such as those written in Markdown, are the most resilient digital format. Unlike the complex binary structures of `.docx` files, which can become corrupted or obsolete as software changes, plain text will remain readable and accessible for decades, ensuring the long-term viability of one's intellectual output [@healy2018plain; @macfarlane2022pandoc]. This is coupled with the powerful concept of **separation of concerns**, where the semantic content of a document—the text, its structure, and its meaning—is written in Markdown, completely divorced from its final visual presentation, which is handled independently by LaTeX templates or other styling mechanisms. This modularity allows for radical changes in output format with zero alteration to the source manuscript.
+2023年開始，生成式人工智慧(Generative Artificial Intelligence, GenAI)技術爆發式成長，透過預訓練(Pre-Trained)的大語言模型(Large Language Model, LLM)能以超高效率理解和輸出文字。這為「活化規格書」開啟了新的可能：我們能否讓GenAI代替我們理解規格書？又能否讓GenAI補充規格書缺失的脈絡？因此本論文將深入研究，GenAI是否能解答上述問題，放大既有創意資產的優勢。
 
-Furthermore, this workflow is uniquely suited for the rigorous demands of modern research. Plain-text files integrate seamlessly with **version control systems** like Git, enabling meticulous tracking of every change, non-destructive experimentation with drafts, and transparent collaboration among authors—a process notoriously fraught with difficulty when using binary files [@healy2018plain]. The entire process, from the initial draft to the final PDF, can be automated with simple scripts, ensuring perfect **reproducibility** at any point in the future, a cornerstone of scientific and scholarly integrity.
+關鍵字：生成式人工智慧，遊戲規格書，創意資產
 
-This system is best understood not as a collection of disparate tools, but as a linear, modular data processing pipeline. The raw manuscript (`.md`) and bibliographic data (`.json` or `.bib`) serve as the initial inputs. These inputs are then passed through a chain of specialized filters and transformers: Zotero and its Better BibTeX extension manage and export bibliographic data; Pandoc parses the source text [@macfarlane2022pandoc]; `pandoc-citeproc` resolves citation markers; `pandoc-crossref` numbers figures and equations [@lierdakil2021crossref]; and finally, a LaTeX engine like XeLaTeX performs the final typesetting to produce a PDF.
+ABSTRACT
 
-```mermaid
-flowchart LR
-    A[Raw Manuscript<br/>.md file] --> D[Pandoc<br/>Parser]
-    B[Bibliographic Data<br/>.json or .bib] --> C[Zotero/BBT<br/>Export & Manage]
-    C --> D
-    D --> E[pandoc-citeproc<br/>Resolve Citations]
-    E --> F[pandoc-crossref<br/>Number Figures/Tables/Equations]
-    F --> G[XeLaTeX<br/>Typesetting Engine]
-    G --> H[Final PDF<br/>Output]
-    
-    style A fill:#b3d9ff,stroke:#4a90e2,stroke-width:2px,color:#000000
-    style B fill:#b3d9ff,stroke:#4a90e2,stroke-width:2px,color:#000000
-    style C fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
-    style D fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
-    style E fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
-    style F fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
-    style G fill:#b3ffd9,stroke:#50c878,stroke-width:2px,color:#000000
-    style H fill:#ffb3d9,stroke:#e91e63,stroke-width:2px,color:#000000
-```
+誌謝
 
-Each stage is discrete and transparent. This contrasts fundamentally with the monolithic, "black box" environment of a word processor, where these processes are intertwined and hidden from the user. The power of this workflow lies in the ability to control this pipeline, to swap out components, insert new processing stages, and debug any issue by inspecting the intermediate output at any point—for instance, by generating the intermediate `.tex` file to diagnose a LaTeX error. This level of control and transparency is the key to solving the complex, bespoke formatting challenges inherent in academic writing.
+所有對於研究提供協助之人或機構，作者都可在誌謝中表達感謝之意。論文口試時的論文初稿，請不要放這頁，因為你還沒畢業。
 
-# Part I: The Core Toolchain
+目錄
 
-## Section 1: Assembling Your Digital Workbench
+[利用生成式人工智慧從遊戲設計流程中的規格書進行知識萃取——以遊戲研發公司為例        1](#h.6kpaz6za9ajl)利用生成式人工智慧從遊戲設計流程中的規格書進行知識萃取——以遊戲研發公司為例        1
 
-Before embarking on the plain-text writing process, a robust environment is required. While one can install tools individually, this project demonstrates a modern, **containerized approach** to academic writing.
+[Leveraging Generative AI for Knowledge Extraction from Design Specs in the Game Design Process: A Case Study in a Game Development Company        1](#h.x1va9nn334vr)Leveraging Generative AI for Knowledge Extraction from Design Specs in the Game Design Process: A Case Study in a Game Development Company        1
 
-**Docker: The Reproducible Environment** A significant challenge in academic workflows is dependency management—ensuring that Pandoc, LaTeX packages, and helper scripts work consistently across different machines. To solve this, we utilize **Docker**. The entire toolchain is encapsulated in a Docker image (derived from `dalibo/pandocker`). This ensures that the build process is perfectly reproducible: if it builds on one machine, it will build on any machine with Docker installed. The complex "plumbing" of the workflow is abstracted away behind simple wrapper scripts (`./make-docker.sh`), allowing the author to focus solely on writing.
+[1 緒論        1](#h.1cbpcb1jnrbb)1 緒論        1
 
-**The Scripted Build System** Behind the scenes, the `Makefile` orchestrates the build process. To manage complexity and ensure cross-platform compatibility (Linux, macOS, Windows), implementation details have been extracted into modular shell scripts in the `tools/` directory. These scripts handle tasks like font detection, PDF merging, and dependency checks, running transparently inside the Docker container.
+[1.1 研究背景與動機        1](#h.hc0earc59t61)1.1 研究背景與動機        1
 
-**A Plain-Text Editor: The Writing Environment** The writing itself is done in a plain-text editor. Modern, extensible editors like Visual Studio Code (VSCode), Atom, or the academic-focused Zettlr are ideal choices.
+[1.1.1 遊戲規格書：創意資產的基石與內隱知識的困境        1](#h.e6p7oz4gxi6a)1.1.1 遊戲規格書：創意資產的基石與內隱知識的困境        1
 
-**Zotero: The Reference Manager** Robust reference management is handled by Zotero, a powerful, open-source application. For this workflow, the installation of the **Better BibTeX for Zotero (BBT)** extension is non-negotiable. BBT provides two essential features: the automatic generation of stable, human-readable citation keys and a highly reliable, automated export process that keeps the bibliography file synchronized with the Zotero library.
+[1.1.2 生成式人工智慧的興起與活化文檔的契機        1](#h.ckcgh2l1ut0r)1.1.2 生成式人工智慧的興起與活化文檔的契機        1
 
-The components are summarized in @tbl:workbench.
+[1.2 研究目的        2](#h.giydlap93fxd)1.2 研究目的        2
 
-| Component          | Purpose                                                  | Recommended Software | Key Configuration Notes                                                               |
-| ------------------ | -------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------- |
-| Container Runtime  | Provides a consistent, reproducible build environment.   | Docker               | Use `./make-docker.sh` to run builds without local dependency issues.                 |
-| Document Converter | Parses Markdown and orchestrates the conversion process. | Pandoc (in Docker)   | No local installation required when using the Docker workflow.                        |
-| Typesetting Engine | Compiles LaTeX code generated by Pandoc into a PDF.      | TeX Live (in Docker) | Included in the Docker image.                                                         |
-| Text Editor        | The environment for writing in plain-text Markdown.      | VSCode               | Install extensions: Markdown Preview Enhanced and Pandoc Citer.                       |
-| Reference Manager  | Manages bibliographic data and exports it for Pandoc.    | Zotero               | Install the Better BibTeX for Zotero (BBT) extension for stable keys and auto-export. |
+[1.1 研究架構與方法        2](#h.vgvv48cnm52e)1.1 研究架構與方法        2
 
-: The Digital Scholar's Workbench. {#tbl:workbench}
+[1.2 研究範圍與限制        2](#h.rrzsu7cus8q0)1.2 研究範圍與限制        2
 
-## Section 2: The Pandoc Conversion Engine: From Markdown to PDF
+[1.3 論文架構        3](#h.1hctwzlk8s7i)1.3 論文架構        3
 
-With the toolchain installed, the conversion process is driven by the Pandoc command-line interface, configured primarily through a metadata block within the Markdown file itself, as seen at the top of this very document.
+[2 第二章 文獻探討        4](#h.ourmdamge5ox)2 第二章 文獻探討        4
 
-**The Basic Conversion Command** The fundamental command to convert a Markdown file to a PDF is straightforward: `pandoc input.md -o output.pdf`. Pandoc typically infers the input and output formats from the file extensions.
+[2.1 文獻探討        4](#h.cfkmn49ozfsy)2.1 文獻探討        4
 
-**The YAML Metadata Block: The Document's Control Panel** Rather than relying on long and cumbersome command-line flags, Pandoc configurations are best managed within a YAML metadata block at the very top of the Markdown file, delimited by `---` on either side. This approach is superior because it keeps the document's essential metadata and its compilation settings version-controlled alongside the content itself.
+[2.1.1 知識管理的重要性為何？        4](#h.xb4t6sthkm85)2.1.1 知識管理的重要性為何？        4
 
-**The Standalone Flag (`-s`)** A critical option for generating a complete document is `--standalone` (or its shorthand, `-s`). This flag instructs Pandoc to use a template to wrap the converted content with the necessary header and footer material—for example, the `\documentclass{...}` and `\begin{document}...\end{document}` commands in LaTeX—to create a self-contained, compilable file rather than a mere fragment.
+[2.1.2 知識管理流程的本質        5](#h.q2zpj7pvxaeb)2.1.2 知識管理流程的本質        5
 
-# Part II: Managing Scholarly Apparatus
+[2.1.3 知識管理的等級        5](#h.jfhhiqwnwegf)2.1.3 知識管理的等級        5
 
-## Section 3: Automated Citations and Bibliographies with `pandoc-citeproc`
+[2.1.4 目前為止有無終極解法？        6](#h.4jknaysh0uba)2.1.4 目前為止有無終極解法？        6
 
-A cornerstone of academic writing is the correct management of citations and bibliographies. The Pandoc workflow automates this process with exceptional precision using its citation processor, `pandoc-citeproc`.
+[3 第三章 研究方向與結果        9](#h.z6ylzs59l7np)3 第三章 研究方向與結果        9
 
-**The Role of `pandoc-citeproc`** The citation processor, invoked with the `--citeproc` flag in modern Pandoc versions, is the filter responsible for parsing Markdown citation syntax, transforming it into fully formatted in-text citations, and automatically generating a bibliography at the end of the document.
+[3.1 三大研究原則        9](#h.40ehl55fllns)3.1 三大研究原則        9
 
-**Step 1: Configuring Zotero and Better BibTeX (BBT)** The process begins with the reference manager. Within Zotero, the Better BibTeX extension should be configured to automatically export the desired library or collection to a file whenever an entry is added or modified.
+[3.2 「萃取」的定義        9](#h.7413bsv81dm6)3.2 「萃取」的定義        9
 
-**Step 2: Choosing the Bibliography Format: CSL JSON vs. BibTeX** To ensure the highest possible fidelity between the reference manager and the final document, it is strongly recommended to export directly from Zotero to a CSL-native format, such as **Better CSL JSON** or **Better CSL YAML**. This eliminates the "man-in-the-middle" conversion and preserves the integrity of the bibliographic data.
+[3.3 目標文件及其驗收標準        10](#h.o6rap277nn6d)3.3 目標文件及其驗收標準        10
 
-**Step 3: Specifying Bibliography and Style in YAML** The connection between the Markdown document and the bibliographic data is made in the YAML metadata block. Two keys are required: `bibliography:` and `csl:`. Thousands of CSL styles for various journals and conventions are available for download from the official Zotero Style Repository.
+[3.3.1 純文字理解        11](#h.tgmkg6urzyl8)3.3.1 純文字理解        11
 
-**Step 4: Mastering Pandoc Citation Syntax** With the setup complete, citing sources in Markdown is simple and expressive. The syntax supports a wide range of scholarly conventions.
+[3.3.2 內嵌圖片理解        19](#h.m9ost3jqri2)3.3.2 內嵌圖片理解        19
 
--   **Standard Parenthetical Citations:** `...as has been shown [@knuth1984tex; @lamport1986latex]`.
-    
--   **Narrative (Author-in-Text) Citations:** `@macfarlane2022pandoc argues that...` renders as "MacFarlane (2022) argues that...".
-    
--   **Suppressing the Author:** When an author is already mentioned, their name can be suppressed in the citation by adding a minus sign: `Healy's research [-@healy2018plain] confirms...` renders as "Healy's research (2018) confirms...".
-    
--   **Prefixes, Locators, and Suffixes:** `[see @knuth1984tex, chap. 3]`.
-    
+[3.3.3 表格理解        29](#h.lwzbwox6zqef)3.3.3 表格理解        29
 
-## Section 4: Managing Figures, Tables, and Cross-References
+[4 第四章 結論與建議        38](#h.qmn7g8jppxlz)4 第四章 結論與建議        38
 
-While vanilla Markdown lacks a native method for sophisticated figure management, this workflow integrates powerful tools for both creation and referencing.
+[4.1 結論        39](#h.72pgb6ffgddy)4.1 結論        39
 
-**Cross-Referencing with `pandoc-crossref`** This critical academic function is seamlessly added by using the `pandoc-crossref` filter [@lierdakil2021crossref].
+[4.2 未來發展建議        39](#h.dpjfar3ci7ie)4.2 未來發展建議        39
 
-**Installation and Activation** First, the `pandoc-crossref` executable must be installed. The filter is then activated by adding the `--filter pandoc-crossref` flag to the Pandoc command. If also using the citation processor, this flag must appear _before_ the `--citeproc` flag.
+1. 第一章 緒論
 
-**Labeling and Referencing Syntax** The syntax for labeling and referencing elements is designed to be intuitive. For example, we can reference the table of tools from earlier: @tbl:workbench. We can also reference the plot in @fig:my-plot and the famous equation in @eq:relativity.
+1. 研究背景與動機
 
-$$E=mc^2$$ {#eq:relativity}
+1. 遊戲規格書：創意資產的基石與內隱知識的困境
 
-![Example plot](images/2025-11-17-19-47-43.png){#fig:my-plot width=20%}
+遊戲規格書（Game Design Document, GDD）是遊戲產品開發的核心文件，它不僅是各部門協作的藍圖，更是承載產品設計哲學與所有技術細節的「創意資產」。在快速變化的遊戲產業中，GDD幾乎是所有研發人員智慧與經驗的結晶。然而，開發過程的脈絡清晰性與人際間的溝通，導致許多關鍵的「內隱知識」（Tacit Knowledge）——例如設計取捨的理由、特定功能決策的背景、以及測試時的限制條件——往往不會被充分記錄在文件之中。
 
-**Customization via YAML** The appearance of cross-references can be customized through YAML metadata variables, as demonstrated in the header of this file.
+隨著時間的推移，特別是當核心成員異動或項目進入維護階段後，這些內隱知識會迅速遺失。此時，GDD雖然文件齊備，卻喪失了原有的脈絡和「生命力」，成為如同摘要所述的「乾涸」庫存文件。這對遊戲開發公司造成了雙重挑戰：
 
-**Programmatic Diagramming with Mermaid** Beyond static images, modern academic writing benefits from programmatic diagrams. This workflow integrates **Mermaid.js**, allowing flowcharts and diagrams to be defined directly in Markdown code blocks. The build system includes a specialized pre-processing step that detects Mermaid code blocks, renders them into high-resolution PNG images (scaled 3x for crisp print quality) using a headless Chrome instance (Puppeteer) inside the Docker container, and seamlessly substitutes them before the final PDF generation. The flowchart in the Introduction of this paper is generated using this exact method.
+1. 學習曲線陡峭與試錯成本高昂：新加入的開發者或維護團隊必須花費大量的時間進行重複性的摸索和試錯，以重新理解歷史決策的「為何」（Why），這嚴重延遲了產品的迭代速度，並提高了無謂的研發成本。
+2. 創意資產價值減損：規格書的核心價值在於傳承，當傳承能力受損，企業的既有創意資產價值隨之減損，資源被浪費在重現既有知識，而非新的規格思考及創新。
 
-# Part III: Advanced Customization and Multilingual Typesetting
+1. 生成式人工智慧的興起與活化文檔的契機
 
-## Section 5: Mastering Document Appearance with LaTeX Templates
+自2023年起，以預訓練大語言模型（LLM）為核心的生成式人工智慧（GenAI）技術迎來爆發性成長。LLM具備超高效率的文字理解、語義連貫和脈絡推理能力，使得它能快速處理大量複雜文本並生成符合情境的回應。
 
-The visual appearance of the final PDF is controlled almost entirely by LaTeX. Pandoc provides a powerful and flexible system for interfacing with LaTeX templates.
+本研究認為，GenAI的特性能為GDD的「活化」提供關鍵解決方案。我們不再需要耗費大量人力去追溯和補寫遺失的脈絡，而是可以探究GenAI是否能扮演以下兩個重要角色：
 
-**Using a Custom Template** For any serious academic work, a custom template is usually required. A custom template is specified using the `--template` flag: `pandoc mydoc.md -o mydoc.pdf --template=eisvogel`. High-quality templates can be found on publisher websites, in large community repositories like Overleaf, and on code-hosting platforms like GitHub [@wandmalfarbe2020eisvogel].
+1. GDD脈絡化理解：利用GenAI強大的閱讀理解能力，快速吸收GDD中複雜的文字描述與結構，並建立知識圖譜或語義索引。
+2. 內隱知識推論與補充：基於LLM的推理能力，結合GDD的「顯性知識」與其自身的「廣泛知識」，推論並補充缺失的設計意圖、決策邏輯和潛在限制，將「乾涸」的文件轉化為富有「脈絡」的知識庫。
 
-**Case Study: The Eisvogel Template for a Custom Cover Page** The popular Eisvogel template provides a clear example of how template-specific variables, set in the YAML block, can be used for deep customization [@wandmalfarbe2020eisvogel].
+因此，本研究的動機是希望藉由GenAI的導入，系統性地解決遊戲規格書中內隱知識流失的痛點，最大化既有創意資產的利用效益，為遊戲研發流程帶來範式轉移（Paradigm Shift）。
 
-## Section 6: A Guide to Traditional Chinese Typesetting
+1. 研究目的
 
-Producing high-quality documents in Traditional Chinese requires specific configuration. The Pandoc and LaTeX toolchain is exceptionally capable in this regard.
+- 當面對非結構化、甚至是非數位(Non-digital)的文件時，能規模化(In Scale)的萃取其中精確資訊的最佳實踐方式有哪些？
+- 當營運或研發的過程在產生新資料或資訊，且其中仍包含重要知識時，有哪些可以捕捉並將其轉化為實際的知識的手段或策略？
+- 在應用GenAI萃取知識的處理上，如何對其效益進行量化？
 
-**The Engine Requirement: `pdflatex` vs. `xelatex`** For any work involving non-Latin scripts, it is essential to use a modern, Unicode-aware engine like **XeLaTeX**.
+1. 研究架構與方法
 
-**Configuring Pandoc for `xelatex`** To instruct Pandoc to use XeLaTeX, one can set `pdf-engine: xelatex` in the document's YAML block.
+本研究將採用個案研究法 (Case Study)。研究的重點將放在針對具代表性的遊戲規格書，驗證GenAI技術的理解能力是否足夠，也嘗試找出能優化理解能力的方法。本研究將基於既有的GenAI技術，提出針對不同資料類型的最佳萃取策略，並輔以概念、範例與成效比較 。
 
-**Font Selection for Traditional Chinese** The second critical requirement is to specify a font that contains the necessary glyphs for Traditional Chinese characters. This is also done via a variable in the YAML block: `CJKmainfont: "Source Han Serif TC"`.
+1. 研究範圍與限制
 
-This configuration allows for seamless typesetting of Traditional Chinese text, like this: 這是傳統中文的範例文字。
+本研究範圍主要是針對最成熟的GenAI產品，如OpenAI的ChatGPT或是Google的Gemini，來進行規格書的理解測試，也以同樣的產品來測試如何優化理解能力的方法，最後是針對遇到的問題提出相關假設，並驗證是否有效能優化理解能力。本研究主要著重於利用最成熟的生成式人工智慧（GenAI）產品，例如 OpenAI 的 ChatGPT 和 Google 的 Gemini，來測試它們應用於規格文件時的理解能力。本研究還探討了優化這些 GenAI 產品理解能力的方法。此外，本研究透過提出相關假設並隨後驗證其在增強理解方面的有效性，來應對已識別的挑戰。這種綜合性方法旨在不僅評估 GenAI 在理解複雜規格方面的現狀，還旨在開發和驗證改進其在此關鍵任務中性能的策略。
 
-## Section 7: Granular Control over Page Numbering
+1. 論文架構
 
-Page numbering is a feature of the final typeset document, and as such, its control resides entirely at the LaTeX level. Pandoc provides several mechanisms to pass the necessary LaTeX commands from the Markdown source to the final compilation stage. The cleanest method is using the `header-includes` YAML field, as shown in this document's metadata, to inject raw LaTeX commands like `\setcounter{page}{1}`.
+本論文將分為五個章節：
 
-## Section 8: Automated Multilingual Publishing with LLMs
+- 第一章 緒論：說明研究背景、動機、目的、範圍、方法與限制。
+- 第二章 文獻探討：說明知識管理的重要性，知識管理流程的本質以及已知的業界解法
+- 第三章 研究方法與流程：說明研究原則，「萃取」的定義及目標，以及實驗目標說明。
+- 第四章 結論與建議：總結研究發現，並對未來的發展提出建議。
 
-A major barrier to internationalizing academic work is the effort required to translate while preserving the rigorous formatting of the manuscript. We have addressed this by integrating an **LLM-powered translation pipeline**.
+1. 第二章 文獻探討
 
-**The AI-Assisted Workflow**: By running `make zh_tw`, the system employs the Gemini API to translate both the Markdown manuscript and the LaTeX cover page into Traditional Chinese. The pipeline is designed to be **structure-aware**: it protects YAML metadata, citation keys (`[@key]`), cross-reference labels (`@fig:id`), and LaTeX commands, ensuring that the translated output is immediately compilable.
+1. 文獻探討
 
-**Challenges and Methodologies**:
-1.  **Preserving Structure**: The system uses carefully crafted prompts to instruct the LLM to translate only natural language text while leaving syntax markers untouched.
-2.  **Font Handling**: The workflow automatically detects and switches to CJK-compatible fonts (e.g., Noto Serif CJK TC) for the translated build, avoiding "tofu" characters.
-3.  **Cross-Reference Localization**: It translates the labels (e.g., "Figure" to "圖") in the metadata, ensuring the scholarly apparatus feels native to the target language.
+1. 知識管理的重要性為何？
 
-This transforms the translation process from a manual typesetting nightmare into a single-command automated task.
+現今有許多知識密集性產業，只是輸出的型式不同而已。在個案遊戲公司就是一個鮮明的例子。拜科技進步所賜，製作遊戲已非高技術門檻的目標，成熟的遊戲引擎已可讓國中生就可以製作出一個可運行的遊戲。但若是要製作出高品質或是受歡迎的遊戲產品，這當中牽涉的環節就相當多。所謂的「環節」，就是各家遊戲公司或工作室所掌握的「內隱知識(Tacit Knowledge)」。
 
-# Part IV: Historical Context and Modern Practice
+不論是遊戲產業或是工程領域，通常會稱呼這類知識叫做「Know-How」。許多的研究都表明，有組織有效率的「知識管理流程(Knowledge Management Process,KMP)」，會給企業帶來更多的「創新能力(Innovation Creation, IC)」以及更好的「組織效能(Organization Performance, OP)」[[@mardaniRelationshipKnowledgeManagement2018]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?oFHWhM&sa=D&source=editors&ust=1765084857759822&usg=AOvVaw39WFS5y-J20v0bfBDVIIJP)[@mardaniRelationshipKnowledgeManagement2018]。為什麼呢？除了讓組織裡的成員能在更好的基礎上，去思考解決問題的可能性，研究表明，更好的KMP通常代表著具有更創新的空間[[@huangMediatingEffectKnowledge2009]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?Bgmrb1&sa=D&source=editors&ust=1765084857760044&usg=AOvVaw03a_SP47sZACLI5IBr3e6a)[@huangMediatingEffectKnowledge2009]能讓成員去發展想法，更創新的想法就會有更高的機率去促成更好的OP[[@grantKnowledgeManagementKnowledgeBased2006]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?E346f2&sa=D&source=editors&ust=1765084857760190&usg=AOvVaw0CV5sKxmw5QWewzWKTD9WS)[@grantKnowledgeManagementKnowledgeBased2006]。[]()KMP, IC和OP三者的關係如[「圖1」](#fig_relationship_between_kmp_ic_op)「圖1」：
 
-## Section 9: The 'Old-Fashioned' Workflow: From Hot Metal to Typewriters
 
-Understanding the power of the modern plain-text workflow is enhanced by appreciating the profound technical challenges it solves. Before the advent of TeX and LaTeX, academic typesetting was a highly specialized, manual process defined by severe physical and mechanical constraints. The era of **hot metal typesetting** and later **"typewriter" composition** involved immense manual effort to produce complex documents.
+![KMP, IC和OP的影響關係](images/image22.png){#fig:image1 width=80%}
 
-The development of TeX by Knuth in the late 1970s and LaTeX by Lamport in the early 1980s marked a revolutionary shift [@knuth1984tex; @lamport1986latex]. They introduced the concept of programmatic, algorithmic typesetting based on semantic commands. The modern Pandoc user operates at an even higher level of abstraction, using a simple, universal syntax that can be compiled to LaTeX or other formats entirely.
+[圖1：](#figur_relationship_between_kmp_ic_op)圖1： [[@mardaniRelationshipKnowledgeManagement2018]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?RX5sgv&sa=D&source=editors&ust=1765084857760597&usg=AOvVaw3XqcTCQIjnBe1jH_LXkm-x)[@mardaniRelationshipKnowledgeManagement2018]
 
-## Section 10: Synthesis and Recommendations: Building Your Sustainable Workflow
+在這個概念下，「The effect of knowledge management practices on firm performance」[(Palacios Marqués & José Garrigós Simón, 2006)](https://www.google.com/url?q=https://www.zotero.org/google-docs/?e7Brj8&sa=D&source=editors&ust=1765084857760860&usg=AOvVaw1r19il1OQbYlqkANIzNQaH)(Palacios Marqués & José Garrigós Simón, 2006) 的研究也證實了這一點。良好的知識管理，是確實可以直接影響到企業的實際表現的，不論是在營收成長，股東滿意度，或是競爭優勢，都和知識管理的成熟程度有高度相關。
 
-This report has detailed a comprehensive academic workflow. The very file you are reading is a tangible example of this process. By combining this Markdown file with the accompanying bibliography and `Makefile`, you can reproduce the final PDF with a single command. This demonstrates the power of a plain-text academic workflow: unparalleled control, robust versioning, seamless collaboration, and the assurance of future access to one's own work [@rowleyWisdomHierarchyRepresentations2007].
+1. 知識管理流程的本質
+
+據文獻，知識管理通常涉及知識的創造(Creation)[[@popadiukInnovationKnowledgeCreation2006]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?xfLemj&sa=D&source=editors&ust=1765084857761232&usg=AOvVaw17JzhMiccJAcl6auugsdnc)[@popadiukInnovationKnowledgeCreation2006]，獲取(Acquisition)[[@zhengImpactMultidimensionalSocial2025]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?mZdRkZ&sa=D&source=editors&ust=1765084857761364&usg=AOvVaw0ig3DrB3d9IvdYVxRXFeIU)[@zhengImpactMultidimensionalSocial2025]及分享(Sharing)[[@songKnowledgeSharingInnovation2008]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?cWw5Hi&sa=D&source=editors&ust=1765084857761478&usg=AOvVaw0fI0R47Od9dVr7kSZoe51G)[@songKnowledgeSharingInnovation2008]。在網路基礎建設已十分發達的現在，「分享」是阻力最小的一環。各式各樣的瀏覽器(Browser)都可以讓文字和圖片簡單的複製貼上，影片也有足夠的頻寬可透過串流(Streaming)觀看。只要沒有權限的限制，我們可在一夜之間傳遞各種型態的知識給他人。
+
+在生成式人工智慧(Generative Artificial Intelligence, GAI)逐漸成熟的現在，只要有知識的原始內容(Raw Material)，可能是一篇純文字內容，或是一份「可攜列印格式文件(Portable Document Format, PDF)」，丟進ChatGPT或是Gemini，我們就可以更高的效率輸出成梳理過的文章，具象化的圖片，甚至是生動的影音內容，來分享知識的內容。僅管，這已開始造成某些行業的破壞及變革，成為企業裁員的理由，造成許多人失業，但這都是不可逆的趨勢。
+
+但，知識管理並不是只有分享一環而已，GAI也不是真的什麼都能生成的出來，因為在「創造」和「獲取」這兩個任務，仍然是知識管理領域中最難克服的本質。不論是實務經驗，還是文獻研究都表明一個殘酷的事實，創造和獲取知識因通常難以和績效或薪酬直接掛鉤[[@ajmalCriticalFactorsKnowledge2010]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?AymMEh&sa=D&source=editors&ust=1765084857762171&usg=AOvVaw24l_koeF9iyidmv1lCosqn)[@ajmalCriticalFactorsKnowledge2010]，導致員工並沒有積極的動力將研發過程的知識整理出來。許多知識可能是在過程中「創造」出來的，亦或是透過和專家訪談「獲取」而來的，但這都只是最終產品的中間產物而已。因為績效不問中間過程，這種供需極度失衡的矛盾現象，導致多數組織就算定了目標，有意圖想把知識管理做好，最終都是落得一個虎頭蛇尾的結局。企業主或管理階段能想到的都是”只要有知識庫，我們就可以如何如何…”，但”只要有知識庫”這件事才是問題。知識管理的困難其實不是「管理」，而是「知識」。
+
+1. 知識管理的等級
+
+知識管理其實不像是一個明確的目標，比較像是一個文化或是標準，因此國際標準組織(International Standard Organization, ISO)在2015年才在9001號標準中，新增了7.1.6的要求：
+
+組織應決定其流程運作和實現產品與服務符合性所需知識。這方面的知識應被保存,且可適用於需求的範圍。在處理變更需求和知識時,組織應考慮到其目前知識基礎,及決定如何獲得或使用所需的額外知識。
+
+但這也是一個概念而已。之後的研究比較有共識的部分，當屬A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology[[@peeModelOrganisationalKnowledge2009]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?kcCJBQ&sa=D&source=editors&ust=1765084857763123&usg=AOvVaw2NqJkp00Gcp_QXzYnLKwUO)[@peeModelOrganisationalKnowledge2009]提出的5個成熟度等級，如[表1：](#table_km_maturity)表1：：
+
+
+| 成熟度 (Level) | 內涵 (Description) |
+| --- | --- |
+| Level 5 | 知識分享已經體制化，組織疆界極小化。知識技能及專業知識包裹為套裝知識，有能力加速知識生命循環，以創造優勢。 |
+| Level 4 | 主要特色為知識分享，可對環境做出預先回應。知識生命循環清楚被界定，效益可以被量化。 |
+| Level 3 | 組織已察覺管理知識的需求且開始蒐集知識管理衡量方法且和企業生產力結合。 |
+| Level 2 | 只分享例行及程序性的知識。 |
+| Level 1 | 知識未明確文件化，獨立零碎散落各部門。 |
+
+[「表1」](#tab_km_maturity)「表1」「知識管理」的成熟度
+
+本研究主要的方向，主要是從等級1到等級3。關鍵在於散落在各部門的文件，是否能成為產生行動的依據。
+
+1. 目前為止有無終極解法？
+
+早期的著作如《The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data》[[@kimballDataWarehouseETL2004]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?Qv6ix4&sa=D&source=editors&ust=1765084857765623&usg=AOvVaw0sUbHj2tPdOoB4nzPiADan)[@kimballDataWarehouseETL2004]，講述的都是純文字的資料處理(e.g. XML)或是資料庫的轉換。富比士的[統計](https://www.google.com/url?q=https://kommandotech.com/statistics/big-data-statistics/&sa=D&source=editors&ust=1765084857765762&usg=AOvVaw2sNfu3y72-0hUBM03AdslX)統計也呼應了實務上的困境：企業中95%的資料都是無結構化(Unstructurized)型式的資料，也就是無法做為知識庫的資料。為了要能夠把無結構化的資料變成所謂的知識，各個時期的科技公司都有不同的做法，如[「圖2」](#fig_techs_use_for_information_extraction)「圖2」：
+
+
+![Figure 2](images/image26.png){#fig:image2 width=80%}
+
+[圖2：](#figur_techs_use_for_information_extraction)圖2： : Evolution of the techniques used for information extraction from unstructured documents [[@baviskarEfficientAutomatedProcessing2021]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?ycqkJl&sa=D&source=editors&ust=1765084857766237&usg=AOvVaw0AAaNW5-eT7IYOZ2FGZzJI)[@baviskarEfficientAutomatedProcessing2021]
+
+最早期是完全人工處理，後來導入了光學字元辨識(Optical Character Recognition,OCR)技術，再加上機器程序自動化(Robotics Processes Automation,RPA)後，僅管已經減少了不少人力，但對於資訊的頡取還是有不足之處，因為有的文件已毀損不清，有的內容語焉不詳。到了基於變換器的雙向編碼器表示技術（Bidirectional Encoder Representations from Transformers，BERT）這種基於自然語言處理（Natural Language Processing,NLP）的預訓練技術加入後，文字的處理品質有了極大的提升，文字幾乎已經不再是問題。真正困難的問題只剩下表格(Tables)類及訊息圖表(Figures, Diagrams and Infographics)類的資訊。這類的文件就非常依賴領域知識(Domain Knowledge)才能做正確的解讀，如金融領域類的知識萃取雖然比較成熟[(Pejić Bach et al., 2019)](https://www.google.com/url?q=https://www.zotero.org/google-docs/?KUtyx0&sa=D&source=editors&ust=1765084857766876&usg=AOvVaw2ErWcUK-F-WDueua_V5E0f)(Pejić Bach et al., 2019)。但技術上還沒有太大的突破，還是需要有不少的資料前處理(Text Pre-Processing),如[圖3：](#figur_ner_workflow)圖3：：
+
+
+![Figure 3](images/image30.png){#fig:image3 width=80%}
+
+[「圖3」](#fig_ner_workflow)「圖3」 NAMED ENTITY RECOGNITION (NER) Workflow
+
+即便要使用類神經網路來訓練萃取，還是要經過不少處理，才能繼續進行「特徵提取(Feature Extraction)」的步驟。
+
+1. 第三章 研究方向與結果
+
+1. 三大研究原則
+
+回顧我們要解決的問題：
+
+1. 當面對非結構化、甚至是非數位(Non-digital)的文件時，要能規模化(In Scale)的萃取其中精確資訊的最佳實踐方式有哪些？
+2. 當營運或研發的過程在產生新資料或資訊，且其中仍包含重要知識時，有哪些可以捕捉並將其轉化為實際的知識的手段或策略？
+3. 在應用GenAI萃取知識的處理上，如何對其效益進行量化？
+
+本研究提出的因應原則為三：可規模化，可持續性，可量化。第一題的關鍵是可規模化。如果只是解決幾份文件，找人來執行即可。但實務狀況是文件滿地都是，大家手上都有”更重要”的事情要處理，完全用人力來萃取這些知識，是幾乎不可能，也不切實際的。第二題的關鍵是可持續性(Sustainable)。就算今天此時此刻，我們真的把所有的文件都萃取完成，但接下來呢？如果沒有改變作業流程，待萃取的文件會以難以控制的速度繼續增長，人力是負荷不了的。那，我們應該如何改變作業流程，讓新資訊的誕生就能被萃取成知識，就算不是100%轉化，也可以持續優化？第三題的關鍵則是，這其實也是數位轉型(Digital Transformation)的一環，而之所以要轉型，目標就是變得更好。那所謂”變得更好”如果沒有量化指標，就難以向利害關係人(Stack Holder)有所交待，也難以向所有員工說明，這樣的轉變意義何在？
+
+儘管本研究的目標僅是針對一份規格書，但針對這份規格書我們發現的問題以及克服問題的方法，亦符合上述主要研究原則。
+
+1. 「萃取」的定義
+
+本研究的重點目標為「萃取」。為了儘可能保證研究的客觀性和一致性，在這裡我們針對「萃取」進行一個兼具理論和實務的定義。
+
+
+![Figure 4](images/image55.png){#fig:image4 width=80%}
+
+[圖4：](#figur_dik_meaning_value)圖4：： 資料(Data)，資訊(Information)和知識(Knowledge)的意義及價值
+
+在「The wisdom hierarchy: representations of the DIKW hierarchy」[[@rowleyWisdomHierarchyRepresentations2007]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?IN3nJl&sa=D&source=editors&ust=1765084857769004&usg=AOvVaw3-wZ2kTYeOhzmHpYjJan1u)[@rowleyWisdomHierarchyRepresentations2007]中，作者引用了「Business information management: improving performance using information systems」[[@chaffeyBusinessInformationManagement2005]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?Uezfn9&sa=D&source=editors&ust=1765084857769237&usg=AOvVaw23PJ70mRT5hKLT5Kx7c_eR)[@chaffeyBusinessInformationManagement2005]中提到的內容，說明了資料，資訊和知識的意義及價值的不同。如[「圖4」](#fig_dik_meaning_value)「圖4」所示，知識和其他兩者最關鍵的不同，當屬其脈絡(Context)的成份有多少[[@ackoffDataWisdom1989]](https://www.google.com/url?q=https://www.zotero.org/google-docs/?ygD8PA&sa=D&source=editors&ust=1765084857769466&usg=AOvVaw2JY8nreNELSMsAtaQOLkCw)[@ackoffDataWisdom1989]，惟有加入足夠多的脈絡，知識才有可行動(Actionable)的價值和意義。
+
+本研究的文件範圍，大多數都是介於資訊或資料的層級。但AI的理解能力已不斷進化，也已經超越大多數人們的智商，如果AI可以直接理解文件的內容，那我們即可基於文件的內容，搭配AI的檢索進而採取行動，這份文件在AI的輔助下亦可補回缺失的脈絡，就不需要再進行所謂的萃取；反之，如果AI在沒有足夠的脈絡的前提下，就無法正確回答文件中其實有記載的內容，我們就需要透過GenAI來輔助生成脈絡，或是由我們手動輸入補充，才能成為可讓我們採取下一步行動的內容，至此我們才能定義這份文件的相關知識，已被「萃取」出來。
+
+1. 目標文件及其驗收標準
+
+本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://www.google.com/url?q=https://youtu.be/rZyODkoJsp0&sa=D&source=editors&ust=1765084857770065&usg=AOvVaw2ZCTefVo8DvTGmP6d4t5-k)IGS宙斯悦华软件批发测试中」，遊戲規格書是「[《宙斯》規格](https://www.google.com/url?q=https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp%3Dsharing&sa=D&source=editors&ust=1765084857770159&usg=AOvVaw0eCefQSh0wvTMu1PLa1FCh)《宙斯》規格」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
+
+測試驗證的方向可簡單分為以下三類：純文字理解，內建圖像理解，以及表格內容理解。目前對一般用戶而言，像是Gemini或是ChatGPT這樣的產品是接受度最高的，而且這些產品都有兩種推論(Reasoning)深度，一個是快速反應，另一個即為深入思考。如字義，快速反應的思考深度就不會太深，深入思考的反應速度就不快。以我們要驗證的方向而言，我們就會優先以快速反應作為第一層測試，若理解有偏差，就會改用深入思考的模式再行測試。測試的產品先以Gemini來測試，也會在ChatGPT上測試。整個測試的流程就是「Gemini 2.5 Flash ⇒ Gemini 2.5 Pro ⇒ ChatGPT 5 ⇒ ChatGPT 5 Reasoning」。
+
+1. 實際測試
+
+1. 純文字理解
+
+為了驗證AI的理解能力，我們設計了一些不是”搜尋”得出來的內容，均是需要透過理解意圖(Intention)和文件語義(Sementics)內容才能正確回答的問題。測試的目的是想確認當文字分散在不同的工作表，以專有名詞或是過短的描述寫作時，AI是否能夠正確回答內容。
+
+1. 這個遊戲有多少個符號？是幾輪幾線的遊戲？
+2. 免費遊戲的條件是？
+3. 在主遊戲有什麼特殊玩法？觸發條件是？
+4. 跟特殊遊戲(Feature Game)有關的音效有哪些？
+5. 「長條堆疊圖騰」在哪裡會出現？條件為何？何時消失？
+
+1. 這個遊戲有多少個符號？是幾輪幾線的遊戲？
+
+
+![Figure 5](images/image9.png){#fig:image5 width=80%}
+
+[圖5：](#figur_plain_texts_test_01)圖5：倍數表(Odds Table)內容
+
+在規格書的內容如[「圖5」](#fig_plain_texts_test_01)「圖5」。純文字的內容算是連續排列，AI應可讀取完整內容，要測試的主要是AI的預訓練模型知識中，能否直接理解老虎機遊戲(Slot Game)常見行話(Jargon)以及會不會被其他內容誤解。3x5是「3列5欄」，但可以是15輪，也可以是5輪。至於有多少個「符號(Symbol)」也是一樣的道理，這個領域對轉出來的東西行話確實也就是「Symbol」。
+
+
+![Figure 6](images/image40.png){#fig:image6 width=80%}
+
+[圖6：](#figur_gemini_plain_texts_test_01)圖6： 「這個遊戲有多少個符號？是幾輪幾線的遊戲？」的對話內容
+
+Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)「圖6」。完全正確。可見這部分已經無須多加脈絡，AI的預訓練知識已覆蓋老虎機基本領域知識。
+
+1. 免費遊戲的條件是？
+
+
+![Figure 7](images/image8.png){#fig:image7 width=80%}
+
+
+![Figure 8](images/image9.png){#fig:image8 width=80%}
+
+[圖7：](#figur_gemini_plain_texts_answer_02)圖7： 免費遊戲的條件
+
+答案如[「圖7」](#fig_gemini_plain_texts_answer_02)「圖7」。這裡要測試AI是否能夠理解「免費遊戲」跟「免費旋轉」是同一件事。而且在不同的位置，都有似是而非，模梭兩可的內容，還帶有一些”雜訊”，像是「MG出現3/4/5顆」或是「(FG不出現)」，都是測試的一部分。
+
+
+![Figure 9](images/image39.png){#fig:image9 width=80%}
+
+[圖8：](#figur_gemini_plain_texts_test_02)圖8： Gemini回答「免費遊戲的條件是？」
+
+如[「圖8」](#fig_gemini_plain_texts_test_02)「圖8」，Gemini 2.5 Flash 並沒有受到雜訊的影響，也可以理解「免費遊戲」和「免費旋轉」其實就是同一回事，算是完全正確理解。
+
+1. 在主遊戲有什麼特殊玩法？觸發條件是？
+
+
+![Figure 10](images/image12.png){#fig:image10 width=80%}
+
+[圖9：](#figur_plain_texts_test_03)圖9： 主遊戲的特殊玩法及觸發條件
+
+如[「圖9」](#fig_plain_texts_test_03)「圖9」，答案在「Feature」這張工作表(Worksheet)中。試算表類型的文件和一般的文件最大的不同就是，它會含有不同的工作表，以區隔不同主題的內容。當然，這也是方便人類閱讀的設計之一，但AI是否能理解這還是在同一份文件的內容？會不會AI只看得到「規格文件(第一張工作表)」的內容而已？這是這項測試主要驗證的目標。
+
+
+![Figure 11](images/image11.png){#fig:image11 width=80%}
+
+[圖10：](#figur_gemini_plain_texts_test_03)圖10： Gemini回答「在主遊戲有什麼特殊玩法？觸發條件是？」
+
+如[「圖10」](#fig_gemini_plain_texts_test_03)「圖10」，Gemini 2.5 Flash即正確回答規格書中的內容，看來它是可以讀取到不同工作表的內容的。
+
+1. 跟特殊遊戲(Feature Game)有關的音效有哪些？
+
+
+![Figure 12](images/image6.png){#fig:image12 width=80%}
+
+[圖11：](#figur_plain_texts_test_04)圖11： 跟特殊遊戲(Feature Game)有關的音效
+
+如[「圖11」](#fig_plain_texts_test_04)「圖11」，在題目上我們再做了一個變化，同樣也是老虎機遊戲領域內的一個行話「特殊遊戲(Feature Game)」。這個行話的定義就比較會有分岐，有人認為特殊遊戲是綁定遊戲主題，有特殊玩法的「獎勵遊戲(Bonus Game)」；也有人認為只要不是主遊戲，其他像是免費遊戲，獎勵遊戲還是其他不同玩法的遊戲，因為絕大多數的設計也必然是綁定主題，或是法規需求的，所以皆可通稱為特殊遊戲，是一個分類名。我們也透過這樣的驗證，來瞭解AI對這個領域的認知是否跟我們的一致？如果它找不到答案，看看它的推論理由為何。
+
+
+![Figure 13](images/image28.png){#fig:image13 width=80%}
+
+[圖12：](#figur_gemini_plain_texts_test_04)圖12： Gemini找不到和「特殊遊戲」相關的音效
+
+如[「圖12」](#fig_gemini_plain_texts_test_04)「圖12」，Gemini 2.5 Flash 明確反映規格書中沒有相關的內容。它的理由是僅將「整輪Wild」這樣的玩法視為是一種特殊玩法。可即便如此，它仍然沒有將[「圖12」](#fig_gemini_plain_texts_test_04)「圖12」中的「三顆堆疊Symbol變成Wild音效」視為特殊遊戲相關的音效。因此，接下來我們將進行深入思考的階段(如[「圖13」](#fig_gemini_plain_texts_test_05_with_pro)「圖13」)來測試看看，”多想想”能不能找到該有的答案。
+
+
+![Figure 14](images/image51.png){#fig:image14 width=80%}
+
+[圖13：](#figur_gemini_plain_texts_test_05_with_pro)圖13： 切換到Gemini 2.5 Pro詢問同一個問題
+
+很可惜，即便我們切換Gemini到2.5 Pro的模式(如[「圖13」](#fig_gemini_plain_texts_test_05_with_pro)「圖13」)後，得到的答案仍和[「圖12」](#fig_gemini_plain_texts_test_04)「圖12」一樣。因此初步我們可以判定，這部分不但是需要補充脈絡的部分，而且也給我們一個明確的警示，在試算表這種型式的文件中，AI的理解可能是很零碎的，是沒有整體概念的，某些問題能正確回答，不代表”同類”的其他問題一樣可以正確的回答。
+
+1. 「長條堆疊圖騰」在哪裡會出現？條件為何？何時消失？
+
+
+![Figure 15](images/image19.png){#fig:image15 width=80%}
+
+[圖14：](#figur_plain_texts_test_05)圖14： 「長條堆疊圖騰」規格
+
+如[「圖14」](#fig_plain_texts_test_05)「圖14」，這需要AI先理解「長條堆疊圖騰」，在規格書中其實被拆成2段說明。一個是「堆疊圖騰」，另一個則是「長幅WILD圖騰」。這就是實務上的知識庫，和單純的搜尋的不同之處，如果僅是搜尋「長條堆疊圖騰」是搜不到”正確”答案的，因為其實在規格書是有另一種說法的，但只要是有內隱知識的企劃人員，都會理解那就是同一回事。其次，在規格書中，這個流程也被拆成多段分別說明了，我們要測試的目標，就是看看AI能否串連所有的文字一併理解。
+
+
+![Figure 16](images/image16.png){#fig:image16 width=80%}
+
+[圖15：](#figur_gemini_plain_texts_test_05)圖15： Gemini無法找到「消失時間」
+
+如[「圖15」](#fig_gemini_plain_texts_test_05)「圖15」，僅管AI可以找到「哪裡會出現」及「何時出現」，但意外的是對於「何時消失」卻無法從「移動到第一輪的WILD，下一輪將消失」的說明理解及回答出正確答案。
+
+1. 正確率小結
+
+簡單的5個題目在Gemini的測試，整理出來的正確率如下：
+
+
+| 編號 | 題目簡述 | 正確率 |
+| --- | --- | --- |
+| 1 | 有多少個符號？是幾輪幾線的遊戲？ | 100% |
+| 2 | 免費遊戲的條件是？ | 100% |
+| 3 | 在主遊戲有什麼特殊玩法？觸發條件是？ | 100% |
+| 4 | 跟特殊遊戲有關的音效有哪些？ | 0% |
+| 5 | 「長條堆疊圖騰」在哪裡會出現？條件為何？何時消失？ | 60% |
+| 總分 | 72% |
+
+[表2：](#table_plain_text_test_results)表2： 文字理解的正確率小結
+
+1. 內嵌圖片理解
+
+多樣式文件中很常會有圖片。各種文件對於圖片的處理方法基本上大同小異，不是嵌入(Embedded)在文件中，像是Microsoft的Word, PowerPoint及Excel這類的文件，不然就是以外連(Image Link)的型式渲染出來，像是HTML或是Markdown這類的文件。由於遊戲規格書在以前，大多數是給人類閱讀的，正所謂「一圖抵千言」，因此常會有許多附圖，幫助讀者理解。但實務上，在開發期人類能夠”閱讀”它們，是因為在開發期人們對這個產品的所有脈絡是知根知底的，所以在閱讀上不會有什麼障礙。可如果產品已經釋出或銷售，多半這類文件就是進入封存狀態，等到幾個月後再去閱讀，甚至是幾年後再去閱讀，之前的脈絡訊息已經遺失，要再透過”閱讀”規格書來理解這個產品的規格，就會變得非常困難。因此，我們希望能透過GenAI的能力，測試看看GenAI是否能有足夠的脈絡理解規格書，如果可以的話，是否也能將這些脈絡給反向輸出到規格書中，幫助人類在之後需要回頭理解這個產品的規格時，更能快速掌握所有相關知識。
+
+以下的問題基本上都是需要”看懂圖片”，而不是依賴理解文件上的片段文字推論出來的，以確保我們可以驗證得出來，AI對圖片中的的資訊，是否跟人類是對齊的。
+
+- 「一般symbol」有哪些？它們的獎項表(Odds Table)為何？
+- 「特殊symbol」長什麼樣子？
+- 「堆疊圖騰擴張變成長幅WILD圖騰後進行對獎」中提到的「長幅WILD圖騰」是長什麼樣子的？
+- 遊戲介面中，有哪些按鈕，又有哪些玩家資產相關的訊息？
+- Info頁有幾頁內容？內容分別為何？
+
+1. 「一般symbol」有哪些？它們的獎項表(Odds Table)為何？
+
+
+![Figure 17](images/image2.png){#fig:image17 width=80%}
+
+[圖16：](#figur_image_test_01)圖16： 「一般symbol」有哪些？
+
+如[「圖16」](#fig_image_test_01)「圖16」，我們可以看到，規格書並沒有針對這些符號作出解釋或描述。我們幾乎可以預期得到，這個題目如果拿去詢問AI的話，在沒有文字的情況下，AI應該是無法正確的回答的。
+
+
+![Figure 18](images/image15.png){#fig:image18 width=80%}
+
+[圖17：](#figur_gemini_image_test_01)圖17： 沒有列出這11個一般symbol的具體名稱
+
+如[「圖17」](#fig_gemini_image_test_01)「圖17」，Gemini確實沒有辦法回答這些Symbol的名稱。而且表格中的那些數字對它而言，也是一堆無法理解的數字。
+
+1. 「特殊symbol」長什麼樣子？
+
+
+![Figure 19](images/image3.png){#fig:image19 width=80%}
+
+[圖18：](#figur_image_test_02)圖18： 「特殊symbol」長什麼樣子？
+
+如[「圖18」](#fig_image_test_02)「圖18」，和前一題類似，儘管在圖的右側有”SCATTER”這樣的文字註解，但其實正確答案並不是”SCATTER”，這個特殊symbol的描述應該是”紅底金字的FREE GAME”這類的內容，我們來看看AI會怎麼回答。
+
+
+![Figure 20](images/image1.png){#fig:image20 width=80%}
+
+[圖19：](#figur_gemini_image_test_02)圖19： Gemini無法描述「特殊symbol」長什麼樣子
+
+如[「圖19」](#fig_gemini_image_test_02)「圖19」，AI雖然找到了特殊Symbol，也找到了相關的規格，但對於symbol長什麼樣子，在沒有足夠的文字輔助的情況下，就是無法回答。
+
+1. 「堆疊圖騰擴張變成長幅WILD圖騰後進行對獎」中提到的「長幅WILD圖騰」是長什麼樣子的？
+
+
+![Figure 21](images/image24.png){#fig:image21 width=80%}
+
+
+![Figure 22](images/image36.png){#fig:image22 width=80%}
+
+[圖20：](#figur_image_test_03)圖20： 「長幅WILD圖騰」是長什麼樣子的？
+
+如[「圖20」](#fig_image_test_03)「圖20」，規格書其實是使用了兩張圖作為展演的分鏡說明。上圖是說明當三個「神殿」符號堆疊在一起的時候，會擴展成一個如下圖的「宙斯長幅WILD圖騰」。這也是在考驗AI是否能正確理解，用戶的問題其實是在詢問下圖的內容。
+
+
+![Figure 23](images/image7.png){#fig:image23 width=80%}
+
+[圖21：](#figur_gemini_image_test_03)圖21： Gemini無法描述「長幅WILD圖騰」長什麼樣子
+
+如[「圖21」](#fig_gemini_image_test_03)「圖21」，AI從既有的文字中雖然已經找到這個圖騰的形狀及屬性，但就是沒有辦法描述出這個「長幅WILD圖騰」的實際內容。
+
+1. 遊戲介面中，有哪些按鈕，又有哪些玩家資產相關的訊息？
+
+其實這一題所需要理解的圖，也是[「圖20」](#fig_image_test_03)「圖20」這一張。主要的按鈕就是「開始旋轉」，「最大押注」，「快速」，「+/-」或「購買」的這些。玩家的資產就是最上方「福」的右邊那串數字，「贏分」是正下方的數字，累積彩金是「購買」鈕的右側數字。接下來就看看AI能找到多少。
+
+
+![Figure 24](images/image46.png){#fig:image24 width=80%}
+
+
+![Figure 25](images/image27.png){#fig:image25 width=80%}
+
+[圖22：](#figur_gemini_image_test_04)圖22： Gemini嘗試透過其他資訊反推可能的答案
+
+如[「圖22」](#fig_gemini_image_test_04)「圖22」，這個回答稍微有點意外，但結論基本上還是同一個。AI一樣是無法真的理解規格書中圖像的內容，但它會嘗試從找到的所有文字，拼湊出可能的答案告訴用戶。
+
+1. Info頁有幾頁內容？內容分別為何？
+
+
+![Figure 26](images/image34.png){#fig:image26 width=80%}
+
+[圖23：](#figur_image_test_05)圖23： Info頁有幾頁內容？
+
+如[「圖23」](#fig_image_test_05)「圖23」，在「INFO」工作表中，最後一頁是「Page 3(派彩線數 50 LINES)」。如果只是問Info頁有幾頁內容，估計AI可透過”Page 3”得知有3頁，但「內容是什麼」這題就還是需要AI確實理解圖片內容才行，而且是三頁都要能理解。
+
+
+![Figure 27](images/image42.png){#fig:image27 width=80%}
+
+[圖24：](#figur_gemini_image_test_05)圖24： Gemini找到3頁Info
+
+如[「圖24」](#fig_gemini_image_test_05)「圖24」，不出所料，AI確實找到了3頁的Info，裡面有寫字的都回答出來了，但圖片的內容無一正確描述。
+
+1. 正確率小結
+
+簡單的5個題目在Gemini的測試，整理出來的正確率如下：
+
+
+| 編號 | 題目簡述 | 正確率 |
+| --- | --- | --- |
+| 1 | 「一般symbol」有哪些？它們的獎項表(Odds Table)為何？ | 0% |
+| 2 | 「特殊symbol」長什麼樣子？ | 0% |
+| 3 | 「長幅WILD圖騰」是長什麼樣子的？ | 0% |
+| 4 | 有哪些按鈕，又有哪些玩家資產相關的訊息？ | 0% |
+| 5 | Info頁有幾頁內容？內容分別為何？ | 0% |
+| 總分 | 0% |
+
+[表3：](#table_image_test_results)表3： 內嵌圖片的正確率小結
+
+1. 表格理解
+
+如前述，在試算表中，文字不是連續存放的。同樣是一句話，可以放在同一個儲存格中，也可以拆到2個儲存格存放。僅管人類”看”起來都一樣，但若是做為知識庫(Knowledge Base)讓AI嘗試去理解，那可能就會得到不同的結果。這也就是和人類認知不對齊(misaligned)的地方，也是許多人聽說過的幻覺(Hallucination)的來源之一。我們要測試的，也就是人類可以很簡單”看得懂”的那些內容，看看AI的認知是否跟人類一致。
+
+- 這個遊戲的美術需求中，有哪些是「動畫」類的需求？
+- 這個遊戲的美術需求中，有哪些是「靜態」的需求？
+- 這個遊戲有使用「聽牌音」嗎？
+- 共用音效有哪些？遊戲專屬音效有哪些？
+- 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少KBits？
+
+1. 這個遊戲的美術需求中，有哪些是「動畫」類的需求？
+
+
+![Figure 28](images/image13.png){#fig:image28 width=80%}
+
+[圖25：](#figur_table_test_01)圖25： 「動畫」類的需求
+
+如[「圖25」](#fig_table_test_01)「圖25」，我們先測試一個簡單的。從編號17的「Free Game瞇牌」到編號22的「Wild Symbol移動」6個項目就是動畫類的需求，儘管我們從編號1到編號16插入了合併儲存格，但這應該不影響AI判讀表格的內容。
+
+
+![Figure 29](images/image43.png){#fig:image29 width=80%}
+
+[圖26：](#figur_gemini_table_test_01)圖26： 「動畫」類的需求有哪些？
+
+如[「圖26」](#fig_gemini_table_test_01)「圖26」，如預期，AI可以正確找到編號17到編號22的項目都算是「動畫」類型的製作內容。
+
+1. 這個遊戲的美術需求中，有哪些是「靜態」類的需求？
+
+如[「圖25」](#fig_table_test_01)「圖25」，這就是對著「合併儲存格」測試。即便在2025年09月的Gemini，仍然無法正確的理解合併儲存格的內容，現在我們再試試看是否有進步。
+
+
+![Figure 30](images/image37.png){#fig:image30 width=80%}
+
+[圖27：](#figur_gemini_table_test_02)圖27： 有哪些是「靜態」類的需求？
+
+如[「圖27」](#fig_gemini_table_test_02)「圖27」，AI已可正確的解讀帶有合併儲存格的表格內容。隨著基礎模型的能力不斷進化，看來再複雜的表格問題應該遲早都可以被攻克。
+
+1. 這個遊戲有使用「聽牌音」嗎？
+
+
+![Figure 31](images/image23.png){#fig:image31 width=80%}
+
+[圖28：](#figur_table_test_03)圖28： 這個遊戲有使用「聽牌音」嗎？
+
+如[「圖28」](#fig_table_test_03)「圖28」，這是個很”狡猾”的問題。人類看到灰底的這一列，通常都會意識到，這應該是一筆有特殊意義的資料。以企劃人員而言，他們更是會很直覺的認為，這100%就是代表「不使用」的意思。但，AI會有同樣的”sense”嗎？
+
+
+![Figure 32](images/image17.png){#fig:image32 width=80%}
+
+[圖29：](#figur_gemini_table_test_03)圖29： 有使用「聽牌音」嗎？
+
+如[「圖29」](#fig_gemini_table_test_03)「圖29」，AI果然誤解了文件中的意思，誤以為”有”使用「聽牌音」。
+
+1. 共用音效有哪些？遊戲專屬音效有哪些？
+
+
+![Figure 33](images/image44.png){#fig:image33 width=80%}
+
+[圖30：](#figur_table_test_04)圖30： 共用/專屬音效有哪些？
+
+如[「圖30」](#fig_table_test_04)「圖30」，這個題目另一種合併儲存格。典型的表格，欄位確實都是整齊排好的，但這次的「共用」及「遊戲」卻是在欄位列合併而成，用以表示同欄位的更高層分類。人類讀者一樣可以很容易理解這個概念，但AI是否一樣可以這樣理解？
+
+
+![Figure 34](images/image48.png){#fig:image34 width=80%}
+
+
+![Figure 35](images/image53.png){#fig:image35 width=80%}
+
+[圖31：](#figur_gemini_table_test_04)圖31： Gemini找到共用/專屬音效
+
+如[「圖31」](#fig_gemini_table_test_04)「圖31」，不僅在「列」的合併儲存格有正確理解表格內容，看來在「欄」的合併儲存格也有正確的理解表格內容。
+
+1. 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少KBits？
+
+
+![Figure 36](images/image21.png){#fig:image36 width=80%}
+
+
+![Figure 37](images/image29.png){#fig:image37 width=80%}
+
+[圖32：](#figur_table_test_05)圖32： 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少KBits？
+
+如[「圖32」](#fig_table_test_05)「圖32」，這是一個跨度較大的理解題。人類讀者基本上是可以理解文件的「結構」的，也就是說，最上面的「機種名稱」，「品質」，「格式」或「位元」等這些欄位，是用來宣告下方這些資料的共通屬性的。那，AI能嗎？
+
+
+![Figure 38](images/image25.png){#fig:image38 width=80%}
+
+[圖33：](#figur_gemini_table_test_05)圖33： 「100倍獎線獎報獎」和「轉場動畫音效」的品質
+
+如[「圖33」](#fig_gemini_table_test_05)「圖33」，AI看來也有像人類一樣理解文件的結構，給出了正確的答案。
+
+1. 正確率小結
+
+
+| 編號 | 題目簡述 | 正確率 |
+| --- | --- | --- |
+| 1 | 這個遊戲的美術需求中，有哪些是「動畫」類的需求？ | 100% |
+| 2 | 這個遊戲的美術需求中，有哪些是「靜態」類的需求？ | 100% |
+| 3 | 這個遊戲有使用「聽牌音」嗎？ | 0% |
+| 4 | 共用音效有哪些？遊戲專屬音效有哪些？ | 100% |
+| 5 | 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少？ | 100% |
+| 總分 | 80% |
+
+[表4：](#table_table_test_results)表4： 表格理解的正確率小結
+
+1. 內嵌圖片的萃取發現
+
+在三個面向的測試結果，我們初步歸納出幾個重點：
+
+- 純文字的理解正確率夠高，已無須再行多餘萃取處理
+- 表格文字的理解正確率也夠高，但AI對其他的”隱喻(e.g.顏色)”，理解能力仍不足
+- 圖片可說是完全沒有理解能力，不論是小圖還是大圖，不論圖像結構是簡單還是複雜的。
+
+因此，從規格書中需要萃取的重要對象之一，就是這些內嵌圖片。這些圖片對人類而言，是可以轉化成「理解(Understanding)」的，例如在[「圖16」](#fig_image_test_01)「圖16」中，我們其實是可以這樣”描述”出那些「一般symbol」是什麼的：
+
+
+| 一般 Symbol（標準符號） | 特殊符號 |
+| --- | --- |
+| 高價值符號 | 中等價值符號 | 低價值符號 |  |
+| 宙斯（Zeus）x5 = 250x4 = 150x3 = 50x2 = 5神殿（Temple）x5 = 200x4 = 100x3 = 25x2 = 5天馬（Pegasus）x5 = 200x4 = 100x3 = 25x2 = 5月桂冠（Laurel Wreath）x5 = 150x4 = 75x3 = 25 | 古幣（Coin）x5 = 150x4 = 75x3 = 25A（Ace）x5 = 100x4 = 50x3 = 10K（King）x5 = 100x4 = 50x3 = 10Q（Queen）x5 = 100x4 = 50x3 = 10 | J（Jack）x5 = 100x4 = 50x3 = 1010（Ten）x5 = 100x4 = 50x3 = 10 | Wild（百搭符號，宙斯）x5 = 250x4 = 150x3 = 50x2 = 5作用：可替代除 Scatter 以外的所有符號，提高中獎機率 |
+
+[表5：](#table_describe_symbols)表5： 用文字描述遊戲中的符號
+
+如[「表5」](#tab_describe_symbols)「表5」(用表格是為了排版美觀，實際上輸出內容是連續文字內容)，當圖中的符號變成文字之後，同一個題目我們再問一次，是否能得到正確答案呢？
+
+
+![Figure 39](images/image10.png){#fig:image39 width=80%}
+
+
+![Figure 40](images/image45.png){#fig:image40 width=80%}
+
+[圖34：](#figur_gemini_pass_image_test_01)圖34： Gemini可正確回答「一般symbol有哪些？」內嵌圖片題
+
+如[「圖34」](#fig_gemini_pass_image_test_01)「圖34」，這次AI就可以像其他的文字題一樣，正確說出一般symbol有哪些，連倍數表的內容都可以正確理解。也就是說，如果我們能將圖片的內容描述成純文字，經過這樣的萃取過程，我們幾乎就可以確保，AI能正確理解規格書內容，能真正成為我們能採取行動的知識。
+
+1. 圖片知識萃取實驗
+
+聽起來很完美。那，[「表5」](#tab_describe_symbols)「表5」的內容是怎麼來的？在「[三大研究原則](#h.40ehl55fllns)三大研究原則」的前提下，我們不可能要透過人力，把這些內容給一字一句打出來。像[「圖16」](#fig_image_test_01)「圖16」的內容，或許OCR還有可能幫得上忙，但若是像[「圖20」](#fig_image_test_03)「圖20」的內容，OCR絕對是無法”辨識”出什麼內容的。我們需要的不是「辨識」，我們需要的是「描述」的能力。我們得試試怎麼樣可以透過GenAI的能力，儘量正確的描述出圖片裡面的內容，一但能掌握到原則，就可以透過撰寫工具程式來批次處理更多的文件，滿足三大原則的要求。
+
+1. 直接描述
+
+
+![Figure 41](images/image4.png){#fig:image41 width=80%}
+
+[圖35：](#figur_describe_symbol_odds)圖35： 直接要求AI描述符號及倍數
+
+如[「圖35」](#fig_describe_symbol_odds)「圖35」，雖然說是”直接”，但還是必須要稍微解釋一下，這是老虎機的符號表，以及我們要AI做什麼。
+
+
+![Figure 42](images/image56.png){#fig:image42 width=80%}
+
+
+![Figure 43](images/image5.png){#fig:image43 width=80%}
+
+
+![Figure 44](images/image18.png){#fig:image44 width=80%}
+
+[圖36：](#figur_gemini_can_describe_symbol_odds)圖36： Gemini可以直接描述符號表截圖中的符號及倍數
+
+如[「圖36」](#fig_gemini_can_describe_symbol_odds)「圖36」，AI不僅可以正確的描述出這些符號是什麼，甚至連「特殊百搭」是”全身的宙斯圖像，下方有WILD”這樣的描述都寫好了。至於那些「請注意」的內容，算是輔助資訊，也沒有寫錯，也可以成為知識庫的一部分。
+
+1. 帶入「遊戲開發者」的描述
+
+對於單純的帶圖的表格及文字，我們幾乎直接叫AI描述就解決了。但若是像[「圖20」](#fig_image_test_03)「圖20」那樣的遊戲介面，只是叫它”描述”出來固然還是可以得到不少內容，可如果我們想要更多更關鍵的內容，我們可以帶入「遊戲開發者」的身份來叫AI描述：
+
+
+![Figure 45](images/image33.png){#fig:image45 width=80%}
+
+[圖37：](#figur_describe_as_developer)圖37： 以「遊戲開發人員」的身份來描述
+
+如[「圖37」](#fig_describe_as_developer)「圖37」，在我們的提詞中有幾個重要的項目。首先有宣告這是遊戲畫面的截圖，再來就是要以「遊戲開發人員」的身份去描述，要聚焦的重點是「介面」及「可能的規格」。
+
+
+![Figure 46](images/image14.png){#fig:image46 width=80%}
+
+
+![Figure 47](images/image35.png){#fig:image47 width=80%}
+
+
+![Figure 48](images/image20.png){#fig:image48 width=80%}
+
+[圖38：](#figur_gemini_describe_main_game_as_developer)圖38： Gemini以開發者身份，詳細描述了主畫面中出現的重要元素
+
+如[「圖38」](#fig_gemini_describe_main_game_as_developer)「圖38」，AI在帶入身份之後，真的是很徹頭徹尾的描述了所有開發者應該要注意的那些元素，即便是一顆「i」的按鈕都沒放過。這樣，我們就可以很大程度的把圖中的資訊給萃取出來，這些內容都是文字，都是可以完全被AI理解，可用來回答我們問題的知識。
+
+1. 產出「派彩線」資料
+
+在[「圖23」](#fig_image_test_05)「圖23」中，我們知道規格書有「派彩線」的相關資料，這是50條派彩線的內容。但，這也是一個圖像資訊。如果我們沒有將其文字化，AI一樣是沒有辦法回答這部分的問題的。我們一樣可以透過遊戲開發者的身份，要求AI輸出”方便開發者引入程式”的型式的資料：
+
+
+![Figure 49](images/image47.png){#fig:image49 width=80%}
+
+
+![Figure 50](images/image41.png){#fig:image50 width=80%}
+
+
+![Figure 51](images/image50.png){#fig:image51 width=80%}
+
+
+![Figure 52](images/image49.png){#fig:image52 width=80%}
+
+[圖39：](#figur_gemini_describe_paylines)圖39： Gemini輸出「派彩線」資料
+
+如[「圖39」](#fig_gemini_describe_paylines)「圖39」，AI不但能正確理解「派彩線」的意涵，輸出高達50條線的所有文字資訊，甚至還可以幫忙轉出Python的源碼。有了這樣的知識，不只是企劃人員可以清楚的知道是哪50條線，甚至軟體人員都可以不用再一行行的複製貼上，AI產出的內容整塊就可以複製進來使用了。
+
+1. 上下文空間(Context Length)不足
+
+目前為止，我們的實驗都是一小塊一小塊的截圖測試，結果都讓人很滿意。如果一小塊驗證都沒問題了，那我們是否可以一口氣給一整頁，然後叫AI全部描述出來就好了？
+
+
+![Figure 53](images/image32.png){#fig:image53 width=80%}
+
+[圖40：](#figur_describe_whole_info)圖40： 直接對整個Info頁描述內容
+
+如[「圖40」](#fig_describe_whole_info)「圖40」，為了避免直接截一張大圖，解析度可能不足的狀況，我們直接截成三張圖。請AI詳細描述整個Info頁的內容。
+
+
+![Figure 54](images/image38.png){#fig:image54 width=80%}
+
+
+![Figure 55](images/image54.png){#fig:image55 width=80%}
+
+[圖41：](#figur_gemini_describe_whole_info)圖41： Gemini分析整個Info頁
+
+如[「圖41」](#fig_gemini_describe_whole_info)「圖41」，AI並不會因為我們拆成三張圖，就以為這是3個不同的規格，起碼它認為這是一個Info頁中的3個區塊。但在「派彩線(50 LINES)」這一段我們就會發現一個奇怪的狀況，它只寫「1到50號派彩線…」這樣的內容，並沒有”詳細”輸出所有的內容。
+
+1. 第四章 結論與建議
+
+1. 結論
+2. 未來發展建議
+
+參考文獻
+
+- Ackoff, R. L. (1989). From Data to Wisdom.Journal of Applied Systems Analysis,16, 3–9.
+- Ajmal, M., Helo, P., & Kekäle, T. (2010). Critical factors for knowledge management in project business.Journal of Knowledge Management,14(1), 156–168. https://doi.org/10.1108/13673271011015633
+- Baviskar, D., Ahirrao, S., Potdar, V., & Kotecha, K. (2021). Efficient Automated Processing of the Unstructured Documents Using Artificial Intelligence: A Systematic Literature Review and Future Directions.IEEE Access,9, 72894–72936. https://doi.org/10.1109/ACCESS.2021.3072900
+- Chaffey, D., & Wood, S. (2005).Business information management: Improving performance using information systems. Financial Times Prentice Hall.
+- Grant, R. (2006). Knowledge Management and the Knowledge-Based Economy. In L. Prusak & E. Matson (Eds.),Knowledge Management and Organizational Learning(pp. 15–29). Oxford University PressOxford. https://doi.org/10.1093/oso/9780199291793.003.0002
+- Huang, J., & Li, Y. (2009). The mediating effect of knowledge management on social interaction and innovation performance.International Journal of Manpower,30(3), 285–301. https://doi.org/10.1108/01437720910956772
+- Kimball, R., & Caserta, J. (2004).The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data. Wiley.
+- Mardani, A., Nikoosokhan, S., Moradi, M., & Doustar, M. (2018). The Relationship Between Knowledge Management and Innovation Performance.The Journal of High Technology Management Research,29(1), 12–26. https://doi.org/10.1016/j.hitech.2018.04.002
+- Palacios Marqués, D., & José Garrigós Simón, F. (2006). The effect of knowledge management practices on firm performance.Journal of Knowledge Management,10(3), 143–156. https://doi.org/10.1108/13673270610670911
+- Pee, L. G., & Kankanhalli, A. (2009). A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology.Journal of Information & Knowledge Management,08(02), 79–99. https://doi.org/10.1142/S0219649209002270
+- Pejić Bach, M., Krstić, Ž., Seljan, S., & Turulja, L. (2019). Text Mining for Big Data Analysis in Financial Sector: A Literature Review.Sustainability,11(5), 1277. https://doi.org/10.3390/su11051277
+- Popadiuk, S., & Choo, C. W. (2006). Innovation and knowledge creation: How are these concepts related?International Journal of Information Management,26(4), 302–312. https://doi.org/10.1016/j.ijinfomgt.2006.03.011
+- Rowley, J. (2007). The wisdom hierarchy: Representations of the DIKW hierarchy.Journal of Information Science,33(2), 163–180. https://doi.org/10.1177/0165551506070706
+- Song, Z., Fan, L., & Chen, S. (2008). Knowledge sharing and innovation capability: Does absorptive capacity function as a mediator?2008 International Conference on Management Science and Engineering 15th Annual Conference Proceedings, 971–976. https://doi.org/10.1109/ICMSE.2008.4669030
+- Zheng, L., Luo, G., & Peng, D. (2025). The impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience: The moderation of knowledge network cohesion.Journal of Intellectual Capital, 1–24. https://doi.org/10.1108/JIC-11-2024-0382
+

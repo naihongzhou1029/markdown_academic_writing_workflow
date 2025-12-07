@@ -1,0 +1,1308 @@
+[
+	{
+		"id": "zhaoTURAToolAugmentedUnified2025",
+		"type": "article",
+		"abstract": "The advent of Large Language Models (LLMs) is transforming search engines into conversational AI search products, primarily using Retrieval-Augmented Generation (RAG) on web corpora. However, this paradigm has significant industrial limitations. Traditional RAG approaches struggle with real-time needs and structured queries that require accessing dynamically generated content like ticket availability or inventory. Limited to indexing static pages, search engines cannot perform the interactive queries needed for such time-sensitive data. Academic research has focused on optimizing RAG for static content, overlooking complex intents and the need for dynamic sources like databases and real-time APIs. To bridge this gap, we introduce TURA (Tool-Augmented Unified Retrieval Agent for AI Search), a novel three-stage framework that combines RAG with agentic tool-use to access both static content and dynamic, real-time information. TURA has three key components: an Intent-Aware Retrieval module to decompose queries and retrieve information sources encapsulated as Model Context Protocol (MCP) Servers, a DAG-based Task Planner that models task dependencies as a Directed Acyclic Graph (DAG) for optimal parallel execution, and a lightweight Distilled Agent Executor for efficient tool calling. TURA is the first architecture to systematically bridge the gap between static RAG and dynamic information sources for a world-class AI search product. Serving tens of millions of users, it leverages an agentic framework to deliver robust, real-time answers while meeting the low-latency demands of a large-scale industrial system.",
+		"DOI": "10.48550/arXiv.2508.04604",
+		"note": "arXiv:2508.04604 [cs]",
+		"number": "arXiv:2508.04604",
+		"publisher": "arXiv",
+		"source": "arXiv.org",
+		"title": "TURA: Tool-Augmented Unified Retrieval Agent for AI Search",
+		"title-short": "TURA",
+		"URL": "http://arxiv.org/abs/2508.04604",
+		"author": [
+			{
+				"family": "Zhao",
+				"given": "Zhejun"
+			},
+			{
+				"family": "Dong",
+				"given": "Yuehu"
+			},
+			{
+				"family": "Liu",
+				"given": "Alley"
+			},
+			{
+				"family": "Zheng",
+				"given": "Lixue"
+			},
+			{
+				"family": "Liu",
+				"given": "Pingsheng"
+			},
+			{
+				"family": "Shen",
+				"given": "Dongdong"
+			},
+			{
+				"family": "Xia",
+				"given": "Long"
+			},
+			{
+				"family": "Zhao",
+				"given": "Jiashu"
+			},
+			{
+				"family": "Yin",
+				"given": "Dawei"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					6
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					6
+				]
+			]
+		}
+	},
+	{
+		"id": "zhangBifrostRAGBridgingDual2025",
+		"type": "article",
+		"abstract": "Information retrieval and question answering from safety regulations are essential for automated construction compliance checking but are hindered by the linguistic and structural complexity of regulatory text. Many compliance-related queries are multi-hop, requiring synthesis of information across interlinked clauses. This poses a challenge for traditional retrieval-augmented generation (RAG) systems. To overcome this, we introduce BifrostRAG: a dual-graph RAG-integrated system that explicitly models both linguistic relationships (via an Entity Network Graph) and document structure (via a Document Navigator Graph). This architecture powers a hybrid retrieval mechanism that combines graph traversal with vector-based semantic search, enabling large language models to reason over both the meaning and the structure of the text. Evaluation on a multi-hop question dataset shows that BifrostRAG achieves 92.8 percent precision, 85.5 percent recall, and an F1 score of 87.3 percent. These results significantly outperform vector-only and graph-only RAG baselines that represent current leading approaches. Error analysis further highlights the comparative advantages of our hybrid method over single-modality RAGs. These findings establish BifrostRAG as a robust knowledge engine for LLM-driven compliance checking. Its dual-graph, hybrid retrieval mechanism offers a transferable blueprint for navigating complex technical documents across knowledge-intensive engineering domains.",
+		"DOI": "10.48550/ARXIV.2507.13625",
+		"license": "arXiv.org perpetual, non-exclusive license",
+		"note": "version: 1",
+		"publisher": "arXiv",
+		"source": "DOI.org (Datacite)",
+		"title": "BifrostRAG: Bridging Dual Knowledge Graphs for Multi-Hop Question Answering in Construction Safety",
+		"title-short": "BifrostRAG",
+		"URL": "https://arxiv.org/abs/2507.13625",
+		"author": [
+			{
+				"family": "Zhang",
+				"given": "Yuxin"
+			},
+			{
+				"family": "Wang",
+				"given": "Xi"
+			},
+			{
+				"family": "Hu",
+				"given": "Mo"
+			},
+			{
+				"family": "Zhang",
+				"given": "Zhenyu"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					2
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2025"
+				]
+			]
+		}
+	},
+	{
+		"id": "dalkirKnowledgeManagementTheory2013",
+		"type": "book",
+		"edition": "0",
+		"ISBN": "978-1-136-38975-7",
+		"language": "en",
+		"note": "DOI: 10.4324/9780080547367",
+		"publisher": "Routledge",
+		"source": "DOI.org (Crossref)",
+		"title": "Knowledge Management in Theory and Practice",
+		"URL": "https://www.taylorfrancis.com/books/9781136389757",
+		"author": [
+			{
+				"family": "Dalkir",
+				"given": "Kimiz"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					2
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2013",
+					9,
+					5
+				]
+			]
+		}
+	},
+	{
+		"id": "xuLargeLanguageModels2024",
+		"type": "article-journal",
+		"abstract": "Abstract\n            Information Extraction (IE) aims to extract structural knowledge from plain natural language texts. Recently, generative Large Language Models (LLMs) have demonstrated remarkable capabilities in text understanding and generation. As a result, numerous works have been proposed to integrate LLMs for IE tasks based on a generative paradigm. To conduct a comprehensive systematic review and exploration of LLM efforts for IE tasks, in this study, we survey the most recent advancements in this field. We first present an extensive overview by categorizing these works in terms of various IE subtasks and techniques, and then we empirically analyze the most advanced methods and discover the emerging trend of IE tasks with LLMs. Based on a thorough review conducted, we identify several insights in technique and promising research directions that deserve further exploration in future studies. We maintain a public repository and consistently update related works and resources on GitHub (LLM4IE repository).",
+		"container-title": "Frontiers of Computer Science",
+		"DOI": "10.1007/s11704-024-40555-y",
+		"ISSN": "2095-2228, 2095-2236",
+		"issue": "6",
+		"journalAbbreviation": "Front. Comput. Sci.",
+		"language": "en",
+		"page": "186357",
+		"source": "DOI.org (Crossref)",
+		"title": "Large language models for generative information extraction: a survey",
+		"title-short": "Large language models for generative information extraction",
+		"URL": "https://link.springer.com/10.1007/s11704-024-40555-y",
+		"volume": "18",
+		"author": [
+			{
+				"family": "Xu",
+				"given": "Derong"
+			},
+			{
+				"family": "Chen",
+				"given": "Wei"
+			},
+			{
+				"family": "Peng",
+				"given": "Wenjun"
+			},
+			{
+				"family": "Zhang",
+				"given": "Chao"
+			},
+			{
+				"family": "Xu",
+				"given": "Tong"
+			},
+			{
+				"family": "Zhao",
+				"given": "Xiangyu"
+			},
+			{
+				"family": "Wu",
+				"given": "Xian"
+			},
+			{
+				"family": "Zheng",
+				"given": "Yefeng"
+			},
+			{
+				"family": "Wang",
+				"given": "Yang"
+			},
+			{
+				"family": "Chen",
+				"given": "Enhong"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					2
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2024",
+					12
+				]
+			]
+		}
+	},
+	{
+		"id": "storeyKnowledgeManagementWorld2025",
+		"type": "article-journal",
+		"abstract": "The management of organizational and worker knowledge is a critical part of any organization. Knowledge management recognizes the explicit knowledge that workers contribute to an organization, as well as the organizational knowledge and skills acquired over time. The potential impact of generative AI (GenAI) raises many issues and opportunities related to effective knowledge management as organizations explore the impact and implications of its adoption. This research explores issues related to an increasing world of GenAI and proposes a Framework for Knowledge Management in the GenAI Era . Knowledge management workers who are novices might be more inclined to use generative AI for performing their tasks. Expert knowledge workers might focus on quality evaluation and quality assessment. Adoption of GenAI may help with the progression from novice to expert, while freeing up time and resources for other work. Challenges include the potential loss of critical organizational knowledge, definition of job-related requirements, expectations, and tasks, as well as over-reliance, and loss of tacit or unarticulated knowledge. These challenges must be balanced against available access to large amounts of general and domain-specific knowledge from GenAI to capture the value realized from its adoption.",
+		"container-title": "ACM Transactions on Management Information Systems",
+		"DOI": "10.1145/3719209",
+		"ISSN": "2158-656X, 2158-6578",
+		"journalAbbreviation": "ACM Trans. Manage. Inf. Syst.",
+		"language": "english",
+		"page": "3719209",
+		"title": "Knowledge Management in a World of Generative AI: Impact and Implications",
+		"title-short": "Knowledge Management in a World of Generative AI",
+		"author": [
+			{
+				"family": "Storey",
+				"given": "Veda Catherine"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					28
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2025",
+					2
+				]
+			]
+		}
+	},
+	{
+		"id": "wangAutomatedIdentificationRepresentation2025a",
+		"type": "article-journal",
+		"abstract": "In the product design and manufacturing process, the effective management and representation of system requirements (SRs) are crucial for ensuring product quality and consistency. However, current methods are hindered by document ambiguity, weak requirement interdependencies, and limited semantic expressiveness in model-based systems engineering. To address these challenges, this paper proposes a prompt-driven integrated framework that synergizes large language models (LLMs) and knowledge graphs (KGs) to automate the visualization of SR text and structured knowledge extraction. Specifically, this paper introduces a template for information extraction tailored to arbitrary requirement documents, designed around five SysML-defined SR categories: functional requirements, interface requirements, performance requirements, physical requirements, and design constraints. By defining structured elements for each category and leveraging the GPT-4 model to extract key information from unstructured texts, the system can effectively extract and present the structured requirement information. Furthermore, the system constructs a knowledge graph to represent system requirements, visually illustrating the interdependencies and constraints between them. A case study applying this approach to Chapters 18–22 of the `Code for Design of Metro' demonstrates the effectiveness of the proposed method in automating requirement representation, enhancing requirement traceability, and improving management. Moreover, a comparison of information extraction accuracy between GPT-4, GPT-3.5-turbo, BERT, and RoBERTa using the same dataset reveals that GPT-4 achieves an overall extraction accuracy of 84.76% compared to 79.05% for GPT-3.5-turbo and 59.05% for both BERT and RoBERTa. This proves the effectiveness of the proposed method in information extraction and provides a new technical pathway for intelligent requirement management.",
+		"container-title": "Applied Sciences",
+		"DOI": "10.3390/app15073502",
+		"ISSN": "2076-3417",
+		"issue": "7",
+		"language": "english",
+		"note": "publisher: Multidisciplinary Digital Publishing Institute",
+		"page": "3502",
+		"title": "Automated Identification and Representation of System Requirements Based on Large Language Models and Knowledge Graphs",
+		"URL": "https://www.researchgate.net/publication/390139302_Automated_Identification_and_Representation_of_System_Requirements_Based_on_Large_Language_Models_and_Knowledge_Graphs",
+		"volume": "15",
+		"author": [
+			{
+				"family": "Wang",
+				"given": "Lei"
+			},
+			{
+				"family": "Wang",
+				"given": "Ming-Chao"
+			},
+			{
+				"family": "Zhang",
+				"given": "Yuan-Rong"
+			},
+			{
+				"family": "Ma",
+				"given": "Jian"
+			},
+			{
+				"family": "Shao",
+				"given": "Hong-Yu"
+			},
+			{
+				"family": "Chang",
+				"given": "Zhi-Xing"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					31
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2025",
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "REFERENCEMODELKNOWLEDGE2011",
+		"type": "paper-conference",
+		"container-title": "Proceedings of the International Conference on Knowledge Management and Information Sharing",
+		"DOI": "10.5220/0003632003060311",
+		"event-place": "Paris, France",
+		"ISBN": "978-989-8425-81-2",
+		"page": "306–311",
+		"publisher": "SciTePress - Science and and Technology Publications",
+		"publisher-place": "Paris, France",
+		"title": "A REFERENCE MODEL FOR KNOWLEDGE RETENTION WITHIN SMALL AND MEDIUM-SIZED ENTERPRISES:",
+		"title-short": "A REFERENCE MODEL FOR KNOWLEDGE RETENTION WITHIN SMALL AND MEDIUM-SIZED ENTERPRISES",
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					31
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2011"
+				]
+			]
+		}
+	},
+	{
+		"id": "goffinCapturingTacitKnowledge2008",
+		"type": "article-journal",
+		"container-title": "IJTIP",
+		"DOI": "10.1504/ijtip.2008.020096",
+		"ISSN": "1740-2832, 1740-2840",
+		"issue": "3",
+		"language": "english",
+		"note": "❌",
+		"page": "234",
+		"title": "Capturing tacit knowledge in New Product Development: a study of Post-Project Reviews",
+		"title-short": "Capturing tacit knowledge in New Product Development",
+		"URL": "https://www.researchgate.net/publication/240296086_Capturing_tacit_knowledge_in_New_Product_Development_a_study_of_Post-Project_Reviews",
+		"volume": "4",
+		"author": [
+			{
+				"family": "Goffin",
+				"given": "Keith"
+			},
+			{
+				"family": "Koners",
+				"given": "Ursula"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					7,
+					26
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2008"
+				]
+			]
+		}
+	},
+	{
+		"id": "kimballDataWarehouseETL2004",
+		"type": "book",
+		"collection-title": "Safari Books Online",
+		"event-place": "Indianapolis, IN",
+		"ISBN": "978-0-7645-7923-3",
+		"language": "english",
+		"publisher": "Wiley",
+		"publisher-place": "Indianapolis, IN",
+		"title": "The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data",
+		"title-short": "The data warehouse ETL toolkit",
+		"author": [
+			{
+				"family": "Kimball",
+				"given": "Ralph"
+			},
+			{
+				"family": "Caserta",
+				"given": "Joe"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2004"
+				]
+			]
+		}
+	},
+	{
+		"id": "dharLeveragingGenerativeAI2024",
+		"type": "paper-conference",
+		"container-title": "2024 IEEE 21st International Conference on Software Architecture Companion (ICSA-C)",
+		"DOI": "10.1109/ICSA-C63560.2024.00034",
+		"event-place": "Hyderabad, India",
+		"ISBN": "979-8-3503-6625-9",
+		"page": "163–166",
+		"publisher": "IEEE",
+		"publisher-place": "Hyderabad, India",
+		"title": "Leveraging Generative AI for Architecture Knowledge Management",
+		"author": [
+			{
+				"family": "Dhar",
+				"given": "Rudra"
+			},
+			{
+				"family": "Vaidhyanathan",
+				"given": "Karthik"
+			},
+			{
+				"family": "Varma",
+				"given": "Vasudeva"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					28
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2024",
+					6
+				]
+			]
+		}
+	},
+	{
+		"id": "zhaoMultisourceKnowledgeFusion2020",
+		"type": "article-journal",
+		"abstract": "Abstract\n            Multi-source knowledge fusion is one of the important research topics in the fields of artificial intelligence, natural language processing, and so on. The research results of multi-source knowledge fusion can help computer to better understand human intelligence, human language and human thinking, effectively promote the Big Search in Cyberspace, effectively promote the construction of domain knowledge graphs (KGs), and bring enormous social and economic benefits. Due to the uncertainty of knowledge acquisition, the reliability and confidence of KG based on entity recognition and relationship extraction technology need to be evaluated. On the one hand, the process of multi-source knowledge reasoning can detect conflicts and provide help for knowledge evaluation and verification; on the other hand, the new knowledge acquired by knowledge reasoning is also uncertain and needs to be evaluated and verified. Collaborative reasoning of multi-source knowledge includes not only inferring new knowledge from multi-source knowledge, but also conflict detection, i.e. identifying erroneous knowledge or conflicts between knowledges. Starting from several related concepts of multi-source knowledge fusion, this paper comprehensively introduces the latest research progress of open-source knowledge fusion, multi-knowledge graphs fusion, information fusion within KGs, multi-modal knowledge fusion and multi-source knowledge collaborative reasoning. On this basis, the challenges and future research directions of multi-source knowledge fusion in a large-scale knowledge base environment are discussed.",
+		"container-title": "World Wide Web",
+		"DOI": "10.1007/s11280-020-00811-0",
+		"ISSN": "1386-145X, 1573-1413",
+		"issue": "4",
+		"journalAbbreviation": "World Wide Web",
+		"language": "en",
+		"page": "2567-2592",
+		"source": "DOI.org (Crossref)",
+		"title": "Multi-source knowledge fusion: a survey",
+		"title-short": "Multi-source knowledge fusion",
+		"URL": "http://link.springer.com/10.1007/s11280-020-00811-0",
+		"volume": "23",
+		"author": [
+			{
+				"family": "Zhao",
+				"given": "Xiaojuan"
+			},
+			{
+				"family": "Jia",
+				"given": "Yan"
+			},
+			{
+				"family": "Li",
+				"given": "Aiping"
+			},
+			{
+				"family": "Jiang",
+				"given": "Rong"
+			},
+			{
+				"family": "Song",
+				"given": "Yichen"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2020",
+					7
+				]
+			]
+		}
+	},
+	{
+		"id": "apeldoornComprehensibleExtractionKnowledge2025",
+		"type": "article-journal",
+		"abstract": "Abstract\n            This dissertation abstract summarizes results of the thesis “Comprehensible Knowledge Base Extraction for Learning Agents - Practical Challenges and Applications in Games” (accepted as dissertation at the Department of Computer Science of TU Dortmund University, Germany). The thesis presents approaches that allow for the automated creation of knowledge bases from agent behavior learned in the context of games. The aims are twofold: (1) The creation of human-readable knowledge that can provide insights into what an agent learned, and (2) the investigation of how learning agents themselves can benefit from incorporating these approaches into their learning processes. Applications are presented, e.g., in the context of general video game playing. Moreover, an outlook on the InteKRator toolbox is provided which implements the most essential approaches in a more general context for the potential use in other domains (e.g. in medical informatics).",
+		"container-title": "KI - Künstliche Intelligenz",
+		"DOI": "10.1007/s13218-024-00845-w",
+		"ISSN": "0933-1875, 1610-1987",
+		"issue": "2",
+		"journalAbbreviation": "Künstl Intell",
+		"language": "en",
+		"page": "173-177",
+		"source": "DOI.org (Crossref)",
+		"title": "Comprehensible Extraction of Knowledge Bases for Learning Agents in Games",
+		"URL": "https://www.researchgate.net/publication/380144006_Comprehensible_Extraction_of_Knowledge_Bases_for_Learning_Agents_in_Games",
+		"volume": "39",
+		"author": [
+			{
+				"family": "Apeldoorn",
+				"given": "Daan"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2025",
+					6
+				]
+			]
+		}
+	},
+	{
+		"id": "peeModelOrganisationalKnowledge2009",
+		"type": "article-journal",
+		"abstract": "Organisations are increasingly investing in knowledge management (KM) initiatives to promote the sharing, application, and creation of knowledge for competitive advantage. To guide and assess the progress of KM initiatives in organisations, various process models have been proposed but a consistent approach that has been empirically tested is lacking. Based on the life cycle theory, this paper reviews, compares, and integrates existing models to propose a General KM Maturity Model (G-KMMM). G-KMMM encompasses the initial, aware, defined, managed, and optimising stages, which are differentiated in terms of their characteristics related to the people, process, and technology aspects of KM. To facilitate empirical validation and application, an accompanying assessment tool is also developed. As an initial validation of the proposed G-KMMM, a case study of a multi-unit information system organisation of a large public university was conducted. Findings indicate that G-KMMM can be a useful diagnostic tool for assessing and guiding KM implementation in organisations.",
+		"container-title": "Journal of Information & Knowledge Management",
+		"DOI": "10.1142/S0219649209002270",
+		"ISSN": "0219-6492",
+		"issue": "02",
+		"journalAbbreviation": "J. Info. Know. Mgmt.",
+		"page": "79-99",
+		"source": "worldscientific.com (Atypon)",
+		"title": "A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology",
+		"URL": "https://www-scopus-com.ntust.idm.oclc.org/pages/publications/84856114893",
+		"volume": "08",
+		"author": [
+			{
+				"family": "Pee",
+				"given": "L. G."
+			},
+			{
+				"family": "Kankanhalli",
+				"given": "A."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					11
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2009",
+					6
+				]
+			]
+		}
+	},
+	{
+		"id": "rowleyWisdomHierarchyRepresentations2007",
+		"type": "article-journal",
+		"abstract": "This paper revisits the data-information-knowledge-wisdom (DIKW) hierarchy by examining the articulation of the hierarchy in a number of widely read textbooks, and analysing their statements about the nature of data, information, knowledge, and wisdom. The hierarchy referred to variously as the ‘Knowledge Hierarchy’, the ‘Information Hierarchy’ and the ‘Knowledge Pyramid’ is one of the fundamental, widely recognized and ‘taken-for-granted’ models in the information and knowledge literatures. It is often quoted, or used implicitly, in definitions of data, information and knowledge in the information management, information systems and knowledge management literatures, but there has been limited direct discussion of the hierarchy. After revisiting Ackoff’s original articulation of the hierarchy, definitions of data, information, knowledge and wisdom as articulated in recent textbooks in information systems and knowledge management are reviewed and assessed, in pursuit of a consensus on definitions and transformation processes. This process brings to the surface the extent of agreement and dissent in relation to these definitions, and provides a basis for a discussion as to whether these articulations present an adequate distinction between data, information, and knowledge. Typically information is defined in terms of data, knowledge in terms of information, and wisdom in terms of knowledge, but there is less consensus in the description of the processes that transform elements lower in the hierarchy into those above them, leading to a lack of definitional clarity. In addition, there is limited reference to wisdom in these texts.",
+		"container-title": "Journal of Information Science",
+		"DOI": "10.1177/0165551506070706",
+		"ISSN": "0165-5515",
+		"issue": "2",
+		"language": "EN",
+		"page": "163-180",
+		"source": "SAGE Journals",
+		"title": "The wisdom hierarchy: representations of the DIKW hierarchy",
+		"title-short": "The wisdom hierarchy",
+		"URL": "https://doi.org/10.1177/0165551506070706",
+		"volume": "33",
+		"author": [
+			{
+				"family": "Rowley",
+				"given": "Jennifer"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					11
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2007",
+					4,
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "leeIntegratedViewKnowledge2012",
+		"type": "article-journal",
+		"abstract": "Purpose \n               \n                This study aims to analyze the relationship between KM infrastructures, knowledge process capabilities, creative organizational learning, and organizational performance. The primary research focus is on the relationships between the KM infrastructure, which includes cultural, structural, management, and technology related factors, and the knowledge process capability by elaborating on the significance of knowledge processes as the determinants of organizational performance. \n               \n             \n             \n              Design/methodology/approach \n               \n                The unit of analysis is a company that has adopted a KMS. A mail survey was used to collect the data and an internet‐based survey was also used to provide more convenience in the response. The response sample included 120 responses. The structural relations among variables were tested using the partial least squares (PLS) method. \n               \n             \n             \n              Findings \n               \n                The results of this study indicate that collaboration, learning culture, top management support, and IT support affect the knowledge process capabilities. Knowledge process capabilities and creative organizational learning in turn mediate the relationship between KM infrastructure and organizational performance, which demonstrate the relevance of KM infrastructure for organizational performance. \n               \n             \n             \n              Originality/value \n               \n                Previous studies on KM have been fragmented in that they have explained some aspects of KM performance but have not provided a holistic view of a KM performance framework. Using a holistic view of the KM performance framework, this study has provided insights to KM for researchers because it explains the integrated aspects of KM performance by examining the relationships between the KM infrastructure, knowledge process capabilities, and organizational outcomes.",
+		"container-title": "Journal of Knowledge Management",
+		"DOI": "10.1108/13673271211218807",
+		"ISSN": "1367-3270",
+		"issue": "2",
+		"language": "en",
+		"license": "https://www.emerald.com/insight/site-policies",
+		"page": "183-203",
+		"source": "DOI.org (Crossref)",
+		"title": "An integrated view of knowledge management for performance",
+		"URL": "http://www.emerald.com/jkm/article/16/2/183-203/256486",
+		"volume": "16",
+		"author": [
+			{
+				"family": "Lee",
+				"given": "Sangjae"
+			},
+			{
+				"family": "Gon Kim",
+				"given": "Byung"
+			},
+			{
+				"family": "Kim",
+				"given": "Hoyal"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					14
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2012",
+					3,
+					30
+				]
+			]
+		}
+	},
+	{
+		"id": "migdadiKnowledgeManagementProcesses2022",
+		"type": "article-journal",
+		"abstract": "Purpose \n              The purpose of this study is to introduce a unified framework which integrates knowledge management processes (knowledge creation, sharing, storage and documentation and acquisition), innovation capability (product, process, marketing and organizational and organizational performance (operational, financial and product quality). Then empirically test the effect of knowledge management processes (KMP) on innovation capability (IC), the effect of IC on organizational performance (OP) and the impact of KMP on OP through the mediator (IC). \n             \n             \n              Design/methodology/approach \n              A questionnaire was designed and addressed to the general managers of the Jordanian companies making up the target population. Statistical techniques employed included confirmatory factor analysis and structural equation modeling (SEM) using AMOS 24 to test the hypotheses. \n             \n             \n              Findings \n              The results show that KMP influences IC, IC affects OP and KMP impacts OP through the mediator (IC). \n             \n             \n              Research limitations/implications \n              The use of longitudinal data and comparisons with this study would provide further insights that would assist in generalizing knowledge related to the relationships among KMP, IC and Os' P. \n             \n             \n              Practical implications \n              If organizations fully comprehend KMP and IC, they would be able to implement them successfully, creating value for their companies and improving OP. \n             \n             \n              Originality/value \n              The existing research on KMP and IC is primarily conceptual and descriptive in nature, and empirical research confirming the real impact of KMP when developing IC is lacking. Also. the relationship between innovation capabilities and OP has not been adequately studied. Hence, this study introduces a conceptual framework which integrates KMP, IC and OP and simultaneously empirically tests the relationships among them.",
+		"container-title": "International Journal of Productivity and Performance Management",
+		"DOI": "10.1108/IJPPM-04-2020-0154",
+		"ISSN": "1741-0401",
+		"issue": "1",
+		"journalAbbreviation": "IJPPM",
+		"language": "en",
+		"license": "https://www.emerald.com/insight/site-policies",
+		"page": "182-210",
+		"source": "DOI.org (Crossref)",
+		"title": "Knowledge management processes, innovation capability and organizational performance",
+		"URL": "http://www.emerald.com/ijppm/article/71/1/182-210/164196",
+		"volume": "71",
+		"author": [
+			{
+				"family": "Migdadi",
+				"given": "Mahmoud Mohammad"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					14
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2022",
+					1,
+					3
+				]
+			]
+		}
+	},
+	{
+		"id": "mardaniRelationshipKnowledgeManagement2018",
+		"type": "article-journal",
+		"container-title": "The Journal of High Technology Management Research",
+		"DOI": "10.1016/j.hitech.2018.04.002",
+		"ISSN": "10478310",
+		"issue": "1",
+		"journalAbbreviation": "The Journal of High Technology Management Research",
+		"language": "en",
+		"page": "12-26",
+		"source": "DOI.org (Crossref)",
+		"title": "The Relationship Between Knowledge Management and Innovation Performance",
+		"URL": "https://pdf.sciencedirectassets.com/272085/1-s2.0-S1047831018X00029/1-s2.0-S1047831018300026/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIGP0YNjvkuqzBxeEB7d%2Bs64sBtJe%2Fl6VgyG4RPBT7%2FBHAiEA8T67wOKGOyQ%2Fj4eansYHrVCyJGhn2RNI4Ru4iq75pr0qswUIWhAFGgwwNTkwMDM1NDY4NjUiDDva0f7NEYoVhoB5ECqQBTpt8MbiOo3gDGu22%2FPA4pn%2BPocNDejPp9u3Nnt%2Bep8jASTMUW%2BrCLaJddJ3a2H5OGow75mK12JgUoM1DEnr7qj2xrUbP9tcvfF8qcDriEvobqsVM62GyYuV9r%2FwFl9WgxqjqkO%2F9242Sxzs2bMrbjOqnzCZp%2Fkw%2BaoHGNjj26AfF4%2FciUKsnp7qq%2BJKjkUXn462E69ftKdYUHOXlxbZzA4c58UKcCdjrUWTsOrggONgzo9ymgjkgQfjEHHv1rekJw%2FHB8VX7wVBXZQFRkXi5a%2B6pVDoNp9FCHE1FWy%2FKUBp6PQxHOXYnzomjzElm78bamqieABIMEfmdwmTNT9JIdfXfEug%2FXa72eMK%2BJKLJEGUYDRoQewZDm%2Ft53ITL3f4BK4leBz%2BcIsatqv52rdusMfGCbPa5du434Nbxd8ObygRAK40ZcHjVhW89Ud6jlfO6o6If6yO9VxWc35m7EypnLOtllEvpH%2FneJn0YLLE4LtlH3VL7lYLxgg2cB%2FpQqQv8axtVFBG1uZTON5qWJ0BvAH9Aj7YkU1Nb5HIVxiRJQ%2BEqo11OtRvtTC0hwgHz2fz6cYYBX8lDlq8OH7eMJCWApjIpVSFc2Za9W%2BuCJoRYAjn7GSXC4otbGOnig5%2FuAqOUFz05zV0qghmtrc1DEMZo5CGzXr%2BUATO7LDyQCxH6MqLz2aUb1zteyXpAbI0dnnLfb0wS0EkE57p2nKX36JyZOkcP1FongoUYgR0OOhYvYhw%2F7IesX%2Bhma%2BZjelyzVecmUptGVfdU3mMglqnLqeJrrCAk8RErIpG%2BwDYO8TBhAYtN3n%2BSDq4%2Fp9iC3bI%2F1hdv0l1nsfvjnawGrJRWUfIzMEs9MFkuZ1Ii1CsbiMv72McMIOPmsYGOrEBfuGaXu6QlCjjfqCPmcLPl9EYWi7uPrsGUzklt55g7F1ASqz2S3aezFwm%2BijzKzZ%2FD3GLXjkj6FLIxsnF2ZY6lG%2FgKVHLgjWLA%2FDW5GhkOynSu61P%2F36QxAfgNgB3yHUFHeZxm%2F9MGibu8JImQ8wRU57bNsK9gjbPcMQMO%2BvKhqE4HxDPb7I8hMhlj2DMLeHsxiPj85RSMgcAk7KRAwJoiv5DUSjk9wpLuJxkcjDvSbib&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250914T095521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY4PBNP6ZD%2F20250914%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=afd30e85f84e1d9841cfe0983af2c20387f300c4dbd00626306b558b282af11e&hash=d65176f39ded7fc790f516e45a6d6a241a94a27954ed3b88dc8851b035d13a7a&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S1047831018300026&tid=spdf-40ca0b26-2c97-4d40-9ad6-0db0a366d4e3&sid=9a92fb2b49d0b040fe68ff8-db22298b254cgxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=11105a52030954575255&rr=97ef0216be0f4a46&cc=tw",
+		"volume": "29",
+		"author": [
+			{
+				"family": "Mardani",
+				"given": "Amirhosein"
+			},
+			{
+				"family": "Nikoosokhan",
+				"given": "Saghi"
+			},
+			{
+				"family": "Moradi",
+				"given": "Mahmoud"
+			},
+			{
+				"family": "Doustar",
+				"given": "Mohammad"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					14
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2018"
+				]
+			]
+		}
+	},
+	{
+		"id": "palaciosmarquesEffectKnowledgeManagement2006",
+		"type": "article-journal",
+		"abstract": "Purpose \n               \n                This research proposes to study the connection between knowledge management practices and firm performance. \n               \n             \n             \n              Design/methodology/approach \n               \n                Theoretical relations are tested through an empirical study carried out on 222 Spanish firms in the biotechnology and telecommunications industries. \n               \n             \n             \n              Findings \n               \n                This paper shows how the firms that adopt knowledge management practices obtain better results than their competitors. \n               \n             \n             \n              Research limitations/implications \n               \n                The subject of principles has not been considered a dimension of knowledge management. New avenues of inquiry are opened considering this dimension. \n               \n             \n             \n              Practical implications \n               \n                It determines practices that have a positive incidence on firm performance. \n               \n             \n             \n              Originality/value \n               \n                The conceptualization of knowledge management practices represents a theoretical innovation. This scale can be used in other knowledge‐intensive industries. The paper concludes that these practices have a positive incidence on firm performance.",
+		"container-title": "Journal of Knowledge Management",
+		"DOI": "10.1108/13673270610670911",
+		"ISSN": "1367-3270",
+		"issue": "3",
+		"language": "en",
+		"license": "https://www.emerald.com/insight/site-policies",
+		"page": "143-156",
+		"source": "DOI.org (Crossref)",
+		"title": "The effect of knowledge management practices on firm performance",
+		"URL": "http://www.emerald.com/jkm/article/10/3/143-156/258638",
+		"volume": "10",
+		"author": [
+			{
+				"family": "Palacios Marqués",
+				"given": "Daniel"
+			},
+			{
+				"family": "José Garrigós Simón",
+				"given": "Fernando"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					18
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2006",
+					5,
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "huangMediatingEffectKnowledge2009",
+		"type": "article-journal",
+		"abstract": "Purpose \n              The purpose of this paper is to examine the mediating role of knowledge management in the relationship between social interaction and innovation performance. \n             \n             \n              Design/methodology/approach \n              The population in the study is the Taiwanese firms listed in the China Credit Information Service Incorporation. A stratified random sampling method was used to select 176 firms in Taiwan. The usable response rate was 23.47 per cent. The study employed LISREL to test the hypothesized relationships in the path‐analytic framework. \n             \n             \n              Findings \n              The results indicate that social interaction is positively related to knowledge management. Knowledge management is, in turn, positively related to administrative and technical innovation performance. Further, the results provide evidence that knowledge management plays a mediating role between social interaction and innovation performance. \n             \n             \n              Originality/value \n              The study highlights the importance of social interaction and knowledge management in the process of innovation, and helps scholars and managers to better understand the mediator of knowledge management through which social interaction benefits innovation performance.",
+		"container-title": "International Journal of Manpower",
+		"DOI": "10.1108/01437720910956772",
+		"ISSN": "0143-7720",
+		"issue": "3",
+		"language": "en",
+		"license": "https://www.emerald.com/insight/site-policies",
+		"page": "285-301",
+		"source": "DOI.org (Crossref)",
+		"title": "The mediating effect of knowledge management on social interaction and innovation performance",
+		"URL": "http://www.emerald.com/ijm/article/30/3/285-301/145283",
+		"volume": "30",
+		"author": [
+			{
+				"family": "Huang",
+				"given": "Jing‐Wen"
+			},
+			{
+				"family": "Li",
+				"given": "Yong‐Hui"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2009",
+					6,
+					12
+				]
+			]
+		}
+	},
+	{
+		"id": "grantKnowledgeManagementKnowledgeBased2006",
+		"type": "chapter",
+		"abstract": "Abstract \n            With the bursting of the dotcom bubble and the onset of recession in much of the industrialised world, optimism over the ‘New Economy’ has evaporated and doubts have grown over the potential for knowledge management to unlock new sources of productivity. In this chapter, I point to the need to identify the fundamental drivers of technological change in the digital economy and explore their impact on industry structure and competition. While the implications for profitability are largely unfavourable, this reinforces the quest for competitive advantage for companies.",
+		"container-title": "Knowledge Management and Organizational Learning",
+		"ISBN": "978-0-19-929179-3",
+		"language": "en",
+		"note": "DOI: 10.1093/oso/9780199291793.003.0002",
+		"page": "15-29",
+		"publisher": "Oxford University PressOxford",
+		"source": "DOI.org (Crossref)",
+		"title": "Knowledge Management and the Knowledge-Based Economy",
+		"URL": "https://academic.oup.com/book/52376/chapter/421270494",
+		"editor": [
+			{
+				"family": "Prusak",
+				"given": "Laurence"
+			},
+			{
+				"family": "Matson",
+				"given": "Eric"
+			}
+		],
+		"author": [
+			{
+				"family": "Grant",
+				"given": "Robert"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2006",
+					8,
+					17
+				]
+			]
+		}
+	},
+	{
+		"id": "popadiukInnovationKnowledgeCreation2006",
+		"type": "article-journal",
+		"container-title": "International Journal of Information Management",
+		"DOI": "10.1016/j.ijinfomgt.2006.03.011",
+		"ISSN": "02684012",
+		"issue": "4",
+		"journalAbbreviation": "International Journal of Information Management",
+		"language": "en",
+		"license": "https://www.elsevier.com/tdm/userlicense/1.0/",
+		"page": "302-312",
+		"source": "DOI.org (Crossref)",
+		"title": "Innovation and knowledge creation: How are these concepts related?",
+		"title-short": "Innovation and knowledge creation",
+		"URL": "https://linkinghub.elsevier.com/retrieve/pii/S0268401206000399",
+		"volume": "26",
+		"author": [
+			{
+				"family": "Popadiuk",
+				"given": "Silvio"
+			},
+			{
+				"family": "Choo",
+				"given": "Chun Wei"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2006",
+					8
+				]
+			]
+		}
+	},
+	{
+		"id": "zhengImpactMultidimensionalSocial2025",
+		"type": "article-journal",
+		"abstract": "Purpose \n              This study constructs a theoretical model based on social capital theory to examine the impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience, with global and local cohesion of knowledge networks as the moderating variables. \n             \n             \n              Design/methodology/approach \n              Based on the literature on social capital, knowledge absorptive capacity and innovation resilience, this study proposes a conceptual model and advances several hypotheses. Panel data from 3,480 firm-year observations of 218 Chinese automobile manufacturing firms spanning the years 2001–2022 are utilized for the empirical analysis. \n             \n             \n              Findings \n              Results indicate that structural, relational and cognitive social capital in collaborative R&D networks all have positive effects on firm innovation resilience. Local cohesion of knowledge network is found to weaken the positive effects of structural, relational and cognitive social capital on firm innovation resilience. In contrast, global cohesion of knowledge networks strengthens the positive impact of structural, relational and cognitive social capital on firm innovation resilience. \n             \n             \n              Practical implications \n              This study examines the impact mechanisms of cooperative R&D network social capital in different dimensions on firm innovation resilience at the firm level. It can guide firms with limited resources and capabilities on how to accumulate specific dimensions of social capital to enhance their innovation resilience. \n             \n             \n              Originality/value \n              Although previous studies have suggested that social capital is conducive to firm innovation, few studies have linked social capital in collaborative R&D networks to firm innovation resilience in terms of theoretical discussions or empirical analyses. This study captures the impact mechanisms of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience from a comprehensive perspective. In addition, this study emphasizes that the structural characteristics of the knowledge base (knowledge network cohesion) are a boundary condition for social capital in collaborative R&D networks to influence firm innovation resilience.",
+		"container-title": "Journal of Intellectual Capital",
+		"DOI": "10.1108/JIC-11-2024-0382",
+		"ISSN": "1469-1930, 1758-7468",
+		"language": "en",
+		"page": "1-24",
+		"source": "DOI.org (Crossref)",
+		"title": "The impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience: the moderation of knowledge network cohesion",
+		"title-short": "The impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience",
+		"URL": "https://www.emerald.com/jic/article/doi/10.1108/JIC-11-2024-0382/1272368/The-impact-of-multi-dimensional-social-capital-in",
+		"author": [
+			{
+				"family": "Zheng",
+				"given": "Li"
+			},
+			{
+				"family": "Luo",
+				"given": "Guibin"
+			},
+			{
+				"family": "Peng",
+				"given": "Di"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2025",
+					8,
+					14
+				]
+			]
+		}
+	},
+	{
+		"id": "songKnowledgeSharingInnovation2008",
+		"type": "paper-conference",
+		"container-title": "2008 International Conference on Management Science and Engineering 15th Annual Conference Proceedings",
+		"DOI": "10.1109/ICMSE.2008.4669030",
+		"event-place": "Long Beach, CA",
+		"event-title": "2008 International Conference on Management Science and Engineering (ICMSE)",
+		"ISBN": "978-1-4244-2387-3",
+		"page": "971-976",
+		"publisher": "IEEE",
+		"publisher-place": "Long Beach, CA",
+		"source": "DOI.org (Crossref)",
+		"title": "Knowledge sharing and innovation capability: Does absorptive capacity function as a mediator?",
+		"title-short": "Knowledge sharing and innovation capability",
+		"URL": "https://ieeexplore.ieee.org/document/4669030/",
+		"author": [
+			{
+				"family": "Song",
+				"given": "Zhi-hong"
+			},
+			{
+				"family": "Fan",
+				"given": "Li-bo"
+			},
+			{
+				"family": "Chen",
+				"given": "Shu"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2008",
+					9
+				]
+			]
+		}
+	},
+	{
+		"id": "ajmalCriticalFactorsKnowledge2010",
+		"type": "article-journal",
+		"abstract": "Purpose \n               \n                The purpose of this study is to identify and examine various factors that influence the success or failure of knowledge management (KM) initiatives in project‐based companies. \n               \n             \n             \n              Design/methodology/approach \n               \n                Following a literature review, the study proposes a conceptual model of six factors of potential importance to the success of KM initiatives. The model is then examined through an online survey of project managers and assistant managers from project‐based businesses in Finland. \n               \n             \n             \n              Findings \n               \n                The study finds that a lack of incentives and the absence of an appropriate information system are the most significant barriers to successful KM initiatives in projects. \n               \n             \n             \n              Research limitations/implications \n               \n                The findings of the study may be restricted in terms of generalisability because of the limited empirical study. \n               \n             \n             \n              Practical implications \n               \n                Project managers should formulate an attractive incentive package to encourage project members to participate in KM initiatives and to suggest ideas for new KM opportunities. Managers should also ensure that an effective user‐friendly information system is in place before introducing KM initiatives. \n               \n             \n             \n              Originality/value \n               \n                The study proposes a new model of critical success factors for KM initiatives in the context of project‐based business.",
+		"container-title": "Journal of Knowledge Management",
+		"DOI": "10.1108/13673271011015633",
+		"ISSN": "1367-3270",
+		"issue": "1",
+		"language": "en",
+		"license": "https://www.emerald.com/insight/site-policies",
+		"note": "📙",
+		"page": "156-168",
+		"source": "DOI.org (Crossref)",
+		"title": "Critical factors for knowledge management in project business",
+		"URL": "http://www.emerald.com/jkm/article/14/1/156-168/258324",
+		"volume": "14",
+		"author": [
+			{
+				"family": "Ajmal",
+				"given": "Mian"
+			},
+			{
+				"family": "Helo",
+				"given": "Petri"
+			},
+			{
+				"family": "Kekäle",
+				"given": "Tauno"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2010",
+					2,
+					23
+				]
+			]
+		}
+	},
+	{
+		"id": "baviskarEfficientAutomatedProcessing2021",
+		"type": "article-journal",
+		"container-title": "IEEE Access",
+		"DOI": "10.1109/ACCESS.2021.3072900",
+		"ISSN": "2169-3536",
+		"journalAbbreviation": "IEEE Access",
+		"license": "https://creativecommons.org/licenses/by/4.0/legalcode",
+		"page": "72894-72936",
+		"source": "DOI.org (Crossref)",
+		"title": "Efficient Automated Processing of the Unstructured Documents Using Artificial Intelligence: A Systematic Literature Review and Future Directions",
+		"title-short": "Efficient Automated Processing of the Unstructured Documents Using Artificial Intelligence",
+		"URL": "https://ieeexplore.ieee.org/document/9402739/",
+		"volume": "9",
+		"author": [
+			{
+				"family": "Baviskar",
+				"given": "Dipali"
+			},
+			{
+				"family": "Ahirrao",
+				"given": "Swati"
+			},
+			{
+				"family": "Potdar",
+				"given": "Vidyasagar"
+			},
+			{
+				"family": "Kotecha",
+				"given": "Ketan"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2021"
+				]
+			]
+		}
+	},
+	{
+		"id": "pejicbachTextMiningBig2019",
+		"type": "article-journal",
+		"abstract": "Big data technologies have a strong impact on different industries, starting from the last decade, which continues nowadays, with the tendency to become omnipresent. The financial sector, as most of the other sectors, concentrated their operating activities mostly on structured data investigation. However, with the support of big data technologies, information stored in diverse sources of semi-structured and unstructured data could be harvested. Recent research and practice indicate that such information can be interesting for the decision-making process. Questions about how and to what extent research on data mining in the financial sector has developed and which tools are used for these purposes remains largely unexplored. This study aims to answer three research questions: (i) What is the intellectual core of the field? (ii) Which techniques are used in the financial sector for textual mining, especially in the era of the Internet, big data, and social media? (iii) Which data sources are the most often used for text mining in the financial sector, and for which purposes? In order to answer these questions, a qualitative analysis of literature is carried out using a systematic literature review, citation and co-citation analysis.",
+		"container-title": "Sustainability",
+		"DOI": "10.3390/su11051277",
+		"ISSN": "2071-1050",
+		"issue": "5",
+		"journalAbbreviation": "Sustainability",
+		"language": "en",
+		"license": "https://creativecommons.org/licenses/by/4.0/",
+		"page": "1277",
+		"source": "DOI.org (Crossref)",
+		"title": "Text Mining for Big Data Analysis in Financial Sector: A Literature Review",
+		"title-short": "Text Mining for Big Data Analysis in Financial Sector",
+		"URL": "https://www.mdpi.com/2071-1050/11/5/1277",
+		"volume": "11",
+		"author": [
+			{
+				"family": "Pejić Bach",
+				"given": "Mirjana"
+			},
+			{
+				"family": "Krstić",
+				"given": "Živko"
+			},
+			{
+				"family": "Seljan",
+				"given": "Sanja"
+			},
+			{
+				"family": "Turulja",
+				"given": "Lejla"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					9,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019",
+					2,
+					28
+				]
+			]
+		}
+	},
+	{
+		"id": "houAdvancingGeologicDocument2025",
+		"type": "article-journal",
+		"abstract": "This paper demonstrates how generative artificial intelligence (AI) enhances geoscientific document processing by improving text analysis, table extraction, and figure classification. Traditional workflows struggle with domain-specific terminology, poor-quality inputs, and rare formats. To address these challenges, we employ domain fine-tuned bidirectional encoder representations from transformers (BERT) models to enhance text processing. Additionally, we utilize multimodal large language models for precise table recognition and context-aware image classification. Finally, a domain-optimized retrieval system, GeoRAG, improves the relevance and accuracy of information retrieval. These AI-driven advancements streamline digitalization, enhance data extraction, and enable efficient handling of complex geoscientific documents. While challenges such as hallucinations, interpretability, and output consistency remain, this study highlights the transformative potential of generative AI for geoscience workflows and decision-making processes.",
+		"container-title": "The Leading Edge",
+		"DOI": "10.1190/tle44020108.1",
+		"ISSN": "1070-485X, 1938-3789",
+		"issue": "2",
+		"journalAbbreviation": "The Leading Edge",
+		"language": "en",
+		"page": "108-113",
+		"source": "DOI.org (Crossref)",
+		"title": "Advancing geologic document digitalization and information retrieval with generative AI",
+		"URL": "https://library.seg.org/doi/10.1190/tle44020108.1",
+		"volume": "44",
+		"author": [
+			{
+				"family": "Hou",
+				"given": "Song"
+			},
+			{
+				"family": "Dong",
+				"given": "Tianhao"
+			},
+			{
+				"family": "Sancheti",
+				"given": "Ojasvi"
+			},
+			{
+				"family": "Liu",
+				"given": "Hao"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2025",
+					10,
+					1
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2025",
+					2
+				]
+			]
+		}
+	},
+	{
+		"id": "chaffeyBusinessInformationManagement2005",
+		"type": "book",
+		"event-place": "Harlow",
+		"ISBN": "978-0-273-68655-2",
+		"language": "eng",
+		"number-of-pages": "662",
+		"publisher": "Financial Times Prentice Hall",
+		"publisher-place": "Harlow",
+		"source": "K10plus ISBN",
+		"title": "Business information management: improving performance using information systems",
+		"title-short": "Business information management",
+		"author": [
+			{
+				"family": "Chaffey",
+				"given": "Dave"
+			},
+			{
+				"family": "Wood",
+				"given": "Steve"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2005"
+				]
+			]
+		}
+	},
+	{
+		"id": "ackoffDataWisdom1989",
+		"type": "article-journal",
+		"container-title": "Journal of Applied Systems Analysis",
+		"page": "3–9",
+		"title": "From Data to Wisdom",
+		"volume": "16",
+		"author": [
+			{
+				"family": "Ackoff",
+				"given": "R. L."
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"1989"
+				]
+			]
+		}
+	}
+]

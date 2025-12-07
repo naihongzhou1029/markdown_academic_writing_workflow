@@ -1,0 +1,2226 @@
+{
+  "config": {
+    "id": "36a3b0b5-bad0-4a04-b79b-441c7cef77db",
+    "label": "BetterBibTeX JSON",
+    "preferences": {
+      "ascii": "",
+      "asciiBibLaTeX": false,
+      "asciiBibTeX": true,
+      "autoAbbrev": false,
+      "autoExport": "immediate",
+      "autoExportDelay": 5,
+      "autoExportIdleWait": 10,
+      "autoExportPathReplaceDiacritics": false,
+      "autoExportPathReplaceDirSep": "-",
+      "autoExportPathReplaceSpace": " ",
+      "automaticTags": true,
+      "autoPinDelay": 0,
+      "auxImport": false,
+      "baseAttachmentPath": "",
+      "biblatexExtendedDateFormat": true,
+      "biblatexExtendedNameFormat": true,
+      "biblatexExtractEprint": true,
+      "biblatexUsePrefix": true,
+      "bibtexEditionOrdinal": false,
+      "bibtexParticleNoOp": false,
+      "bibtexURL": "off",
+      "cache": true,
+      "cacheDelete": false,
+      "charmap": "",
+      "chinese": false,
+      "chineseSplitName": true,
+      "citeCommand": "cite",
+      "citekeyCaseInsensitive": true,
+      "citekeyFold": true,
+      "citekeyFormat": "auth.lower + shorttitle(3, 3) + year",
+      "citekeySearch": true,
+      "citekeyUnsafeChars": "\\\"#%'(),={}~",
+      "csquotes": "",
+      "DOIandURL": "both",
+      "exportBibTeXStrings": "off",
+      "exportBraceProtection": true,
+      "exportSort": "citekey",
+      "exportTitleCase": true,
+      "extraMergeCitekeys": false,
+      "extraMergeCSL": false,
+      "extraMergeTeX": false,
+      "git": "config",
+      "import": true,
+      "importBibTeXStrings": true,
+      "importCaseProtection": "as-needed",
+      "importCitationKey": true,
+      "importDetectURLs": true,
+      "importExtra": true,
+      "importJabRefAbbreviations": true,
+      "importJabRefStrings": true,
+      "importNoteToExtra": "",
+      "importPlaceEvent": "inproceedings,conference,presentation,talk",
+      "importSentenceCase": "on+guess",
+      "importSentenceCaseQuoted": true,
+      "importUnknownTexCommand": "ignore",
+      "itemObserverDelay": 5,
+      "jabrefFormat": 0,
+      "japanese": false,
+      "keyConflictPolicy": "keep",
+      "keyScope": "library",
+      "language": "langid",
+      "mapMath": "",
+      "mapText": "",
+      "packages": "",
+      "parseParticles": true,
+      "patchDates": "dateadded=dateAdded, date-added=dateAdded, datemodified=dateModified, date-modified=dateModified",
+      "postscript": "",
+      "postscriptOverride": "",
+      "preferencesOverride": "",
+      "qualityReport": false,
+      "quickCopyEta": "",
+      "quickCopyMode": "latex",
+      "quickCopyOrgMode": "zotero",
+      "quickCopyPandocBrackets": false,
+      "quickCopySelectLink": "zotero",
+      "rawImports": false,
+      "rawLaTag": "#LaTeX",
+      "relativeFilePaths": false,
+      "separatorList": "and",
+      "separatorNames": "and",
+      "skipFields": "",
+      "skipWords": "a,ab,aboard,about,above,across,after,against,al,along,amid,among,an,and,anti,around,as,at,before,behind,below,beneath,beside,besides,between,beyond,but,by,d,da,das,de,del,dell,dello,dei,degli,della,dell,delle,dem,den,der,des,despite,die,do,down,du,during,ein,eine,einem,einen,einer,eines,el,en,et,except,for,from,gli,i,il,in,inside,into,is,l,la,las,le,les,like,lo,los,near,nor,of,off,on,onto,or,over,past,per,plus,round,save,since,so,some,sur,than,the,through,to,toward,towards,un,una,unas,under,underneath,une,unlike,uno,unos,until,up,upon,versus,via,von,while,with,within,without,yet,zu,zum",
+      "startupProgress": "popup",
+      "strings": "",
+      "stringsOverride": "",
+      "verbatimFields": "url,doi,file,pdf,ids,eprint,/^verb[a-z]$/,groups,/^citeulike-linkout-[0-9]+$/, /^bdsk-url-[0-9]+$/, keywords",
+      "warnBulkModify": 10,
+      "warnTitleCased": false
+    },
+    "options": {
+      "Items": true,
+      "Normalize": false,
+      "Preferences": true,
+      "biblatexAPA": false,
+      "biblatexChicago": false,
+      "exportFileData": false,
+      "exportNotes": true,
+      "keepUpdated": false,
+      "worker": true,
+      "exportDir": "/Users/zhounaihong/Downloads",
+      "exportPath": "/Users/zhounaihong/Downloads/Graduate Paper.json"
+    }
+  },
+  "version": {
+    "zotero": "7.0.29",
+    "bbt": "7.0.68"
+  },
+  "collections": {
+    "42YZ9XIY": {
+      "key": "42YZ9XIY",
+      "parent": "",
+      "name": "Cited",
+      "collections": [],
+      "items": [
+        13,
+        20,
+        22,
+        72,
+        74,
+        90,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        208,
+        211,
+        212
+      ]
+    },
+    "4VXAUQUH": {
+      "key": "4VXAUQUH",
+      "parent": "",
+      "name": "Extraction",
+      "collections": [],
+      "items": [
+        1,
+        4,
+        10,
+        19,
+        242,
+        243,
+        244
+      ]
+    }
+  },
+  "items": [
+    {
+      "key": "ILGYFPJL",
+      "version": 875,
+      "itemType": "journalArticle",
+      "title": "From Data to Wisdom",
+      "date": "1989",
+      "volume": "16",
+      "pages": "3–9",
+      "publicationTitle": "Journal of Applied Systems Analysis",
+      "creators": [
+        {
+          "firstName": "R. L.",
+          "lastName": "Ackoff",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-10-10T14:46:38Z",
+      "dateModified": "2025-10-10T14:46:38Z",
+      "uri": "http://zotero.org/users/17640229/items/ILGYFPJL",
+      "itemID": 212,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "From Data to Wisdom.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-10-10T14:47:30Z",
+          "dateModified": "2025-10-10T14:47:30Z",
+          "uri": "http://zotero.org/users/17640229/items/TNKBKP5Z",
+          "path": "/Users/zhounaihong/Zotero/storage/TNKBKP5Z/From Data to Wisdom.pdf",
+          "select": "zotero://select/library/items/TNKBKP5Z"
+        }
+      ],
+      "notes": [],
+      "citationKey": "ackoffDataWisdom1989",
+      "itemKey": "ILGYFPJL",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/ILGYFPJL"
+    },
+    {
+      "key": "3M3WXU3N",
+      "version": 876,
+      "itemType": "journalArticle",
+      "title": "Critical factors for knowledge management in project business",
+      "abstractNote": "Purpose \n               \n                The purpose of this study is to identify and examine various factors that influence the success or failure of knowledge management (KM) initiatives in project‐based companies. \n               \n             \n             \n              Design/methodology/approach \n               \n                Following a literature review, the study proposes a conceptual model of six factors of potential importance to the success of KM initiatives. The model is then examined through an online survey of project managers and assistant managers from project‐based businesses in Finland. \n               \n             \n             \n              Findings \n               \n                The study finds that a lack of incentives and the absence of an appropriate information system are the most significant barriers to successful KM initiatives in projects. \n               \n             \n             \n              Research limitations/implications \n               \n                The findings of the study may be restricted in terms of generalisability because of the limited empirical study. \n               \n             \n             \n              Practical implications \n               \n                Project managers should formulate an attractive incentive package to encourage project members to participate in KM initiatives and to suggest ideas for new KM opportunities. Managers should also ensure that an effective user‐friendly information system is in place before introducing KM initiatives. \n               \n             \n             \n              Originality/value \n               \n                The study proposes a new model of critical success factors for KM initiatives in the context of project‐based business.",
+      "date": "2010-02-23",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "http://www.emerald.com/jkm/article/14/1/156-168/258324",
+      "accessDate": "2025-09-29T03:19:26Z",
+      "rights": "https://www.emerald.com/insight/site-policies",
+      "extra": "📙",
+      "volume": "14",
+      "pages": "156-168",
+      "publicationTitle": "Journal of Knowledge Management",
+      "DOI": "10.1108/13673271011015633",
+      "issue": "1",
+      "ISSN": "1367-3270",
+      "creators": [
+        {
+          "firstName": "Mian",
+          "lastName": "Ajmal",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Petri",
+          "lastName": "Helo",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Tauno",
+          "lastName": "Kekäle",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-29T03:19:27Z",
+      "dateModified": "2025-10-20T00:46:43Z",
+      "uri": "http://zotero.org/users/17640229/items/3M3WXU3N",
+      "itemID": 202,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "SSRN-id1608910.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-10-20T00:47:24Z",
+          "dateModified": "2025-10-20T00:47:24Z",
+          "uri": "http://zotero.org/users/17640229/items/T6XVW67I",
+          "path": "/Users/zhounaihong/Zotero/storage/T6XVW67I/SSRN-id1608910.pdf",
+          "select": "zotero://select/library/items/T6XVW67I"
+        }
+      ],
+      "notes": [],
+      "citationKey": "ajmalCriticalFactorsKnowledge2010",
+      "itemKey": "3M3WXU3N",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/3M3WXU3N"
+    },
+    {
+      "key": "C62A79WI",
+      "version": 911,
+      "itemType": "journalArticle",
+      "title": "Comprehensible Extraction of Knowledge Bases for Learning Agents in Games",
+      "abstractNote": "Abstract\n            This dissertation abstract summarizes results of the thesis “Comprehensible Knowledge Base Extraction for Learning Agents - Practical Challenges and Applications in Games” (accepted as dissertation at the Department of Computer Science of TU Dortmund University, Germany). The thesis presents approaches that allow for the automated creation of knowledge bases from agent behavior learned in the context of games. The aims are twofold: (1) The creation of human-readable knowledge that can provide insights into what an agent learned, and (2) the investigation of how learning agents themselves can benefit from incorporating these approaches into their learning processes. Applications are presented, e.g., in the context of general video game playing. Moreover, an outlook on the InteKRator toolbox is provided which implements the most essential approaches in a more general context for the potential use in other domains (e.g. in medical informatics).",
+      "date": "06/2025",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://www.researchgate.net/publication/380144006_Comprehensible_Extraction_of_Knowledge_Bases_for_Learning_Agents_in_Games",
+      "accessDate": "2025-08-29T00:30:36Z",
+      "volume": "39",
+      "pages": "173-177",
+      "publicationTitle": "KI - Künstliche Intelligenz",
+      "DOI": "10.1007/s13218-024-00845-w",
+      "issue": "2",
+      "journalAbbreviation": "Künstl Intell",
+      "ISSN": "0933-1875, 1610-1987",
+      "creators": [
+        {
+          "firstName": "Daan",
+          "lastName": "Apeldoorn",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-08-29T00:30:36Z",
+      "dateModified": "2025-09-11T01:11:14Z",
+      "uri": "http://zotero.org/users/17640229/items/C62A79WI",
+      "itemID": 19,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Comprehensible_Extraction_of_Knowledge_Bases_for_L.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-11T01:11:21Z",
+          "dateModified": "2025-09-11T01:11:21Z",
+          "uri": "http://zotero.org/users/17640229/items/JV2PKG3M",
+          "path": "/Users/zhounaihong/Zotero/storage/JV2PKG3M/Comprehensible_Extraction_of_Knowledge_Bases_for_L.pdf",
+          "select": "zotero://select/library/items/JV2PKG3M"
+        }
+      ],
+      "notes": [],
+      "citationKey": "apeldoornComprehensibleExtractionKnowledge2025",
+      "itemKey": "C62A79WI",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/C62A79WI"
+    },
+    {
+      "key": "V5F99BFG",
+      "version": 868,
+      "itemType": "journalArticle",
+      "title": "Efficient Automated Processing of the Unstructured Documents Using Artificial Intelligence: A Systematic Literature Review and Future Directions",
+      "date": "2021",
+      "shortTitle": "Efficient Automated Processing of the Unstructured Documents Using Artificial Intelligence",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://ieeexplore.ieee.org/document/9402739/",
+      "accessDate": "2025-09-29T05:27:22Z",
+      "rights": "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "volume": "9",
+      "pages": "72894-72936",
+      "publicationTitle": "IEEE Access",
+      "DOI": "10.1109/ACCESS.2021.3072900",
+      "journalAbbreviation": "IEEE Access",
+      "ISSN": "2169-3536",
+      "creators": [
+        {
+          "firstName": "Dipali",
+          "lastName": "Baviskar",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Swati",
+          "lastName": "Ahirrao",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Vidyasagar",
+          "lastName": "Potdar",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Ketan",
+          "lastName": "Kotecha",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-29T05:27:23Z",
+      "dateModified": "2025-10-24T13:43:05Z",
+      "uri": "http://zotero.org/users/17640229/items/V5F99BFG",
+      "itemID": 203,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Efficient_Automated_Processing_of_the_Unstructured_Documents_Using_Artificial_Intelligence_A_Systematic_Literature_Review_and_Future_Directions.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-29T05:28:38Z",
+          "dateModified": "2025-09-29T05:28:38Z",
+          "uri": "http://zotero.org/users/17640229/items/GQRVFDKB",
+          "path": "/Users/zhounaihong/Zotero/storage/GQRVFDKB/Efficient_Automated_Processing_of_the_Unstructured_Documents_Using_Artificial_Intelligence_A_Systematic_Literature_Review_and_Future_Directions.pdf",
+          "select": "zotero://select/library/items/GQRVFDKB"
+        }
+      ],
+      "notes": [],
+      "citationKey": "baviskarEfficientAutomatedProcessing2021",
+      "itemKey": "V5F99BFG",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/V5F99BFG"
+    },
+    {
+      "key": "Z2YV87LX",
+      "version": 877,
+      "itemType": "book",
+      "title": "Business information management: improving performance using information systems",
+      "date": "2005",
+      "language": "eng",
+      "shortTitle": "Business information management",
+      "libraryCatalog": "K10plus ISBN",
+      "place": "Harlow",
+      "publisher": "Financial Times Prentice Hall",
+      "ISBN": "978-0-273-68655-2",
+      "numPages": "662",
+      "creators": [
+        {
+          "firstName": "Dave",
+          "lastName": "Chaffey",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Steve",
+          "lastName": "Wood",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-10-10T14:51:12Z",
+      "dateModified": "2025-10-10T14:51:12Z",
+      "uri": "http://zotero.org/users/17640229/items/Z2YV87LX",
+      "itemID": 211,
+      "attachments": [],
+      "notes": [],
+      "citationKey": "chaffeyBusinessInformationManagement2005",
+      "itemKey": "Z2YV87LX",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/Z2YV87LX"
+    },
+    {
+      "key": "F8SKGZ5Z",
+      "version": 739,
+      "itemType": "book",
+      "title": "Knowledge Management in Theory and Practice",
+      "date": "2013-9-5",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://www.taylorfrancis.com/books/9781136389757",
+      "accessDate": "2025-09-02T00:39:41Z",
+      "extra": "DOI: 10.4324/9780080547367",
+      "publisher": "Routledge",
+      "ISBN": "978-1-136-38975-7",
+      "edition": "0",
+      "creators": [
+        {
+          "firstName": "Kimiz",
+          "lastName": "Dalkir",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:39:41Z",
+      "dateModified": "2025-09-02T00:39:41Z",
+      "uri": "http://zotero.org/users/17640229/items/F8SKGZ5Z",
+      "itemID": 3,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Knowledge Management in Theory and Practice by Kimiz Dalkir- Jay Liebowitz (1).pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-07T03:35:45Z",
+          "dateModified": "2025-09-07T03:35:45Z",
+          "uri": "http://zotero.org/users/17640229/items/FPEV3V3J",
+          "path": "/Users/zhounaihong/Zotero/storage/FPEV3V3J/Knowledge Management in Theory and Practice by Kimiz Dalkir- Jay Liebowitz (1).pdf",
+          "select": "zotero://select/library/items/FPEV3V3J"
+        }
+      ],
+      "notes": [],
+      "citationKey": "dalkirKnowledgeManagementTheory2013",
+      "itemKey": "F8SKGZ5Z",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/F8SKGZ5Z"
+    },
+    {
+      "key": "Z5EA45XX",
+      "version": 739,
+      "itemType": "conferencePaper",
+      "title": "Leveraging Generative AI for Architecture Knowledge Management",
+      "date": "2024-06",
+      "accessDate": "2025-08-28",
+      "extra": "Citation Key: dharLeveragingGenerativeAI2024",
+      "place": "Hyderabad, India",
+      "publisher": "IEEE",
+      "ISBN": "979-8-3503-6625-9",
+      "pages": "163–166",
+      "proceedingsTitle": "2024 IEEE 21st International Conference on Software Architecture Companion (ICSA-C)",
+      "DOI": "10.1109/ICSA-C63560.2024.00034",
+      "creators": [
+        {
+          "firstName": "Rudra",
+          "lastName": "Dhar",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Karthik",
+          "lastName": "Vaidhyanathan",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Vasudeva",
+          "lastName": "Varma",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:37:18Z",
+      "dateModified": "2025-09-02T00:37:18Z",
+      "uri": "http://zotero.org/users/17640229/items/Z5EA45XX",
+      "itemID": 14,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "copyright",
+          "url": "https://doi.org/10.15223/policy-029",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-02T00:37:18Z",
+          "dateModified": "2025-09-02T00:37:18Z",
+          "uri": "http://zotero.org/users/17640229/items/96W46Y8L",
+          "select": "zotero://select/library/items/96W46Y8L"
+        },
+        {
+          "itemType": "attachment",
+          "title": "Leveraging_Generative_AI_for_Architecture_Knowledge_Management.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-13T15:19:42Z",
+          "dateModified": "2025-09-13T15:19:42Z",
+          "uri": "http://zotero.org/users/17640229/items/66AK978J",
+          "path": "/Users/zhounaihong/Zotero/storage/66AK978J/Leveraging_Generative_AI_for_Architecture_Knowledge_Management.pdf",
+          "select": "zotero://select/library/items/66AK978J"
+        }
+      ],
+      "notes": [],
+      "citationKey": "dharLeveragingGenerativeAI2024",
+      "itemKey": "Z5EA45XX",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/Z5EA45XX"
+    },
+    {
+      "key": "TPG53ADN",
+      "version": 832,
+      "itemType": "journalArticle",
+      "title": "Capturing tacit knowledge in New Product Development: a study of Post-Project Reviews",
+      "date": "2008",
+      "language": "english",
+      "shortTitle": "Capturing tacit knowledge in New Product Development",
+      "url": "https://www.researchgate.net/publication/240296086_Capturing_tacit_knowledge_in_New_Product_Development_a_study_of_Post-Project_Reviews",
+      "accessDate": "2025-07-26",
+      "extra": "❌",
+      "volume": "4",
+      "pages": "234",
+      "publicationTitle": "IJTIP",
+      "DOI": "10.1504/ijtip.2008.020096",
+      "issue": "3",
+      "ISSN": "1740-2832, 1740-2840",
+      "creators": [
+        {
+          "firstName": "Keith",
+          "lastName": "Goffin",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Ursula",
+          "lastName": "Koners",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:37:18Z",
+      "dateModified": "2025-10-20T00:46:29Z",
+      "uri": "http://zotero.org/users/17640229/items/TPG53ADN",
+      "itemID": 12,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Capturing_tacit_knowledge_in_New_Product_Developme.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-11T01:09:27Z",
+          "dateModified": "2025-09-11T01:09:27Z",
+          "uri": "http://zotero.org/users/17640229/items/KEITC26G",
+          "path": "/Users/zhounaihong/Zotero/storage/KEITC26G/Capturing_tacit_knowledge_in_New_Product_Developme.pdf",
+          "select": "zotero://select/library/items/KEITC26G"
+        }
+      ],
+      "notes": [],
+      "citationKey": "goffinCapturingTacitKnowledge2008",
+      "itemKey": "TPG53ADN",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/TPG53ADN"
+    },
+    {
+      "key": "6CE86UEJ",
+      "version": 878,
+      "itemType": "bookSection",
+      "title": "Knowledge Management and the Knowledge-Based Economy",
+      "abstractNote": "Abstract \n            With the bursting of the dotcom bubble and the onset of recession in much of the industrialised world, optimism over the ‘New Economy’ has evaporated and doubts have grown over the potential for knowledge management to unlock new sources of productivity. In this chapter, I point to the need to identify the fundamental drivers of technological change in the digital economy and explore their impact on industry structure and competition. While the implications for profitability are largely unfavourable, this reinforces the quest for competitive advantage for companies.",
+      "date": "2006-8-17",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://academic.oup.com/book/52376/chapter/421270494",
+      "accessDate": "2025-09-29T02:23:41Z",
+      "extra": "DOI: 10.1093/oso/9780199291793.003.0002",
+      "publisher": "Oxford University PressOxford",
+      "ISBN": "978-0-19-929179-3 978-1-383-04385-3",
+      "pages": "15-29",
+      "bookTitle": "Knowledge Management and Organizational Learning",
+      "creators": [
+        {
+          "firstName": "Laurence",
+          "lastName": "Prusak",
+          "creatorType": "editor"
+        },
+        {
+          "firstName": "Eric",
+          "lastName": "Matson",
+          "creatorType": "editor"
+        },
+        {
+          "firstName": "Robert",
+          "lastName": "Grant",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-29T02:23:43Z",
+      "dateModified": "2025-10-24T13:47:54Z",
+      "uri": "http://zotero.org/users/17640229/items/6CE86UEJ",
+      "itemID": 198,
+      "attachments": [],
+      "notes": [],
+      "citationKey": "grantKnowledgeManagementKnowledgeBased2006",
+      "itemKey": "6CE86UEJ",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/6CE86UEJ"
+    },
+    {
+      "key": "RKYTWWEA",
+      "version": 739,
+      "itemType": "journalArticle",
+      "title": "Advancing geologic document digitalization and information retrieval with generative AI",
+      "abstractNote": "This paper demonstrates how generative artificial intelligence (AI) enhances geoscientific document processing by improving text analysis, table extraction, and figure classification. Traditional workflows struggle with domain-specific terminology, poor-quality inputs, and rare formats. To address these challenges, we employ domain fine-tuned bidirectional encoder representations from transformers (BERT) models to enhance text processing. Additionally, we utilize multimodal large language models for precise table recognition and context-aware image classification. Finally, a domain-optimized retrieval system, GeoRAG, improves the relevance and accuracy of information retrieval. These AI-driven advancements streamline digitalization, enhance data extraction, and enable efficient handling of complex geoscientific documents. While challenges such as hallucinations, interpretability, and output consistency remain, this study highlights the transformative potential of generative AI for geoscience workflows and decision-making processes.",
+      "date": "02/2025",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://library.seg.org/doi/10.1190/tle44020108.1",
+      "accessDate": "2025-10-01T00:36:26Z",
+      "volume": "44",
+      "pages": "108-113",
+      "publicationTitle": "The Leading Edge",
+      "DOI": "10.1190/tle44020108.1",
+      "issue": "2",
+      "journalAbbreviation": "The Leading Edge",
+      "ISSN": "1070-485X, 1938-3789",
+      "creators": [
+        {
+          "firstName": "Song",
+          "lastName": "Hou",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Tianhao",
+          "lastName": "Dong",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Ojasvi",
+          "lastName": "Sancheti",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Hao",
+          "lastName": "Liu",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-10-01T00:36:27Z",
+      "dateModified": "2025-10-01T00:36:27Z",
+      "uri": "http://zotero.org/users/17640229/items/RKYTWWEA",
+      "itemID": 210,
+      "attachments": [],
+      "notes": [],
+      "citationKey": "houAdvancingGeologicDocument2025",
+      "itemKey": "RKYTWWEA",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/RKYTWWEA"
+    },
+    {
+      "key": "DF3G7UP9",
+      "version": 879,
+      "itemType": "journalArticle",
+      "title": "The mediating effect of knowledge management on social interaction and innovation performance",
+      "abstractNote": "Purpose \n              The purpose of this paper is to examine the mediating role of knowledge management in the relationship between social interaction and innovation performance. \n             \n             \n              Design/methodology/approach \n              The population in the study is the Taiwanese firms listed in the China Credit Information Service Incorporation. A stratified random sampling method was used to select 176 firms in Taiwan. The usable response rate was 23.47 per cent. The study employed LISREL to test the hypothesized relationships in the path‐analytic framework. \n             \n             \n              Findings \n              The results indicate that social interaction is positively related to knowledge management. Knowledge management is, in turn, positively related to administrative and technical innovation performance. Further, the results provide evidence that knowledge management plays a mediating role between social interaction and innovation performance. \n             \n             \n              Originality/value \n              The study highlights the importance of social interaction and knowledge management in the process of innovation, and helps scholars and managers to better understand the mediator of knowledge management through which social interaction benefits innovation performance.",
+      "date": "2009-06-12",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "http://www.emerald.com/ijm/article/30/3/285-301/145283",
+      "accessDate": "2025-09-29T02:15:45Z",
+      "rights": "https://www.emerald.com/insight/site-policies",
+      "volume": "30",
+      "pages": "285-301",
+      "publicationTitle": "International Journal of Manpower",
+      "DOI": "10.1108/01437720910956772",
+      "issue": "3",
+      "ISSN": "0143-7720",
+      "creators": [
+        {
+          "firstName": "Jing‐Wen",
+          "lastName": "Huang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yong‐Hui",
+          "lastName": "Li",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-29T02:15:46Z",
+      "dateModified": "2025-10-24T13:48:12Z",
+      "uri": "http://zotero.org/users/17640229/items/DF3G7UP9",
+      "itemID": 197,
+      "attachments": [],
+      "notes": [],
+      "citationKey": "huangMediatingEffectKnowledge2009",
+      "itemKey": "DF3G7UP9",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/DF3G7UP9"
+    },
+    {
+      "key": "VSWZXA47",
+      "version": 881,
+      "itemType": "book",
+      "title": "The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data",
+      "date": "2004",
+      "language": "english",
+      "shortTitle": "The data warehouse ETL toolkit",
+      "extra": "Citation Key: kimballDataWarehouseETL2004",
+      "place": "Indianapolis, IN",
+      "publisher": "Wiley",
+      "ISBN": "978-0-7645-7923-3",
+      "series": "Safari Books Online",
+      "creators": [
+        {
+          "firstName": "Ralph",
+          "lastName": "Kimball",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Joe",
+          "lastName": "Caserta",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:37:18Z",
+      "dateModified": "2025-10-24T13:48:29Z",
+      "uri": "http://zotero.org/users/17640229/items/VSWZXA47",
+      "itemID": 13,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "The Data Warehouse ETL Toolkit _ Practical Techniques for Extracting- Cleaning-.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-07T03:36:31Z",
+          "dateModified": "2025-09-07T03:36:31Z",
+          "uri": "http://zotero.org/users/17640229/items/SCZE428Q",
+          "path": "/Users/zhounaihong/Zotero/storage/SCZE428Q/The Data Warehouse ETL Toolkit _ Practical Techniques for Extracting- Cleaning-.pdf",
+          "select": "zotero://select/library/items/SCZE428Q"
+        }
+      ],
+      "notes": [
+        {
+          "key": "WHQ47XN6",
+          "version": 19,
+          "itemType": "note",
+          "parentItem": "VSWZXA47",
+          "note": "Includes index Electronic reproduction, Boulder, Colo : NetLibrary, 2004",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-02T00:37:18Z",
+          "dateModified": "2025-09-02T00:37:18Z",
+          "uri": "http://zotero.org/users/17640229/items/WHQ47XN6"
+        }
+      ],
+      "citationKey": "kimballDataWarehouseETL2004",
+      "itemKey": "VSWZXA47",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/VSWZXA47"
+    },
+    {
+      "key": "MTPYTJTE",
+      "version": 919,
+      "itemType": "journalArticle",
+      "title": "An integrated view of knowledge management for performance",
+      "abstractNote": "Purpose \n               \n                This study aims to analyze the relationship between KM infrastructures, knowledge process capabilities, creative organizational learning, and organizational performance. The primary research focus is on the relationships between the KM infrastructure, which includes cultural, structural, management, and technology related factors, and the knowledge process capability by elaborating on the significance of knowledge processes as the determinants of organizational performance. \n               \n             \n             \n              Design/methodology/approach \n               \n                The unit of analysis is a company that has adopted a KMS. A mail survey was used to collect the data and an internet‐based survey was also used to provide more convenience in the response. The response sample included 120 responses. The structural relations among variables were tested using the partial least squares (PLS) method. \n               \n             \n             \n              Findings \n               \n                The results of this study indicate that collaboration, learning culture, top management support, and IT support affect the knowledge process capabilities. Knowledge process capabilities and creative organizational learning in turn mediate the relationship between KM infrastructure and organizational performance, which demonstrate the relevance of KM infrastructure for organizational performance. \n               \n             \n             \n              Originality/value \n               \n                Previous studies on KM have been fragmented in that they have explained some aspects of KM performance but have not provided a holistic view of a KM performance framework. Using a holistic view of the KM performance framework, this study has provided insights to KM for researchers because it explains the integrated aspects of KM performance by examining the relationships between the KM infrastructure, knowledge process capabilities, and organizational outcomes.",
+      "date": "2012-03-30",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "http://www.emerald.com/jkm/article/16/2/183-203/256486",
+      "accessDate": "2025-09-14T08:52:51Z",
+      "rights": "https://www.emerald.com/insight/site-policies",
+      "volume": "16",
+      "pages": "183-203",
+      "publicationTitle": "Journal of Knowledge Management",
+      "DOI": "10.1108/13673271211218807",
+      "issue": "2",
+      "ISSN": "1367-3270",
+      "creators": [
+        {
+          "firstName": "Sangjae",
+          "lastName": "Lee",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Byung",
+          "lastName": "Gon Kim",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Hoyal",
+          "lastName": "Kim",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "performance_corelation"
+        }
+      ],
+      "relations": {},
+      "dateAdded": "2025-09-14T08:52:52Z",
+      "dateModified": "2025-10-24T14:13:45Z",
+      "uri": "http://zotero.org/users/17640229/items/MTPYTJTE",
+      "itemID": 70,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "2012_KMP_JKM.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-14T08:53:13Z",
+          "dateModified": "2025-09-14T08:53:13Z",
+          "uri": "http://zotero.org/users/17640229/items/EVH8WC73",
+          "path": "/Users/zhounaihong/Zotero/storage/EVH8WC73/2012_KMP_JKM.pdf",
+          "select": "zotero://select/library/items/EVH8WC73"
+        }
+      ],
+      "notes": [],
+      "citationKey": "leeIntegratedViewKnowledge2012",
+      "itemKey": "MTPYTJTE",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/MTPYTJTE"
+    },
+    {
+      "key": "NEASA83L",
+      "version": 869,
+      "itemType": "journalArticle",
+      "title": "The Relationship Between Knowledge Management and Innovation Performance",
+      "date": "2018",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://pdf.sciencedirectassets.com/272085/1-s2.0-S1047831018X00029/1-s2.0-S1047831018300026/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIGP0YNjvkuqzBxeEB7d%2Bs64sBtJe%2Fl6VgyG4RPBT7%2FBHAiEA8T67wOKGOyQ%2Fj4eansYHrVCyJGhn2RNI4Ru4iq75pr0qswUIWhAFGgwwNTkwMDM1NDY4NjUiDDva0f7NEYoVhoB5ECqQBTpt8MbiOo3gDGu22%2FPA4pn%2BPocNDejPp9u3Nnt%2Bep8jASTMUW%2BrCLaJddJ3a2H5OGow75mK12JgUoM1DEnr7qj2xrUbP9tcvfF8qcDriEvobqsVM62GyYuV9r%2FwFl9WgxqjqkO%2F9242Sxzs2bMrbjOqnzCZp%2Fkw%2BaoHGNjj26AfF4%2FciUKsnp7qq%2BJKjkUXn462E69ftKdYUHOXlxbZzA4c58UKcCdjrUWTsOrggONgzo9ymgjkgQfjEHHv1rekJw%2FHB8VX7wVBXZQFRkXi5a%2B6pVDoNp9FCHE1FWy%2FKUBp6PQxHOXYnzomjzElm78bamqieABIMEfmdwmTNT9JIdfXfEug%2FXa72eMK%2BJKLJEGUYDRoQewZDm%2Ft53ITL3f4BK4leBz%2BcIsatqv52rdusMfGCbPa5du434Nbxd8ObygRAK40ZcHjVhW89Ud6jlfO6o6If6yO9VxWc35m7EypnLOtllEvpH%2FneJn0YLLE4LtlH3VL7lYLxgg2cB%2FpQqQv8axtVFBG1uZTON5qWJ0BvAH9Aj7YkU1Nb5HIVxiRJQ%2BEqo11OtRvtTC0hwgHz2fz6cYYBX8lDlq8OH7eMJCWApjIpVSFc2Za9W%2BuCJoRYAjn7GSXC4otbGOnig5%2FuAqOUFz05zV0qghmtrc1DEMZo5CGzXr%2BUATO7LDyQCxH6MqLz2aUb1zteyXpAbI0dnnLfb0wS0EkE57p2nKX36JyZOkcP1FongoUYgR0OOhYvYhw%2F7IesX%2Bhma%2BZjelyzVecmUptGVfdU3mMglqnLqeJrrCAk8RErIpG%2BwDYO8TBhAYtN3n%2BSDq4%2Fp9iC3bI%2F1hdv0l1nsfvjnawGrJRWUfIzMEs9MFkuZ1Ii1CsbiMv72McMIOPmsYGOrEBfuGaXu6QlCjjfqCPmcLPl9EYWi7uPrsGUzklt55g7F1ASqz2S3aezFwm%2BijzKzZ%2FD3GLXjkj6FLIxsnF2ZY6lG%2FgKVHLgjWLA%2FDW5GhkOynSu61P%2F36QxAfgNgB3yHUFHeZxm%2F9MGibu8JImQ8wRU57bNsK9gjbPcMQMO%2BvKhqE4HxDPb7I8hMhlj2DMLeHsxiPj85RSMgcAk7KRAwJoiv5DUSjk9wpLuJxkcjDvSbib&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250914T095521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY4PBNP6ZD%2F20250914%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=afd30e85f84e1d9841cfe0983af2c20387f300c4dbd00626306b558b282af11e&hash=d65176f39ded7fc790f516e45a6d6a241a94a27954ed3b88dc8851b035d13a7a&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S1047831018300026&tid=spdf-40ca0b26-2c97-4d40-9ad6-0db0a366d4e3&sid=9a92fb2b49d0b040fe68ff8-db22298b254cgxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=11105a52030954575255&rr=97ef0216be0f4a46&cc=tw",
+      "accessDate": "2025-09-14T09:52:28Z",
+      "volume": "29",
+      "pages": "12-26",
+      "publicationTitle": "The Journal of High Technology Management Research",
+      "DOI": "10.1016/j.hitech.2018.04.002",
+      "issue": "1",
+      "journalAbbreviation": "The Journal of High Technology Management Research",
+      "ISSN": "10478310",
+      "creators": [
+        {
+          "firstName": "Amirhosein",
+          "lastName": "Mardani",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Saghi",
+          "lastName": "Nikoosokhan",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Mahmoud",
+          "lastName": "Moradi",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Mohammad",
+          "lastName": "Doustar",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-14T09:52:29Z",
+      "dateModified": "2025-10-24T13:43:11Z",
+      "uri": "http://zotero.org/users/17640229/items/NEASA83L",
+      "itemID": 74,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "migdadi2020.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-14T09:53:18Z",
+          "dateModified": "2025-09-14T09:53:18Z",
+          "uri": "http://zotero.org/users/17640229/items/7R9HCN4Z",
+          "path": "/Users/zhounaihong/Zotero/storage/7R9HCN4Z/migdadi2020.pdf",
+          "select": "zotero://select/library/items/7R9HCN4Z"
+        }
+      ],
+      "notes": [],
+      "citationKey": "mardaniRelationshipKnowledgeManagement2018",
+      "itemKey": "NEASA83L",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/NEASA83L"
+    },
+    {
+      "key": "947AKMIH",
+      "version": 865,
+      "itemType": "journalArticle",
+      "title": "Knowledge management processes, innovation capability and organizational performance",
+      "abstractNote": "Purpose \n              The purpose of this study is to introduce a unified framework which integrates knowledge management processes (knowledge creation, sharing, storage and documentation and acquisition), innovation capability (product, process, marketing and organizational and organizational performance (operational, financial and product quality). Then empirically test the effect of knowledge management processes (KMP) on innovation capability (IC), the effect of IC on organizational performance (OP) and the impact of KMP on OP through the mediator (IC). \n             \n             \n              Design/methodology/approach \n              A questionnaire was designed and addressed to the general managers of the Jordanian companies making up the target population. Statistical techniques employed included confirmatory factor analysis and structural equation modeling (SEM) using AMOS 24 to test the hypotheses. \n             \n             \n              Findings \n              The results show that KMP influences IC, IC affects OP and KMP impacts OP through the mediator (IC). \n             \n             \n              Research limitations/implications \n              The use of longitudinal data and comparisons with this study would provide further insights that would assist in generalizing knowledge related to the relationships among KMP, IC and Os' P. \n             \n             \n              Practical implications \n              If organizations fully comprehend KMP and IC, they would be able to implement them successfully, creating value for their companies and improving OP. \n             \n             \n              Originality/value \n              The existing research on KMP and IC is primarily conceptual and descriptive in nature, and empirical research confirming the real impact of KMP when developing IC is lacking. Also. the relationship between innovation capabilities and OP has not been adequately studied. Hence, this study introduces a conceptual framework which integrates KMP, IC and OP and simultaneously empirically tests the relationships among them.",
+      "date": "2022-01-03",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "http://www.emerald.com/ijppm/article/71/1/182-210/164196",
+      "accessDate": "2025-09-14T09:42:35Z",
+      "rights": "https://www.emerald.com/insight/site-policies",
+      "volume": "71",
+      "pages": "182-210",
+      "publicationTitle": "International Journal of Productivity and Performance Management",
+      "DOI": "10.1108/IJPPM-04-2020-0154",
+      "issue": "1",
+      "journalAbbreviation": "IJPPM",
+      "ISSN": "1741-0401",
+      "creators": [
+        {
+          "firstName": "Mahmoud Mohammad",
+          "lastName": "Migdadi",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-14T09:42:36Z",
+      "dateModified": "2025-10-24T13:42:28Z",
+      "uri": "http://zotero.org/users/17640229/items/947AKMIH",
+      "itemID": 72,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "migdadi2020.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-14T09:46:55Z",
+          "dateModified": "2025-09-14T09:46:55Z",
+          "uri": "http://zotero.org/users/17640229/items/PVZFV4TC",
+          "path": "/Users/zhounaihong/Zotero/storage/PVZFV4TC/migdadi2020.pdf",
+          "select": "zotero://select/library/items/PVZFV4TC"
+        }
+      ],
+      "notes": [
+        {
+          "key": "QMKAGM4Z",
+          "version": 458,
+          "itemType": "note",
+          "parentItem": "947AKMIH",
+          "note": "<div data-schema-version=\"9\"><p>2.5 Knowledge management processes and organizational performance</p>\n</div>",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-24T00:59:27Z",
+          "dateModified": "2025-09-24T00:59:33Z",
+          "uri": "http://zotero.org/users/17640229/items/QMKAGM4Z"
+        }
+      ],
+      "citationKey": "migdadiKnowledgeManagementProcesses2022",
+      "itemKey": "947AKMIH",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/947AKMIH"
+    },
+    {
+      "key": "KNQ4GP88",
+      "version": 946,
+      "itemType": "journalArticle",
+      "title": "Large Scale Retrieval and Generation of Image Descriptions",
+      "date": "8/2016",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "http://link.springer.com/10.1007/s11263-015-0840-y",
+      "accessDate": "2025-11-26T09:55:37Z",
+      "volume": "119",
+      "pages": "46-59",
+      "publicationTitle": "International Journal of Computer Vision",
+      "DOI": "10.1007/s11263-015-0840-y",
+      "issue": "1",
+      "journalAbbreviation": "Int J Comput Vis",
+      "ISSN": "0920-5691, 1573-1405",
+      "creators": [
+        {
+          "firstName": "Vicente",
+          "lastName": "Ordonez",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Xufeng",
+          "lastName": "Han",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Polina",
+          "lastName": "Kuznetsova",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Girish",
+          "lastName": "Kulkarni",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Margaret",
+          "lastName": "Mitchell",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Kota",
+          "lastName": "Yamaguchi",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Karl",
+          "lastName": "Stratos",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Amit",
+          "lastName": "Goyal",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Jesse",
+          "lastName": "Dodge",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Alyssa",
+          "lastName": "Mensch",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Hal",
+          "lastName": "Daumé",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Alexander C.",
+          "lastName": "Berg",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yejin",
+          "lastName": "Choi",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Tamara L.",
+          "lastName": "Berg",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-11-26T09:55:37Z",
+      "dateModified": "2025-11-26T09:55:37Z",
+      "uri": "http://zotero.org/users/17640229/items/KNQ4GP88",
+      "itemID": 243,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "PDF",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-11-26T09:55:59Z",
+          "dateModified": "2025-11-26T09:55:59Z",
+          "uri": "http://zotero.org/users/17640229/items/XIUCYK5E",
+          "path": "/Users/zhounaihong/Zotero/storage/XIUCYK5E/Ordonez et al. - 2016 - Large Scale Retrieval and Generation of Image Descriptions.pdf",
+          "select": "zotero://select/library/items/XIUCYK5E"
+        }
+      ],
+      "notes": [],
+      "citationKey": "ordonezLargeScaleRetrieval2016",
+      "itemKey": "KNQ4GP88",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/KNQ4GP88"
+    },
+    {
+      "key": "HJ6VKB3U",
+      "version": 906,
+      "itemType": "journalArticle",
+      "title": "The effect of knowledge management practices on firm performance",
+      "abstractNote": "Purpose \n               \n                This research proposes to study the connection between knowledge management practices and firm performance. \n               \n             \n             \n              Design/methodology/approach \n               \n                Theoretical relations are tested through an empirical study carried out on 222 Spanish firms in the biotechnology and telecommunications industries. \n               \n             \n             \n              Findings \n               \n                This paper shows how the firms that adopt knowledge management practices obtain better results than their competitors. \n               \n             \n             \n              Research limitations/implications \n               \n                The subject of principles has not been considered a dimension of knowledge management. New avenues of inquiry are opened considering this dimension. \n               \n             \n             \n              Practical implications \n               \n                It determines practices that have a positive incidence on firm performance. \n               \n             \n             \n              Originality/value \n               \n                The conceptualization of knowledge management practices represents a theoretical innovation. This scale can be used in other knowledge‐intensive industries. The paper concludes that these practices have a positive incidence on firm performance.",
+      "date": "2006-05-01",
+      "language": "en",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "http://www.emerald.com/jkm/article/10/3/143-156/258638",
+      "accessDate": "2025-09-18T10:59:04Z",
+      "rights": "https://www.emerald.com/insight/site-policies",
+      "volume": "10",
+      "pages": "143-156",
+      "publicationTitle": "Journal of Knowledge Management",
+      "DOI": "10.1108/13673270610670911",
+      "issue": "3",
+      "ISSN": "1367-3270",
+      "creators": [
+        {
+          "firstName": "Daniel",
+          "lastName": "Palacios Marqués",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Fernando",
+          "lastName": "José Garrigós Simón",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-18T10:59:05Z",
+      "dateModified": "2025-09-18T10:59:05Z",
+      "uri": "http://zotero.org/users/17640229/items/HJ6VKB3U",
+      "itemID": 90,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "The_effect_of_knowledge_management_practices_on_fi.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-18T12:27:15Z",
+          "dateModified": "2025-09-18T12:27:15Z",
+          "uri": "http://zotero.org/users/17640229/items/A4XKKNQ8",
+          "path": "/Users/zhounaihong/Zotero/storage/A4XKKNQ8/The_effect_of_knowledge_management_practices_on_fi.pdf",
+          "select": "zotero://select/library/items/A4XKKNQ8"
+        }
+      ],
+      "notes": [],
+      "citationKey": "palaciosmarquesEffectKnowledgeManagement2006",
+      "itemKey": "HJ6VKB3U",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/HJ6VKB3U"
+    },
+    {
+      "key": "5P246WRR",
+      "version": 871,
+      "itemType": "journalArticle",
+      "title": "A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology",
+      "abstractNote": "Organisations are increasingly investing in knowledge management (KM) initiatives to promote the sharing, application, and creation of knowledge for competitive advantage. To guide and assess the progress of KM initiatives in organisations, various process models have been proposed but a consistent approach that has been empirically tested is lacking. Based on the life cycle theory, this paper reviews, compares, and integrates existing models to propose a General KM Maturity Model (G-KMMM). G-KMMM encompasses the initial, aware, defined, managed, and optimising stages, which are differentiated in terms of their characteristics related to the people, process, and technology aspects of KM. To facilitate empirical validation and application, an accompanying assessment tool is also developed. As an initial validation of the proposed G-KMMM, a case study of a multi-unit information system organisation of a large public university was conducted. Findings indicate that G-KMMM can be a useful diagnostic tool for assessing and guiding KM implementation in organisations.",
+      "date": "2009-06",
+      "libraryCatalog": "worldscientific.com (Atypon)",
+      "url": "https://www-scopus-com.ntust.idm.oclc.org/pages/publications/84856114893",
+      "accessDate": "2025-08-10T17:17:11Z",
+      "volume": "08",
+      "pages": "79-99",
+      "publicationTitle": "Journal of Information & Knowledge Management",
+      "DOI": "10.1142/S0219649209002270",
+      "issue": "02",
+      "journalAbbreviation": "J. Info. Know. Mgmt.",
+      "ISSN": "0219-6492",
+      "creators": [
+        {
+          "firstName": "L. G.",
+          "lastName": "Pee",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "A.",
+          "lastName": "Kankanhalli",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "case study",
+          "type": 1
+        },
+        {
+          "tag": "Knowledge management",
+          "type": 1
+        },
+        {
+          "tag": "maturity modeling",
+          "type": 1
+        }
+      ],
+      "relations": {},
+      "dateAdded": "2025-08-10T17:17:12Z",
+      "dateModified": "2025-10-24T13:43:38Z",
+      "uri": "http://zotero.org/users/17640229/items/5P246WRR",
+      "itemID": 20,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Full Text PDF",
+          "url": "https://www.worldscientific.com/doi/pdf/10.1142/S0219649209002270",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-08-10T17:17:13Z",
+          "dateModified": "2025-08-10T17:17:13Z",
+          "uri": "http://zotero.org/users/17640229/items/2BUABKZT",
+          "select": "zotero://select/library/items/2BUABKZT"
+        },
+        {
+          "itemType": "attachment",
+          "title": "KMmat.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-13T15:16:53Z",
+          "dateModified": "2025-09-13T15:16:53Z",
+          "uri": "http://zotero.org/users/17640229/items/TBNKBXH8",
+          "path": "/Users/zhounaihong/Zotero/storage/TBNKBXH8/KMmat.pdf",
+          "select": "zotero://select/library/items/TBNKBXH8"
+        }
+      ],
+      "notes": [],
+      "citationKey": "peeModelOrganisationalKnowledge2009",
+      "itemKey": "5P246WRR",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/5P246WRR"
+    },
+    {
+      "key": "STUG256S",
+      "version": 882,
+      "itemType": "journalArticle",
+      "title": "Text Mining for Big Data Analysis in Financial Sector: A Literature Review",
+      "abstractNote": "Big data technologies have a strong impact on different industries, starting from the last decade, which continues nowadays, with the tendency to become omnipresent. The financial sector, as most of the other sectors, concentrated their operating activities mostly on structured data investigation. However, with the support of big data technologies, information stored in diverse sources of semi-structured and unstructured data could be harvested. Recent research and practice indicate that such information can be interesting for the decision-making process. Questions about how and to what extent research on data mining in the financial sector has developed and which tools are used for these purposes remains largely unexplored. This study aims to answer three research questions: (i) What is the intellectual core of the field? (ii) Which techniques are used in the financial sector for textual mining, especially in the era of the Internet, big data, and social media? (iii) Which data sources are the most often used for text mining in the financial sector, and for which purposes? In order to answer these questions, a qualitative analysis of literature is carried out using a systematic literature review, citation and co-citation analysis.",
+      "date": "2019-02-28",
+      "language": "en",
+      "shortTitle": "Text Mining for Big Data Analysis in Financial Sector",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://www.mdpi.com/2071-1050/11/5/1277",
+      "accessDate": "2025-09-29T06:33:59Z",
+      "rights": "https://creativecommons.org/licenses/by/4.0/",
+      "volume": "11",
+      "pages": "1277",
+      "publicationTitle": "Sustainability",
+      "DOI": "10.3390/su11051277",
+      "issue": "5",
+      "journalAbbreviation": "Sustainability",
+      "ISSN": "2071-1050",
+      "creators": [
+        {
+          "firstName": "Mirjana",
+          "lastName": "Pejić Bach",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Živko",
+          "lastName": "Krstić",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Sanja",
+          "lastName": "Seljan",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Lejla",
+          "lastName": "Turulja",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-29T06:33:59Z",
+      "dateModified": "2025-10-24T13:49:09Z",
+      "uri": "http://zotero.org/users/17640229/items/STUG256S",
+      "itemID": 208,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "sustainability-11-01277-v3.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-29T06:34:10Z",
+          "dateModified": "2025-09-29T06:34:10Z",
+          "uri": "http://zotero.org/users/17640229/items/5AMRC68J",
+          "path": "/Users/zhounaihong/Zotero/storage/5AMRC68J/sustainability-11-01277-v3.pdf",
+          "select": "zotero://select/library/items/5AMRC68J"
+        }
+      ],
+      "notes": [],
+      "citationKey": "pejicbachTextMiningBig2019",
+      "itemKey": "STUG256S",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/STUG256S"
+    },
+    {
+      "key": "BQEHA7VT",
+      "version": 883,
+      "itemType": "journalArticle",
+      "title": "Innovation and knowledge creation: How are these concepts related?",
+      "date": "8/2006",
+      "language": "en",
+      "shortTitle": "Innovation and knowledge creation",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://linkinghub.elsevier.com/retrieve/pii/S0268401206000399",
+      "accessDate": "2025-09-29T02:54:01Z",
+      "rights": "https://www.elsevier.com/tdm/userlicense/1.0/",
+      "volume": "26",
+      "pages": "302-312",
+      "publicationTitle": "International Journal of Information Management",
+      "DOI": "10.1016/j.ijinfomgt.2006.03.011",
+      "issue": "4",
+      "journalAbbreviation": "International Journal of Information Management",
+      "ISSN": "02684012",
+      "creators": [
+        {
+          "firstName": "Silvio",
+          "lastName": "Popadiuk",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Chun Wei",
+          "lastName": "Choo",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-29T02:54:02Z",
+      "dateModified": "2025-10-24T13:49:30Z",
+      "uri": "http://zotero.org/users/17640229/items/BQEHA7VT",
+      "itemID": 199,
+      "attachments": [],
+      "notes": [],
+      "citationKey": "popadiukInnovationKnowledgeCreation2006",
+      "itemKey": "BQEHA7VT",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/BQEHA7VT"
+    },
+    {
+      "key": "YVCSFPQS",
+      "version": 739,
+      "itemType": "conferencePaper",
+      "title": "A REFERENCE MODEL FOR KNOWLEDGE RETENTION WITHIN SMALL AND MEDIUM-SIZED ENTERPRISES:",
+      "date": "2011",
+      "shortTitle": "A REFERENCE MODEL FOR KNOWLEDGE RETENTION WITHIN SMALL AND MEDIUM-SIZED ENTERPRISES",
+      "accessDate": "2025-08-31",
+      "extra": "Citation Key: REFERENCEMODELKNOWLEDGE2011",
+      "place": "Paris, France",
+      "publisher": "SciTePress - Science and and Technology Publications",
+      "ISBN": "978-989-8425-81-2",
+      "pages": "306–311",
+      "proceedingsTitle": "Proceedings of the International Conference on Knowledge Management and Information Sharing",
+      "DOI": "10.5220/0003632003060311",
+      "creators": [],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:37:18Z",
+      "dateModified": "2025-09-02T00:37:18Z",
+      "uri": "http://zotero.org/users/17640229/items/YVCSFPQS",
+      "itemID": 11,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "36320.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-13T15:15:13Z",
+          "dateModified": "2025-09-13T15:15:13Z",
+          "uri": "http://zotero.org/users/17640229/items/ICQWIQWU",
+          "path": "/Users/zhounaihong/Zotero/storage/ICQWIQWU/36320.pdf",
+          "select": "zotero://select/library/items/ICQWIQWU"
+        }
+      ],
+      "notes": [],
+      "citationKey": "REFERENCEMODELKNOWLEDGE2011",
+      "itemKey": "YVCSFPQS",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/YVCSFPQS"
+    },
+    {
+      "key": "6ZHGFX36",
+      "version": 884,
+      "itemType": "journalArticle",
+      "title": "The wisdom hierarchy: representations of the DIKW hierarchy",
+      "abstractNote": "This paper revisits the data-information-knowledge-wisdom (DIKW) hierarchy by examining the articulation of the hierarchy in a number of widely read textbooks, and analysing their statements about the nature of data, information, knowledge, and wisdom. The hierarchy referred to variously as the ‘Knowledge Hierarchy’, the ‘Information Hierarchy’ and the ‘Knowledge Pyramid’ is one of the fundamental, widely recognized and ‘taken-for-granted’ models in the information and knowledge literatures. It is often quoted, or used implicitly, in definitions of data, information and knowledge in the information management, information systems and knowledge management literatures, but there has been limited direct discussion of the hierarchy. After revisiting Ackoff’s original articulation of the hierarchy, definitions of data, information, knowledge and wisdom as articulated in recent textbooks in information systems and knowledge management are reviewed and assessed, in pursuit of a consensus on definitions and transformation processes. This process brings to the surface the extent of agreement and dissent in relation to these definitions, and provides a basis for a discussion as to whether these articulations present an adequate distinction between data, information, and knowledge. Typically information is defined in terms of data, knowledge in terms of information, and wisdom in terms of knowledge, but there is less consensus in the description of the processes that transform elements lower in the hierarchy into those above them, leading to a lack of definitional clarity. In addition, there is limited reference to wisdom in these texts.",
+      "date": "2007-04-01",
+      "language": "EN",
+      "shortTitle": "The wisdom hierarchy",
+      "libraryCatalog": "SAGE Journals",
+      "url": "https://doi.org/10.1177/0165551506070706",
+      "accessDate": "2025-08-10T17:09:30Z",
+      "volume": "33",
+      "pages": "163-180",
+      "publicationTitle": "Journal of Information Science",
+      "DOI": "10.1177/0165551506070706",
+      "issue": "2",
+      "ISSN": "0165-5515",
+      "creators": [
+        {
+          "firstName": "Jennifer",
+          "lastName": "Rowley",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-08-10T17:10:36Z",
+      "dateModified": "2025-08-10T17:10:36Z",
+      "uri": "http://zotero.org/users/17640229/items/6ZHGFX36",
+      "itemID": 22,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "rowley2007.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-13T05:39:16Z",
+          "dateModified": "2025-09-13T05:39:16Z",
+          "uri": "http://zotero.org/users/17640229/items/WC3XQS9Z",
+          "path": "/Users/zhounaihong/Zotero/storage/WC3XQS9Z/rowley2007.pdf",
+          "select": "zotero://select/library/items/WC3XQS9Z"
+        },
+        {
+          "itemType": "attachment",
+          "title": "SAGE PDF Full Text",
+          "url": "https://journals.sagepub.com/doi/pdf/10.1177/0165551506070706",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-08-10T17:10:37Z",
+          "dateModified": "2025-08-10T17:10:37Z",
+          "uri": "http://zotero.org/users/17640229/items/QCPT8IUH",
+          "select": "zotero://select/library/items/QCPT8IUH"
+        }
+      ],
+      "notes": [],
+      "citationKey": "rowleyWisdomHierarchyRepresentations2007",
+      "itemKey": "6ZHGFX36",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/6ZHGFX36"
+    },
+    {
+      "key": "8FBS62KE",
+      "version": 886,
+      "itemType": "conferencePaper",
+      "title": "Knowledge sharing and innovation capability: Does absorptive capacity function as a mediator?",
+      "date": "9/2008",
+      "shortTitle": "Knowledge sharing and innovation capability",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://ieeexplore.ieee.org/document/4669030/",
+      "accessDate": "2025-09-29T02:57:06Z",
+      "place": "Long Beach, CA",
+      "publisher": "IEEE",
+      "ISBN": "978-1-4244-2387-3",
+      "pages": "971-976",
+      "proceedingsTitle": "2008 International Conference on Management Science and Engineering 15th Annual Conference Proceedings",
+      "conferenceName": "2008 International Conference on Management Science and Engineering (ICMSE)",
+      "DOI": "10.1109/ICMSE.2008.4669030",
+      "creators": [
+        {
+          "firstName": "Zhi-hong",
+          "lastName": "Song",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Li-bo",
+          "lastName": "Fan",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Shu",
+          "lastName": "Chen",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-29T02:57:07Z",
+      "dateModified": "2025-10-24T13:50:00Z",
+      "uri": "http://zotero.org/users/17640229/items/8FBS62KE",
+      "itemID": 201,
+      "attachments": [],
+      "notes": [],
+      "citationKey": "songKnowledgeSharingInnovation2008",
+      "itemKey": "8FBS62KE",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/8FBS62KE"
+    },
+    {
+      "key": "PMILCNIN",
+      "version": 739,
+      "itemType": "journalArticle",
+      "title": "Knowledge Management in a World of Generative AI: Impact and Implications",
+      "abstractNote": "The management of organizational and worker knowledge is a critical part of any organization. Knowledge management recognizes the explicit knowledge that workers contribute to an organization, as well as the organizational knowledge and skills acquired over time. The potential impact of generative AI (GenAI) raises many issues and opportunities related to effective knowledge management as organizations explore the impact and implications of its adoption. This research explores issues related to an increasing world of GenAI and proposes a Framework for Knowledge Management in the GenAI Era . Knowledge management workers who are novices might be more inclined to use generative AI for performing their tasks. Expert knowledge workers might focus on quality evaluation and quality assessment. Adoption of GenAI may help with the progression from novice to expert, while freeing up time and resources for other work. Challenges include the potential loss of critical organizational knowledge, definition of job-related requirements, expectations, and tasks, as well as over-reliance, and loss of tacit or unarticulated knowledge. These challenges must be balanced against available access to large amounts of general and domain-specific knowledge from GenAI to capture the value realized from its adoption.",
+      "date": "2025-02",
+      "language": "english",
+      "shortTitle": "Knowledge Management in a World of Generative AI",
+      "accessDate": "2025-08-28",
+      "extra": "Citation Key: storeyKnowledgeManagementWorld2025",
+      "pages": "3719209",
+      "publicationTitle": "ACM Transactions on Management Information Systems",
+      "DOI": "10.1145/3719209",
+      "journalAbbreviation": "ACM Trans. Manage. Inf. Syst.",
+      "ISSN": "2158-656X, 2158-6578",
+      "creators": [
+        {
+          "firstName": "Veda Catherine",
+          "lastName": "Storey",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:37:18Z",
+      "dateModified": "2025-09-02T00:37:18Z",
+      "uri": "http://zotero.org/users/17640229/items/PMILCNIN",
+      "itemID": 9,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "2025Storey--TMIS-GenAIRG.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-11T15:51:03Z",
+          "dateModified": "2025-09-11T15:51:03Z",
+          "uri": "http://zotero.org/users/17640229/items/TDC8ZB2I",
+          "path": "/Users/zhounaihong/Zotero/storage/TDC8ZB2I/2025Storey--TMIS-GenAIRG.pdf",
+          "select": "zotero://select/library/items/TDC8ZB2I"
+        }
+      ],
+      "notes": [],
+      "citationKey": "storeyKnowledgeManagementWorld2025",
+      "itemKey": "PMILCNIN",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/PMILCNIN"
+    },
+    {
+      "key": "VW2KIGW6",
+      "version": 908,
+      "itemType": "journalArticle",
+      "title": "Automated Identification and Representation of System Requirements Based on Large Language Models and Knowledge Graphs",
+      "abstractNote": "In the product design and manufacturing process, the effective management and representation of system requirements (SRs) are crucial for ensuring product quality and consistency. However, current methods are hindered by document ambiguity, weak requirement interdependencies, and limited semantic expressiveness in model-based systems engineering. To address these challenges, this paper proposes a prompt-driven integrated framework that synergizes large language models (LLMs) and knowledge graphs (KGs) to automate the visualization of SR text and structured knowledge extraction. Specifically, this paper introduces a template for information extraction tailored to arbitrary requirement documents, designed around five SysML-defined SR categories: functional requirements, interface requirements, performance requirements, physical requirements, and design constraints. By defining structured elements for each category and leveraging the GPT-4 model to extract key information from unstructured texts, the system can effectively extract and present the structured requirement information. Furthermore, the system constructs a knowledge graph to represent system requirements, visually illustrating the interdependencies and constraints between them. A case study applying this approach to Chapters 18–22 of the `Code for Design of Metro' demonstrates the effectiveness of the proposed method in automating requirement representation, enhancing requirement traceability, and improving management. Moreover, a comparison of information extraction accuracy between GPT-4, GPT-3.5-turbo, BERT, and RoBERTa using the same dataset reveals that GPT-4 achieves an overall extraction accuracy of 84.76% compared to 79.05% for GPT-3.5-turbo and 59.05% for both BERT and RoBERTa. This proves the effectiveness of the proposed method in information extraction and provides a new technical pathway for intelligent requirement management.",
+      "date": "2025-01",
+      "language": "english",
+      "url": "https://www.researchgate.net/publication/390139302_Automated_Identification_and_Representation_of_System_Requirements_Based_on_Large_Language_Models_and_Knowledge_Graphs",
+      "accessDate": "2025-08-31",
+      "extra": "Citation Key: wangAutomatedIdentificationRepresentation2025a\nPublisher: Multidisciplinary Digital Publishing Institute",
+      "volume": "15",
+      "pages": "3502",
+      "publicationTitle": "Applied Sciences",
+      "DOI": "10.3390/app15073502",
+      "issue": "7",
+      "ISSN": "2076-3417",
+      "creators": [
+        {
+          "firstName": "Lei",
+          "lastName": "Wang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Ming-Chao",
+          "lastName": "Wang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yuan-Rong",
+          "lastName": "Zhang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Jian",
+          "lastName": "Ma",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Hong-Yu",
+          "lastName": "Shao",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Zhi-Xing",
+          "lastName": "Chang",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "information extraction"
+        },
+        {
+          "tag": "knowledge graphs"
+        },
+        {
+          "tag": "large language models"
+        },
+        {
+          "tag": "requirement representation"
+        }
+      ],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:37:18Z",
+      "dateModified": "2025-09-11T01:08:12Z",
+      "uri": "http://zotero.org/users/17640229/items/VW2KIGW6",
+      "itemID": 10,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "copyright",
+          "url": "http://creativecommons.org/licenses/by/3.0/",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-02T00:37:18Z",
+          "dateModified": "2025-09-02T00:37:18Z",
+          "uri": "http://zotero.org/users/17640229/items/7WTQCW76",
+          "select": "zotero://select/library/items/7WTQCW76"
+        },
+        {
+          "itemType": "attachment",
+          "title": "PDF",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-07T03:48:50Z",
+          "dateModified": "2025-09-07T03:48:50Z",
+          "uri": "http://zotero.org/users/17640229/items/63ISJ85K",
+          "path": "/Users/zhounaihong/Zotero/storage/63ISJ85K/Wang et al. - 2025 - Automated Identification and Representation of System Requirements Based on Large Language Models an.pdf",
+          "select": "zotero://select/library/items/63ISJ85K"
+        }
+      ],
+      "notes": [
+        {
+          "key": "9XZYFEWJ",
+          "version": 20,
+          "itemType": "note",
+          "parentItem": "VW2KIGW6",
+          "note": "<blockquote>https://doi.org/10.3390/app15073502</blockquote>",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-02T00:37:18Z",
+          "dateModified": "2025-09-02T00:37:18Z",
+          "uri": "http://zotero.org/users/17640229/items/9XZYFEWJ"
+        }
+      ],
+      "citationKey": "wangAutomatedIdentificationRepresentation2025a",
+      "itemKey": "VW2KIGW6",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/VW2KIGW6"
+    },
+    {
+      "key": "RKFNDSJK",
+      "version": 926,
+      "itemType": "preprint",
+      "title": "Divide, Conquer and Combine: A Training-Free Framework for High-Resolution Image Perception in Multimodal Large Language Models",
+      "abstractNote": "Multimodal large language models (MLLMs) have experienced significant advancements recently, but still struggle to recognize and interpret intricate details in high-resolution (HR) images effectively. While state-of-the-art (SOTA) MLLMs claim to process images at 4K resolution, existing MLLM benchmarks only support up to 2K, leaving the capabilities of SOTA models on true HR images largely untested. Furthermore, existing methods for enhancing HR image perception in MLLMs rely on computationally expensive visual instruction tuning. To address these limitations, we introduce HR-Bench, the first deliberately designed benchmark to rigorously evaluate MLLM performance on 4K&8K images. Through extensive experiments, we demonstrate that while downsampling HR images leads to vision information loss, leveraging complementary modalities, e.g., text, can effectively compensate for this loss. Building upon this insight, we propose Divide, Conquer and Combine (DC$^2$), a novel training-free framework for enhancing MLLM perception of HR images. DC$^2$ follows a three-staged approach: 1) Divide: recursively partitioning the HR image into patches and merging similar patches to minimize computational overhead, 2) Conquer: leveraging the MLLM to generate accurate textual descriptions for each image patch, and 3) Combine: utilizing the generated text descriptions to enhance the MLLM's understanding of the overall HR image. Extensive experiments show that: 1) the SOTA MLLM achieves 63% accuracy, which is markedly lower than the 87% accuracy achieved by humans on HR-Bench; 2) our DC$^2$ brings consistent and significant improvements (a relative increase of +6% on HR-Bench and +8% on general multimodal benchmarks). The benchmark and code will be released to facilitate the multimodal R&D community.",
+      "date": "2024-08-28",
+      "shortTitle": "Divide, Conquer and Combine",
+      "libraryCatalog": "arXiv.org",
+      "url": "http://arxiv.org/abs/2408.15556",
+      "accessDate": "2025-11-25T15:31:57Z",
+      "extra": "arXiv:2408.15556 [cs]",
+      "DOI": "10.48550/arXiv.2408.15556",
+      "repository": "arXiv",
+      "archiveID": "arXiv:2408.15556",
+      "creators": [
+        {
+          "firstName": "Wenbin",
+          "lastName": "Wang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Liang",
+          "lastName": "Ding",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Minyan",
+          "lastName": "Zeng",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Xiabin",
+          "lastName": "Zhou",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Li",
+          "lastName": "Shen",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yong",
+          "lastName": "Luo",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Dacheng",
+          "lastName": "Tao",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "Computer Science - Computer Vision and Pattern Recognition",
+          "type": 1
+        }
+      ],
+      "relations": {},
+      "dateAdded": "2025-11-25T15:31:57Z",
+      "dateModified": "2025-11-25T15:31:57Z",
+      "uri": "http://zotero.org/users/17640229/items/RKFNDSJK",
+      "itemID": 244,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Preprint PDF",
+          "url": "http://arxiv.org/pdf/2408.15556v1",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-11-25T15:32:00Z",
+          "dateModified": "2025-11-25T15:32:00Z",
+          "uri": "http://zotero.org/users/17640229/items/LVN2D6TE",
+          "path": "/Users/zhounaihong/Zotero/storage/LVN2D6TE/Wang et al. - 2024 - Divide, Conquer and Combine A Training-Free Framework for High-Resolution Image Perception in Multi.pdf",
+          "select": "zotero://select/library/items/LVN2D6TE"
+        },
+        {
+          "itemType": "attachment",
+          "title": "Snapshot",
+          "url": "https://arxiv.org/abs/2408.15556",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-11-25T15:32:07Z",
+          "dateModified": "2025-11-25T15:32:07Z",
+          "uri": "http://zotero.org/users/17640229/items/VHJQZFU7",
+          "path": "/Users/zhounaihong/Zotero/storage/VHJQZFU7/2408.html",
+          "select": "zotero://select/library/items/VHJQZFU7"
+        }
+      ],
+      "notes": [],
+      "citationKey": "wangDivideConquerCombine2024",
+      "itemKey": "RKFNDSJK",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/RKFNDSJK"
+    },
+    {
+      "key": "JCH8LNY4",
+      "version": 917,
+      "itemType": "journalArticle",
+      "title": "Large language models for generative information extraction: a survey",
+      "abstractNote": "Abstract\n            Information Extraction (IE) aims to extract structural knowledge from plain natural language texts. Recently, generative Large Language Models (LLMs) have demonstrated remarkable capabilities in text understanding and generation. As a result, numerous works have been proposed to integrate LLMs for IE tasks based on a generative paradigm. To conduct a comprehensive systematic review and exploration of LLM efforts for IE tasks, in this study, we survey the most recent advancements in this field. We first present an extensive overview by categorizing these works in terms of various IE subtasks and techniques, and then we empirically analyze the most advanced methods and discover the emerging trend of IE tasks with LLMs. Based on a thorough review conducted, we identify several insights in technique and promising research directions that deserve further exploration in future studies. We maintain a public repository and consistently update related works and resources on GitHub (LLM4IE repository).",
+      "date": "12/2024",
+      "language": "en",
+      "shortTitle": "Large language models for generative information extraction",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://link.springer.com/10.1007/s11704-024-40555-y",
+      "accessDate": "2025-09-02T00:39:11Z",
+      "volume": "18",
+      "pages": "186357",
+      "publicationTitle": "Frontiers of Computer Science",
+      "DOI": "10.1007/s11704-024-40555-y",
+      "issue": "6",
+      "journalAbbreviation": "Front. Comput. Sci.",
+      "ISSN": "2095-2228, 2095-2236",
+      "creators": [
+        {
+          "firstName": "Derong",
+          "lastName": "Xu",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Wei",
+          "lastName": "Chen",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Wenjun",
+          "lastName": "Peng",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Chao",
+          "lastName": "Zhang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Tong",
+          "lastName": "Xu",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Xiangyu",
+          "lastName": "Zhao",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Xian",
+          "lastName": "Wu",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yefeng",
+          "lastName": "Zheng",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yang",
+          "lastName": "Wang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Enhong",
+          "lastName": "Chen",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:39:11Z",
+      "dateModified": "2025-09-02T00:39:11Z",
+      "uri": "http://zotero.org/users/17640229/items/JCH8LNY4",
+      "itemID": 4,
+      "attachments": [],
+      "notes": [],
+      "citationKey": "xuLargeLanguageModels2024",
+      "itemKey": "JCH8LNY4",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/JCH8LNY4"
+    },
+    {
+      "key": "IRAX5FB2",
+      "version": 950,
+      "itemType": "preprint",
+      "title": "OmniParser V2: Structured-Points-of-Thought for Unified Visual Text Parsing and Its Generality to Multimodal Large Language Models",
+      "abstractNote": "Visually-situated text parsing (VsTP) has recently seen notable advancements, driven by the growing demand for automated document understanding and the emergence of large language models capable of processing document-based questions. While various methods have been proposed to tackle the complexities of VsTP, existing solutions often rely on task-specific architectures and objectives for individual tasks. This leads to modal isolation and complex workflows due to the diversified targets and heterogeneous schemas. In this paper, we introduce OmniParser V2, a universal model that unifies VsTP typical tasks, including text spotting, key information extraction, table recognition, and layout analysis, into a unified framework. Central to our approach is the proposed Structured-Points-of-Thought (SPOT) prompting schemas, which improves model performance across diverse scenarios by leveraging a unified encoder-decoder architecture, objective, and input\\&output representation. SPOT eliminates the need for task-specific architectures and loss functions, significantly simplifying the processing pipeline. Our extensive evaluations across four tasks on eight different datasets show that OmniParser V2 achieves state-of-the-art or competitive results in VsTP. Additionally, we explore the integration of SPOT within a multimodal large language model structure, further enhancing text localization and recognition capabilities, thereby confirming the generality of SPOT prompting technique. The code is available at \\href{https://github.com/AlibabaResearch/AdvancedLiterateMachinery}{AdvancedLiterateMachinery}.",
+      "date": "2025-02-22",
+      "shortTitle": "OmniParser V2",
+      "libraryCatalog": "arXiv.org",
+      "url": "http://arxiv.org/abs/2502.16161",
+      "accessDate": "2025-11-26T11:27:34Z",
+      "extra": "arXiv:2502.16161 [cs]",
+      "DOI": "10.48550/arXiv.2502.16161",
+      "repository": "arXiv",
+      "archiveID": "arXiv:2502.16161",
+      "creators": [
+        {
+          "firstName": "Wenwen",
+          "lastName": "Yu",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Zhibo",
+          "lastName": "Yang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Jianqiang",
+          "lastName": "Wan",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Sibo",
+          "lastName": "Song",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Jun",
+          "lastName": "Tang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Wenqing",
+          "lastName": "Cheng",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yuliang",
+          "lastName": "Liu",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Xiang",
+          "lastName": "Bai",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "Computer Science - Computation and Language",
+          "type": 1
+        },
+        {
+          "tag": "Computer Science - Computer Vision and Pattern Recognition",
+          "type": 1
+        }
+      ],
+      "relations": {},
+      "dateAdded": "2025-11-26T11:27:34Z",
+      "dateModified": "2025-11-26T11:27:34Z",
+      "uri": "http://zotero.org/users/17640229/items/IRAX5FB2",
+      "itemID": 242,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Preprint PDF",
+          "url": "http://arxiv.org/pdf/2502.16161v1",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-11-26T11:27:37Z",
+          "dateModified": "2025-11-26T11:27:37Z",
+          "uri": "http://zotero.org/users/17640229/items/K54LV6VV",
+          "path": "/Users/zhounaihong/Zotero/storage/K54LV6VV/Yu et al. - 2025 - OmniParser V2 Structured-Points-of-Thought for Unified Visual Text Parsing and Its Generality to Mu.pdf",
+          "select": "zotero://select/library/items/K54LV6VV"
+        },
+        {
+          "itemType": "attachment",
+          "title": "Snapshot",
+          "url": "https://arxiv.org/abs/2502.16161",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-11-26T11:27:42Z",
+          "dateModified": "2025-11-26T11:27:42Z",
+          "uri": "http://zotero.org/users/17640229/items/U2FVZ8EK",
+          "path": "/Users/zhounaihong/Zotero/storage/U2FVZ8EK/2502.html",
+          "select": "zotero://select/library/items/U2FVZ8EK"
+        }
+      ],
+      "notes": [],
+      "citationKey": "yuOmniParserV2StructuredPointsofThought2025",
+      "itemKey": "IRAX5FB2",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/IRAX5FB2"
+    },
+    {
+      "key": "X49TIUKR",
+      "version": 739,
+      "itemType": "preprint",
+      "title": "BifrostRAG: Bridging Dual Knowledge Graphs for Multi-Hop Question Answering in Construction Safety",
+      "abstractNote": "Information retrieval and question answering from safety regulations are essential for automated construction compliance checking but are hindered by the linguistic and structural complexity of regulatory text. Many compliance-related queries are multi-hop, requiring synthesis of information across interlinked clauses. This poses a challenge for traditional retrieval-augmented generation (RAG) systems. To overcome this, we introduce BifrostRAG: a dual-graph RAG-integrated system that explicitly models both linguistic relationships (via an Entity Network Graph) and document structure (via a Document Navigator Graph). This architecture powers a hybrid retrieval mechanism that combines graph traversal with vector-based semantic search, enabling large language models to reason over both the meaning and the structure of the text. Evaluation on a multi-hop question dataset shows that BifrostRAG achieves 92.8 percent precision, 85.5 percent recall, and an F1 score of 87.3 percent. These results significantly outperform vector-only and graph-only RAG baselines that represent current leading approaches. Error analysis further highlights the comparative advantages of our hybrid method over single-modality RAGs. These findings establish BifrostRAG as a robust knowledge engine for LLM-driven compliance checking. Its dual-graph, hybrid retrieval mechanism offers a transferable blueprint for navigating complex technical documents across knowledge-intensive engineering domains.",
+      "date": "2025",
+      "shortTitle": "BifrostRAG",
+      "libraryCatalog": "DOI.org (Datacite)",
+      "url": "https://arxiv.org/abs/2507.13625",
+      "accessDate": "2025-09-02T00:40:56Z",
+      "rights": "arXiv.org perpetual, non-exclusive license",
+      "extra": "Version Number: 1",
+      "DOI": "10.48550/ARXIV.2507.13625",
+      "repository": "arXiv",
+      "creators": [
+        {
+          "firstName": "Yuxin",
+          "lastName": "Zhang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Xi",
+          "lastName": "Wang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Mo",
+          "lastName": "Hu",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Zhenyu",
+          "lastName": "Zhang",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "Artificial Intelligence (cs.AI)",
+          "type": 1
+        },
+        {
+          "tag": "FOS: Computer and information sciences",
+          "type": 1
+        }
+      ],
+      "relations": {},
+      "dateAdded": "2025-09-02T00:40:56Z",
+      "dateModified": "2025-09-02T00:40:56Z",
+      "uri": "http://zotero.org/users/17640229/items/X49TIUKR",
+      "itemID": 2,
+      "attachments": [],
+      "notes": [
+        {
+          "key": "TEFUN9H5",
+          "version": 27,
+          "itemType": "note",
+          "parentItem": "X49TIUKR",
+          "note": "<h2>Other</h2>\n19 pages, 13 figures",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-02T00:40:56Z",
+          "dateModified": "2025-09-02T00:40:56Z",
+          "uri": "http://zotero.org/users/17640229/items/TEFUN9H5"
+        }
+      ],
+      "citationKey": "zhangBifrostRAGBridgingDual2025",
+      "itemKey": "X49TIUKR",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/X49TIUKR"
+    },
+    {
+      "key": "S2JS9UZG",
+      "version": 739,
+      "itemType": "journalArticle",
+      "title": "Multi-source knowledge fusion: a survey",
+      "abstractNote": "Abstract\n            Multi-source knowledge fusion is one of the important research topics in the fields of artificial intelligence, natural language processing, and so on. The research results of multi-source knowledge fusion can help computer to better understand human intelligence, human language and human thinking, effectively promote the Big Search in Cyberspace, effectively promote the construction of domain knowledge graphs (KGs), and bring enormous social and economic benefits. Due to the uncertainty of knowledge acquisition, the reliability and confidence of KG based on entity recognition and relationship extraction technology need to be evaluated. On the one hand, the process of multi-source knowledge reasoning can detect conflicts and provide help for knowledge evaluation and verification; on the other hand, the new knowledge acquired by knowledge reasoning is also uncertain and needs to be evaluated and verified. Collaborative reasoning of multi-source knowledge includes not only inferring new knowledge from multi-source knowledge, but also conflict detection, i.e. identifying erroneous knowledge or conflicts between knowledges. Starting from several related concepts of multi-source knowledge fusion, this paper comprehensively introduces the latest research progress of open-source knowledge fusion, multi-knowledge graphs fusion, information fusion within KGs, multi-modal knowledge fusion and multi-source knowledge collaborative reasoning. On this basis, the challenges and future research directions of multi-source knowledge fusion in a large-scale knowledge base environment are discussed.",
+      "date": "07/2020",
+      "language": "en",
+      "shortTitle": "Multi-source knowledge fusion",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "http://link.springer.com/10.1007/s11280-020-00811-0",
+      "accessDate": "2025-08-29T00:33:49Z",
+      "volume": "23",
+      "pages": "2567-2592",
+      "publicationTitle": "World Wide Web",
+      "DOI": "10.1007/s11280-020-00811-0",
+      "issue": "4",
+      "journalAbbreviation": "World Wide Web",
+      "ISSN": "1386-145X, 1573-1413",
+      "creators": [
+        {
+          "firstName": "Xiaojuan",
+          "lastName": "Zhao",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yan",
+          "lastName": "Jia",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Aiping",
+          "lastName": "Li",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Rong",
+          "lastName": "Jiang",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yichen",
+          "lastName": "Song",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-08-29T00:33:49Z",
+      "dateModified": "2025-08-29T00:33:49Z",
+      "uri": "http://zotero.org/users/17640229/items/S2JS9UZG",
+      "itemID": 17,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Full Text",
+          "url": "https://link.springer.com/content/pdf/10.1007/s11280-020-00811-0.pdf",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-08-29T00:33:54Z",
+          "dateModified": "2025-08-29T00:33:54Z",
+          "uri": "http://zotero.org/users/17640229/items/Y2CI47XA",
+          "path": "/Users/zhounaihong/Zotero/storage/Y2CI47XA/Zhao et al. - 2020 - Multi-source knowledge fusion a survey.pdf",
+          "select": "zotero://select/library/items/Y2CI47XA"
+        }
+      ],
+      "notes": [],
+      "citationKey": "zhaoMultisourceKnowledgeFusion2020",
+      "itemKey": "S2JS9UZG",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/S2JS9UZG"
+    },
+    {
+      "key": "T6IMYDSK",
+      "version": 909,
+      "itemType": "preprint",
+      "title": "TURA: Tool-Augmented Unified Retrieval Agent for AI Search",
+      "abstractNote": "The advent of Large Language Models (LLMs) is transforming search engines into conversational AI search products, primarily using Retrieval-Augmented Generation (RAG) on web corpora. However, this paradigm has significant industrial limitations. Traditional RAG approaches struggle with real-time needs and structured queries that require accessing dynamically generated content like ticket availability or inventory. Limited to indexing static pages, search engines cannot perform the interactive queries needed for such time-sensitive data. Academic research has focused on optimizing RAG for static content, overlooking complex intents and the need for dynamic sources like databases and real-time APIs. To bridge this gap, we introduce TURA (Tool-Augmented Unified Retrieval Agent for AI Search), a novel three-stage framework that combines RAG with agentic tool-use to access both static content and dynamic, real-time information. TURA has three key components: an Intent-Aware Retrieval module to decompose queries and retrieve information sources encapsulated as Model Context Protocol (MCP) Servers, a DAG-based Task Planner that models task dependencies as a Directed Acyclic Graph (DAG) for optimal parallel execution, and a lightweight Distilled Agent Executor for efficient tool calling. TURA is the first architecture to systematically bridge the gap between static RAG and dynamic information sources for a world-class AI search product. Serving tens of millions of users, it leverages an agentic framework to deliver robust, real-time answers while meeting the low-latency demands of a large-scale industrial system.",
+      "date": "2025-08-06",
+      "shortTitle": "TURA",
+      "libraryCatalog": "arXiv.org",
+      "url": "http://arxiv.org/abs/2508.04604",
+      "accessDate": "2025-09-06T02:13:25Z",
+      "extra": "arXiv:2508.04604 [cs]",
+      "DOI": "10.48550/arXiv.2508.04604",
+      "repository": "arXiv",
+      "archiveID": "arXiv:2508.04604",
+      "creators": [
+        {
+          "firstName": "Zhejun",
+          "lastName": "Zhao",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Yuehu",
+          "lastName": "Dong",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Alley",
+          "lastName": "Liu",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Lixue",
+          "lastName": "Zheng",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Pingsheng",
+          "lastName": "Liu",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Dongdong",
+          "lastName": "Shen",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Long",
+          "lastName": "Xia",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Jiashu",
+          "lastName": "Zhao",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Dawei",
+          "lastName": "Yin",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "Computer Science - Artificial Intelligence",
+          "type": 1
+        },
+        {
+          "tag": "Computer Science - Computation and Language",
+          "type": 1
+        },
+        {
+          "tag": "Computer Science - Information Retrieval",
+          "type": 1
+        }
+      ],
+      "relations": {},
+      "dateAdded": "2025-09-06T02:13:25Z",
+      "dateModified": "2025-09-06T02:13:25Z",
+      "uri": "http://zotero.org/users/17640229/items/T6IMYDSK",
+      "itemID": 1,
+      "attachments": [
+        {
+          "itemType": "attachment",
+          "title": "Preprint PDF",
+          "url": "http://arxiv.org/pdf/2508.04604v1",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-06T02:13:27Z",
+          "dateModified": "2025-09-06T02:13:27Z",
+          "uri": "http://zotero.org/users/17640229/items/HD48YQTF",
+          "path": "/Users/zhounaihong/Zotero/storage/HD48YQTF/Zhao et al. - 2025 - TURA Tool-Augmented Unified Retrieval Agent for AI Search.pdf",
+          "select": "zotero://select/library/items/HD48YQTF"
+        },
+        {
+          "itemType": "attachment",
+          "title": "Snapshot",
+          "url": "https://arxiv.org/abs/2508.04604",
+          "tags": [],
+          "relations": {},
+          "dateAdded": "2025-09-06T02:13:35Z",
+          "dateModified": "2025-09-06T02:13:35Z",
+          "uri": "http://zotero.org/users/17640229/items/JU38N37G",
+          "path": "/Users/zhounaihong/Zotero/storage/JU38N37G/2508.html",
+          "select": "zotero://select/library/items/JU38N37G"
+        }
+      ],
+      "notes": [],
+      "citationKey": "zhaoTURAToolAugmentedUnified2025",
+      "itemKey": "T6IMYDSK",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/T6IMYDSK"
+    },
+    {
+      "key": "MPEJYPGH",
+      "version": 887,
+      "itemType": "journalArticle",
+      "title": "The impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience: the moderation of knowledge network cohesion",
+      "abstractNote": "Purpose \n              This study constructs a theoretical model based on social capital theory to examine the impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience, with global and local cohesion of knowledge networks as the moderating variables. \n             \n             \n              Design/methodology/approach \n              Based on the literature on social capital, knowledge absorptive capacity and innovation resilience, this study proposes a conceptual model and advances several hypotheses. Panel data from 3,480 firm-year observations of 218 Chinese automobile manufacturing firms spanning the years 2001–2022 are utilized for the empirical analysis. \n             \n             \n              Findings \n              Results indicate that structural, relational and cognitive social capital in collaborative R&D networks all have positive effects on firm innovation resilience. Local cohesion of knowledge network is found to weaken the positive effects of structural, relational and cognitive social capital on firm innovation resilience. In contrast, global cohesion of knowledge networks strengthens the positive impact of structural, relational and cognitive social capital on firm innovation resilience. \n             \n             \n              Practical implications \n              This study examines the impact mechanisms of cooperative R&D network social capital in different dimensions on firm innovation resilience at the firm level. It can guide firms with limited resources and capabilities on how to accumulate specific dimensions of social capital to enhance their innovation resilience. \n             \n             \n              Originality/value \n              Although previous studies have suggested that social capital is conducive to firm innovation, few studies have linked social capital in collaborative R&D networks to firm innovation resilience in terms of theoretical discussions or empirical analyses. This study captures the impact mechanisms of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience from a comprehensive perspective. In addition, this study emphasizes that the structural characteristics of the knowledge base (knowledge network cohesion) are a boundary condition for social capital in collaborative R&D networks to influence firm innovation resilience.",
+      "date": "2025-08-14",
+      "language": "en",
+      "shortTitle": "The impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "url": "https://www.emerald.com/jic/article/doi/10.1108/JIC-11-2024-0382/1272368/The-impact-of-multi-dimensional-social-capital-in",
+      "accessDate": "2025-09-29T02:55:26Z",
+      "pages": "1-24",
+      "publicationTitle": "Journal of Intellectual Capital",
+      "DOI": "10.1108/JIC-11-2024-0382",
+      "ISSN": "1469-1930, 1758-7468",
+      "creators": [
+        {
+          "firstName": "Li",
+          "lastName": "Zheng",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Guibin",
+          "lastName": "Luo",
+          "creatorType": "author"
+        },
+        {
+          "firstName": "Di",
+          "lastName": "Peng",
+          "creatorType": "author"
+        }
+      ],
+      "tags": [],
+      "relations": {},
+      "dateAdded": "2025-09-29T02:55:27Z",
+      "dateModified": "2025-10-24T13:50:18Z",
+      "uri": "http://zotero.org/users/17640229/items/MPEJYPGH",
+      "itemID": 200,
+      "attachments": [],
+      "notes": [],
+      "citationKey": "zhengImpactMultidimensionalSocial2025",
+      "itemKey": "MPEJYPGH",
+      "libraryID": 1,
+      "select": "zotero://select/library/items/MPEJYPGH"
+    }
+  ]
+}

@@ -60,7 +60,7 @@ if [ ! -f "$API_KEY_FILE" ]; then
     echo "Example: echo \"<your-key>\" > \"$API_KEY_FILE\" && chmod 600 \"$API_KEY_FILE\"" >&2
     # Only fail if a translation target is requested
     case " $* " in
-        *" zh_tw "*|*"$(ZH_TW_DIR)"*|*"translate"* )
+        *" zh_tw "*|*"translate"* )
             exit 1;;
         * ) ;;
     esac

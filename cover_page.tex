@@ -26,11 +26,10 @@
 \newcommand{\Department}{Executive Master of Research and Development}
 \newcommand{\DegreeName}{Master's Thesis}
 \newcommand{\StudentID}{M11326915}
-\newcommand{\TitleEn}{Sustainable Scholarship: A Robust Academic Workflow with
-Markdown, Pandoc, and LaTeX}
-\newcommand{\AuthorEn}{Naihong Zhou}
-\newcommand{\AdvisorEn}{Zhengyuan Zheng, Wenkai Dai}
-\newcommand{\ROCDate}{November 30, 2025}
+\newcommand{\Title}{利用生成式人工智慧從遊戲設計流程中的規格書進行知識萃取——以遊戲研發公司為例}
+\newcommand{\Author}{周乃宏}
+\newcommand{\Advisor}{鄭正元，戴文凱 博士}
+\newcommand{\ROCDate}{June 1, 2026}
 
 % ----------------------------
 % Simple helpers
@@ -44,15 +43,15 @@ Markdown, Pandoc, and LaTeX}
 % University emblem/logo
 \begin{center}
   % Logo is optional. If file not present, leaves vertical space.
-  \IfFileExists{ntust_logo.jpg}{%
+  \IfFileExists{ntust_logo.jpg}{
     \includegraphics[width=28mm]{ntust_logo.jpg}%
-  }{%
-    \IfFileExists{ntust_logo.pdf}{%
+  }{
+    \IfFileExists{ntust_logo.pdf}{
       \includegraphics[width=28mm]{ntust_logo.pdf}%
-    }{%
-      \IfFileExists{ntust_logo.png}{%
+    }{
+      \IfFileExists{ntust_logo.png}{
         \includegraphics[width=28mm]{ntust_logo.png}%
-      }{%
+      }{
         \vspace{28mm}%
       }%
     }%
@@ -62,8 +61,8 @@ Markdown, Pandoc, and LaTeX}
 % University / Department / Degree
 \vspace{8mm}
 \begin{center}
-  {\CJKfamily{song}\fontsize{20pt}{28pt}\selectfont \University}\\[4mm]
-  {\CJKfamily{song}\fontsize{18pt}{26pt}\selectfont \Department}\\[4mm]
+  {\CJKfamily{song}\fontsize{20pt}{28pt}\selectfont \University}\[4mm]
+  {\CJKfamily{song}\fontsize{18pt}{26pt}\selectfont \Department}\[4mm]
   {\CJKfamily{song}\fontsize{18pt}{26pt}\selectfont \DegreeName}
 \end{center}
 
@@ -76,15 +75,15 @@ Markdown, Pandoc, and LaTeX}
 % Titles
 \vspace{20mm}
 \begin{center}
-  {\fontsize{16pt}{24pt}\selectfont \TitleEn}
+  {\CJKfamily{song}\fontsize{16pt}{24pt}\selectfont \Title}
 \end{center}
 
 % Author / Advisor
 \vspace{28mm}
 \begin{center}
   {\CJKfamily{song}\fontsize{14pt}{22pt}\selectfont
-    Student: \AuthorEn \\[6mm]
-    Advisor: \AdvisorEn
+    Student: \Author \[6mm]
+    Advisor: \Advisor
   }
 \end{center}
 
@@ -95,5 +94,4 @@ Markdown, Pandoc, and LaTeX}
 \end{center}
 
 \end{document}
-
 
