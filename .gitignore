@@ -47,5 +47,8 @@ images/mermaid-*.png
 .vscode/
 .cache/
 
+# Cabal build artifacts (from local pandoc-crossref builds)
+dist-newstyle/
+
 # API keys
 .api_key
