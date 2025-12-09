@@ -75,14 +75,19 @@ $(PDF): $(SRC) $(BIB) $(CSL)
 	@bash $(REPLACE_FONTS_SCRIPT) $(MERMAID_TEMP_SRC) $(TEMP_SRC) "PingFang SC" "$(CJK_FONT_SC)"
 	@pandoc $(TEMP_SRC) --standalone --filter pandoc-crossref --citeproc -V date=$(shell date +%Y-%m-%d) -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) paper.tex
-	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
-	@xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
+	@xelatex -interaction=nonstopmode paper.tex >paper.xelatex.log 2>&1 || (echo "XeLaTeX first pass failed. Last 50 lines of log:" && tail -50 paper.xelatex.log && exit 1)
+	@xelatex -interaction=nonstopmode paper.tex >paper.xelatex.log 2>&1 || (echo "XeLaTeX second pass failed. Last 50 lines of log:" && tail -50 paper.xelatex.log && exit 1)
 	@if [ -f paper.pdf ]; then \
 		if [ "paper.pdf" != "$(PDF)" ]; then mv paper.pdf "$(PDF)"; fi; \
 	else \
+		echo "Error: PDF file not generated: paper.pdf"; \
+		if [ -f paper.xelatex.log ]; then \
+			echo "Last 50 lines of XeLaTeX log:"; \
+			tail -50 paper.xelatex.log; \
+		fi; \
 		exit 1; \
 	fi
-	@bash $(CLEANUP_TEMP_SCRIPT) $(MERMAID_TEMP_SRC) $(TEMP_SRC)
+	@bash $(CLEANUP_TEMP_SCRIPT) $(MERMAID_TEMP_SRC) $(TEMP_SRC) paper.xelatex.log
 
 # Build the cover page (XeLaTeX)
 cover: $(COVER_PDF)
@@ -127,10 +132,17 @@ $(ZH_TW_PDF): $(ZH_TW_SRC) $(BIB) $(CSL)
 	@bash $(REPLACE_FONTS_SCRIPT) $(ZH_TW_DIR)/paper.mermaid.tmp.md $(ZH_TW_DIR)/paper.tmp.md "PingFang SC" "$(CJK_FONT_TC)"
 	@cd $(ZH_TW_DIR) && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography="bibliography.json" --csl=chicago-author-date.csl -V date=$(shell date +%Y-%m-%d) -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) $(ZH_TW_DIR)/paper.tex
-	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
-	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
-	@if [ ! -f "$(ZH_TW_PDF)" ]; then exit 1; fi
-	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/paper.mermaid.tmp.md $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log
+	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >paper.xelatex.log 2>&1 || (echo "XeLaTeX first pass failed. Last 50 lines of log:" && tail -50 paper.xelatex.log && exit 1)
+	@cd $(ZH_TW_DIR) && xelatex -interaction=nonstopmode paper.tex >paper.xelatex.log 2>&1 || (echo "XeLaTeX second pass failed. Last 50 lines of log:" && tail -50 paper.xelatex.log && exit 1)
+	@if [ ! -f "$(ZH_TW_PDF)" ]; then \
+		echo "Error: PDF file not generated: $(ZH_TW_PDF)"; \
+		if [ -f $(ZH_TW_DIR)/paper.xelatex.log ]; then \
+			echo "Last 50 lines of XeLaTeX log:"; \
+			tail -50 $(ZH_TW_DIR)/paper.xelatex.log; \
+		fi; \
+		exit 1; \
+	fi
+	@bash $(CLEANUP_TEMP_SCRIPT) $(ZH_TW_DIR)/paper.mermaid.tmp.md $(ZH_TW_DIR)/paper.tmp.md $(ZH_TW_DIR)/paper.tex $(ZH_TW_DIR)/paper.aux $(ZH_TW_DIR)/paper.log $(ZH_TW_DIR)/paper.xelatex.log
 	@echo "Cleaned up intermediate translation files"
 
 # Build cover PDF from translated LaTeX
