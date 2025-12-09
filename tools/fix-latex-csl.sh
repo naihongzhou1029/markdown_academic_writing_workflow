@@ -30,7 +30,8 @@ with open(file_path, 'r', encoding='utf-8') as f:
     content = f.read()
 
 # Find \setCJKmainfont{...} and extract font name (search anywhere in document)
-cjk_font_pattern = r'\\setCJKmainfont\{([^}]+)\}'
+# Handle potential whitespace around the command
+cjk_font_pattern = r'\\setCJKmainfont\s*\{([^}]+)\}'
 match = re.search(cjk_font_pattern, content)
 
 if match:
@@ -44,7 +45,7 @@ if match:
         # Check if xeCJK is already in preamble
         needs_xecjk = r'\usepackage{xeCJK}' not in preamble
         needs_mainfont = r'\setCJKmainfont' not in preamble
-        needs_boldfont = r'\setCJKboldfont' not in content
+        needs_boldfont = r'\setCJKboldfont' not in preamble
         
         if needs_xecjk or needs_mainfont or needs_boldfont:
             # Build commands to add
@@ -58,10 +59,19 @@ if match:
             
             # Add commands before \begin{document}
             if commands_to_add:
+                # Remove duplicate commands from document body to avoid conflicts
+                # Remove \usepackage{xeCJK} from body if present
+                document_body = re.sub(r'\\usepackage\{xeCJK\}', '', document_body)
+                # Remove \setCJKmainfont{...} from body if present
+                document_body = re.sub(r'\\setCJKmainfont\{[^}]+\}', '', document_body)
+                # Remove \setCJKboldfont{...} from body if present
+                document_body = re.sub(r'\\setCJKboldfont\{[^}]+\}', '', document_body)
+                
                 content = preamble + '\n'.join(commands_to_add) + '\n' + document_body
-    
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(content)
+        
+        # Always write the file, even if no changes were made
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(content)
 PYTHON_EOF
 
 rm -f "${LATEX_FILE}.bak"
