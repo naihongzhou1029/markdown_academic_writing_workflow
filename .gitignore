@@ -29,6 +29,7 @@ zh_tw/
 *.lot
 *.loa
 *.lol
+paper.tex
 
 # minted cache (if used)
 _minted*
