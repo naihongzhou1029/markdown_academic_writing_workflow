@@ -77,21 +77,18 @@ if (-not (Test-Path $ApiKeyFile)) {
 # --entrypoint="": override container entrypoint to run make directly
 # -v: mount current directory as /workspace in container
 # -w: set working directory in container
-$makeArgsStr = if ($MakeArgs.Count -gt 0) { $MakeArgs -join " " } else { "" }
 
-$dockerArgs = @(
-    "run",
-    "--rm",
-    "--entrypoint", "",
-    "-v", "${WorkDir}:/workspace",
-    "-w", "/workspace",
-    $Image,
-    "/usr/bin/make"
-)
+# Construct Docker command string to avoid PowerShell array expansion issues with empty strings
+$makeTargets = if ($MakeArgs -and $MakeArgs.Count -gt 0) { $MakeArgs -join " " } else { "" }
 
-if ($makeArgsStr) {
-    $dockerArgs += $makeArgsStr.Split(" ")
+# Build command string with proper quoting
+# Use format string to clearly handle the empty entrypoint value
+$dockerCmd = 'docker run --rm --entrypoint="" -v "{0}:/workspace" -w /workspace {1} /usr/bin/make' -f $WorkDir, $Image
+
+if ($makeTargets) {
+    $dockerCmd += " $makeTargets"
 }
 
-& docker $dockerArgs
+# Execute using Invoke-Expression for proper command string parsing
+Invoke-Expression $dockerCmd
 
