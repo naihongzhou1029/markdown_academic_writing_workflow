@@ -11,7 +11,7 @@ import html
 import shutil
 from pathlib import Path
 from html.parser import HTMLParser
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from datetime import datetime
 
 # Try to import BeautifulSoup, fall back to html.parser if not available
@@ -88,23 +88,32 @@ class GoogleDocsHTMLParser:
             # Mark cover table to skip it in content conversion
             cover_table['data-skip'] = 'true'
         
-        # Extract title from first two h1 tags (Chinese and English)
-        h1_tags = soup.find_all('h1')
-        if h1_tags and len(h1_tags) >= 2:
-            # First h1 is Chinese title, second is English title
-            self.metadata['title'] = h1_tags[0].get_text(strip=True)
-            self.metadata['title_en'] = h1_tags[1].get_text(strip=True)
-            # Mark these h1s to skip in content
-            h1_tags[0]['data-skip'] = 'true'
-            h1_tags[1]['data-skip'] = 'true'
-        elif h1_tags:
-            self.metadata['title'] = h1_tags[0].get_text(strip=True)
-            h1_tags[0]['data-skip'] = 'true'
+        # Find abstract section first (case-insensitive) to avoid marking it as title
+        abstract_text, abstract_h1 = self._find_abstract(soup)
         
-        # Find abstract section
-        abstract_text = self._find_abstract(soup)
+        # Extract title from first two h1 tags (Chinese and English), excluding ABSTRACT
+        h1_tags = soup.find_all('h1')
+        title_h1s = [h1 for h1 in h1_tags if h1 != abstract_h1]
+        
+        if title_h1s and len(title_h1s) >= 2:
+            # First h1 is Chinese title, second is English title
+            self.metadata['title'] = title_h1s[0].get_text(strip=True)
+            self.metadata['title_en'] = title_h1s[1].get_text(strip=True)
+            # Mark these h1s to skip in content
+            title_h1s[0]['data-skip'] = 'true'
+            title_h1s[1]['data-skip'] = 'true'
+        elif title_h1s:
+            self.metadata['title'] = title_h1s[0].get_text(strip=True)
+            title_h1s[0]['data-skip'] = 'true'
+        
+        # Store abstract text in metadata
         if abstract_text:
             self.metadata['abstract'] = abstract_text
+            # Ensure ABSTRACT h1 is NOT skipped (it should appear in markdown)
+            if abstract_h1:
+                # Remove any skip flag that might have been set
+                if abstract_h1.get('data-skip'):
+                    del abstract_h1['data-skip']
             
         # Convert body content to Markdown, skipping cover page elements
         body = soup.find('body') or soup
@@ -177,12 +186,14 @@ class GoogleDocsHTMLParser:
                           'July', 'August', 'September', 'October', 'November', 'December']
             self.metadata['date'] = f"{month_names[month-1]} 1, {ad_year}"
             
-    def _find_abstract(self, soup) -> Optional[str]:
-        """Find abstract section in HTML."""
-        # Look for "摘要" heading followed by paragraphs
+    def _find_abstract(self, soup) -> Tuple[Optional[str], Any]:
+        """Find abstract section in HTML. Returns (abstract_text, abstract_h1_element)."""
+        # Look for "摘要" or "Abstract" heading (case-insensitive) followed by paragraphs
         for element in soup.find_all(['h1', 'h2', 'h3', 'p']):
             text = element.get_text(strip=True)
-            if text.strip() == '摘要' or text.strip() == 'Abstract':
+            text_lower = text.strip().lower()
+            # Match "摘要", "Abstract", or "ABSTRACT" (case-insensitive)
+            if text_lower == '摘要' or text_lower == 'abstract':
                 # Get following paragraphs until we hit another heading or "關鍵字"
                 abstract_parts = []
                 next_elem = element.find_next_sibling()
@@ -192,14 +203,16 @@ class GoogleDocsHTMLParser:
                     if next_elem.name == 'p':
                         para_text = next_elem.get_text(strip=True)
                         # Stop at keywords section
-                        if '關鍵字' in para_text or 'Keywords' in para_text:
+                        if '關鍵字' in para_text or 'Keywords' in para_text or 'keywords' in para_text.lower():
                             break
                         if para_text:
                             abstract_parts.append(para_text)
                     next_elem = next_elem.find_next_sibling()
                 if abstract_parts:
-                    return ' '.join(abstract_parts)
-        return None
+                    # Return both the abstract text and the h1 element (if it's an h1)
+                    abstract_h1 = element if element.name == 'h1' else None
+                    return (' '.join(abstract_parts), abstract_h1)
+        return (None, None)
         
     def _extract_abstract_text(self, html_content: str) -> Optional[str]:
         """Extract abstract text using regex."""
