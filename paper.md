@@ -184,7 +184,7 @@ ABSTRACT
 
 ![KMP, IC和OP的影響關係](images/image22.png){#fig:image1 width=80%}
 
-[圖1：](#figur_relationship_between_kmp_ic_op)圖1： [@mardaniRelationshipKnowledgeManagement2018]
+[圖1：](#figur_relationship_between_kmp_ic_op) [@mardaniRelationshipKnowledgeManagement2018]
 
 在這個概念下，「The effect of knowledge management practices on firm performance」(Palacios Marqués & José Garrigós Simón, 2006) 的研究也證實了這一點。良好的知識管理，是確實可以直接影響到企業的實際表現的，不論是在營收成長，股東滿意度，或是競爭優勢，都和知識管理的成熟程度有高度相關。
 
@@ -230,7 +230,7 @@ ABSTRACT
 
 ![Figure 2](images/image26.png){#fig:image2 width=80%}
 
-[圖2：](#figur_techs_use_for_information_extraction)圖2： : Evolution of the techniques used for information extraction from unstructured documents [@baviskarEfficientAutomatedProcessing2021]
+[圖2：](#figur_techs_use_for_information_extraction)  : Evolution of the techniques used for information extraction from unstructured documents [@baviskarEfficientAutomatedProcessing2021]
 
 最早期是完全人工處理，後來導入了光學字元辨識(Optical Character Recognition,OCR)技術，再加上機器程序自動化(Robotics Processes Automation,RPA)後，僅管已經減少了不少人力，但對於資訊的頡取還是有不足之處，因為有的文件已毀損不清，有的內容語焉不詳。到了基於變換器的雙向編碼器表示技術（Bidirectional Encoder Representations from Transformers，BERT）這種基於自然語言處理（Natural Language Processing,NLP）的預訓練技術加入後，文字的處理品質有了極大的提升，文字幾乎已經不再是問題。真正困難的問題只剩下表格(Tables)類及訊息圖表(Figures, Diagrams and Infographics)類的資訊。這類的文件就非常依賴領域知識(Domain Knowledge)才能做正確的解讀，如金融領域類的知識萃取雖然比較成熟(Pejić Bach et al., 2019)。但技術上還沒有太大的突破，還是需要有不少的資料前處理(Text Pre-Processing),如[圖3：](#figur_ner_workflow)
 
@@ -305,14 +305,14 @@ ABSTRACT
 
 ![Figure 5](images/image9.png){#fig:image5 width=80%}
 
-[圖5：](#figur_plain_texts_test_01)圖5：倍數表(Odds Table)內容
+[圖5：](#figur_plain_texts_test_01) 倍數表(Odds Table)內容
 
 在規格書的內容如[「圖5」](#fig_plain_texts_test_01)。純文字的內容算是連續排列，AI應可讀取完整內容，要測試的主要是AI的預訓練模型知識中，能否直接理解老虎機遊戲(Slot Game)常見行話(Jargon)以及會不會被其他內容誤解。3x5是「3列5欄」，但可以是15輪，也可以是5輪。至於有多少個「符號(Symbol)」也是一樣的道理，這個領域對轉出來的東西行話確實也就是「Symbol」。
 
 
 ![Figure 6](images/image40.png){#fig:image6 width=80%}
 
-[圖6：](#figur_gemini_plain_texts_test_01)圖6： 「這個遊戲有多少個符號？是幾輪幾線的遊戲？」的對話內容
+[圖6：](#figur_gemini_plain_texts_test_01)  「這個遊戲有多少個符號？是幾輪幾線的遊戲？」的對話內容
 
 Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完全正確。可見這部分已經無須多加脈絡，AI的預訓練知識已覆蓋老虎機基本領域知識。
 
@@ -326,14 +326,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 8](images/image9.png){#fig:image8 width=80%}
 
-[圖7：](#figur_gemini_plain_texts_answer_02)圖7： 免費遊戲的條件
+[圖7：](#figur_gemini_plain_texts_answer_02)  免費遊戲的條件
 
 答案如[「圖7」](#fig_gemini_plain_texts_answer_02)。這裡要測試AI是否能夠理解「免費遊戲」跟「免費旋轉」是同一件事。而且在不同的位置，都有似是而非，模梭兩可的內容，還帶有一些”雜訊”，像是「MG出現3/4/5顆」或是「(FG不出現)」，都是測試的一部分。
 
 
 ![Figure 9](images/image39.png){#fig:image9 width=80%}
 
-[圖8：](#figur_gemini_plain_texts_test_02)圖8： Gemini回答「免費遊戲的條件是？」
+[圖8：](#figur_gemini_plain_texts_test_02)  Gemini回答「免費遊戲的條件是？」
 
 如[「圖8」](#fig_gemini_plain_texts_test_02)，Gemini 2.5 Flash 並沒有受到雜訊的影響，也可以理解「免費遊戲」和「免費旋轉」其實就是同一回事，算是完全正確理解。
 
@@ -344,14 +344,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 10](images/image12.png){#fig:image10 width=80%}
 
-[圖9：](#figur_plain_texts_test_03)圖9： 主遊戲的特殊玩法及觸發條件
+[圖9：](#figur_plain_texts_test_03)  主遊戲的特殊玩法及觸發條件
 
 如[「圖9」](#fig_plain_texts_test_03)，答案在「Feature」這張工作表(Worksheet)中。試算表類型的文件和一般的文件最大的不同就是，它會含有不同的工作表，以區隔不同主題的內容。當然，這也是方便人類閱讀的設計之一，但AI是否能理解這還是在同一份文件的內容？會不會AI只看得到「規格文件(第一張工作表)」的內容而已？這是這項測試主要驗證的目標。
 
 
 ![Figure 11](images/image11.png){#fig:image11 width=80%}
 
-[圖10：](#figur_gemini_plain_texts_test_03)圖10： Gemini回答「在主遊戲有什麼特殊玩法？觸發條件是？」
+[圖10：](#figur_gemini_plain_texts_test_03)  Gemini回答「在主遊戲有什麼特殊玩法？觸發條件是？」
 
 如[「圖10」](#fig_gemini_plain_texts_test_03)，Gemini 2.5 Flash即正確回答規格書中的內容，看來它是可以讀取到不同工作表的內容的。
 
@@ -362,21 +362,21 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 12](images/image6.png){#fig:image12 width=80%}
 
-[圖11：](#figur_plain_texts_test_04)圖11： 跟特殊遊戲(Feature Game)有關的音效
+[圖11：](#figur_plain_texts_test_04)  跟特殊遊戲(Feature Game)有關的音效
 
 如[「圖11」](#fig_plain_texts_test_04)，在題目上我們再做了一個變化，同樣也是老虎機遊戲領域內的一個行話「特殊遊戲(Feature Game)」。這個行話的定義就比較會有分岐，有人認為特殊遊戲是綁定遊戲主題，有特殊玩法的「獎勵遊戲(Bonus Game)」；也有人認為只要不是主遊戲，其他像是免費遊戲，獎勵遊戲還是其他不同玩法的遊戲，因為絕大多數的設計也必然是綁定主題，或是法規需求的，所以皆可通稱為特殊遊戲，是一個分類名。我們也透過這樣的驗證，來瞭解AI對這個領域的認知是否跟我們的一致？如果它找不到答案，看看它的推論理由為何。
 
 
 ![Figure 13](images/image28.png){#fig:image13 width=80%}
 
-[圖12：](#figur_gemini_plain_texts_test_04)圖12： Gemini找不到和「特殊遊戲」相關的音效
+[圖12：](#figur_gemini_plain_texts_test_04)  Gemini找不到和「特殊遊戲」相關的音效
 
 如[「圖12」](#fig_gemini_plain_texts_test_04)，Gemini 2.5 Flash 明確反映規格書中沒有相關的內容。它的理由是僅將「整輪Wild」這樣的玩法視為是一種特殊玩法。可即便如此，它仍然沒有將[「圖12」](#fig_gemini_plain_texts_test_04)中的「三顆堆疊Symbol變成Wild音效」視為特殊遊戲相關的音效。因此，接下來我們將進行深入思考的階段(如[「圖13」](#fig_gemini_plain_texts_test_05_with_pro))來測試看看，”多想想”能不能找到該有的答案。
 
 
 ![Figure 14](images/image51.png){#fig:image14 width=80%}
 
-[圖13：](#figur_gemini_plain_texts_test_05_with_pro)圖13： 切換到Gemini 2.5 Pro詢問同一個問題
+[圖13：](#figur_gemini_plain_texts_test_05_with_pro)  切換到Gemini 2.5 Pro詢問同一個問題
 
 很可惜，即便我們切換Gemini到2.5 Pro的模式(如[「圖13」](#fig_gemini_plain_texts_test_05_with_pro))後，得到的答案仍和[「圖12」](#fig_gemini_plain_texts_test_04)一樣。因此初步我們可以判定，這部分不但是需要補充脈絡的部分，而且也給我們一個明確的警示，在試算表這種型式的文件中，AI的理解可能是很零碎的，是沒有整體概念的，某些問題能正確回答，不代表”同類”的其他問題一樣可以正確的回答。
 
@@ -387,14 +387,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 15](images/image19.png){#fig:image15 width=80%}
 
-[圖14：](#figur_plain_texts_test_05)圖14： 「長條堆疊圖騰」規格
+[圖14：](#figur_plain_texts_test_05)  「長條堆疊圖騰」規格
 
 如[「圖14」](#fig_plain_texts_test_05)，這需要AI先理解「長條堆疊圖騰」，在規格書中其實被拆成2段說明。一個是「堆疊圖騰」，另一個則是「長幅WILD圖騰」。這就是實務上的知識庫，和單純的搜尋的不同之處，如果僅是搜尋「長條堆疊圖騰」是搜不到”正確”答案的，因為其實在規格書是有另一種說法的，但只要是有內隱知識的企劃人員，都會理解那就是同一回事。其次，在規格書中，這個流程也被拆成多段分別說明了，我們要測試的目標，就是看看AI能否串連所有的文字一併理解。
 
 
 ![Figure 16](images/image16.png){#fig:image16 width=80%}
 
-[圖15：](#figur_gemini_plain_texts_test_05)圖15： Gemini無法找到「消失時間」
+[圖15：](#figur_gemini_plain_texts_test_05)  Gemini無法找到「消失時間」
 
 如[「圖15」](#fig_gemini_plain_texts_test_05)，僅管AI可以找到「哪裡會出現」及「何時出現」，但意外的是對於「何時消失」卻無法從「移動到第一輪的WILD，下一輪將消失」的說明理解及回答出正確答案。
 
@@ -414,7 +414,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 | 5 | 「長條堆疊圖騰」在哪裡會出現？條件為何？何時消失？ | 60% |
 | 總分 | 72% |
 
-[表2：](#table_plain_text_test_results)表2： 文字理解的正確率小結
+[表2：](#table_plain_text_test_results)  文字理解的正確率小結
 
 
 ### 內嵌圖片理解
@@ -437,14 +437,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 17](images/image2.png){#fig:image17 width=80%}
 
-[圖16：](#figur_image_test_01)圖16： 「一般symbol」有哪些？
+[圖16：](#figur_image_test_01)  「一般symbol」有哪些？
 
 如[「圖16」](#fig_image_test_01)，我們可以看到，規格書並沒有針對這些符號作出解釋或描述。我們幾乎可以預期得到，這個題目如果拿去詢問AI的話，在沒有文字的情況下，AI應該是無法正確的回答的。
 
 
 ![Figure 18](images/image15.png){#fig:image18 width=80%}
 
-[圖17：](#figur_gemini_image_test_01)圖17： 沒有列出這11個一般symbol的具體名稱
+[圖17：](#figur_gemini_image_test_01)  沒有列出這11個一般symbol的具體名稱
 
 如[「圖17」](#fig_gemini_image_test_01)，Gemini確實沒有辦法回答這些Symbol的名稱。而且表格中的那些數字對它而言，也是一堆無法理解的數字。
 
@@ -455,14 +455,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 19](images/image3.png){#fig:image19 width=80%}
 
-[圖18：](#figur_image_test_02)圖18： 「特殊symbol」長什麼樣子？
+[圖18：](#figur_image_test_02)  「特殊symbol」長什麼樣子？
 
 如[「圖18」](#fig_image_test_02)，和前一題類似，儘管在圖的右側有”SCATTER”這樣的文字註解，但其實正確答案並不是”SCATTER”，這個特殊symbol的描述應該是”紅底金字的FREE GAME”這類的內容，我們來看看AI會怎麼回答。
 
 
 ![Figure 20](images/image1.png){#fig:image20 width=80%}
 
-[圖19：](#figur_gemini_image_test_02)圖19： Gemini無法描述「特殊symbol」長什麼樣子
+[圖19：](#figur_gemini_image_test_02)  Gemini無法描述「特殊symbol」長什麼樣子
 
 如[「圖19」](#fig_gemini_image_test_02)，AI雖然找到了特殊Symbol，也找到了相關的規格，但對於symbol長什麼樣子，在沒有足夠的文字輔助的情況下，就是無法回答。
 
@@ -476,14 +476,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 22](images/image36.png){#fig:image22 width=80%}
 
-[圖20：](#figur_image_test_03)圖20： 「長幅WILD圖騰」是長什麼樣子的？
+[圖20：](#figur_image_test_03)  「長幅WILD圖騰」是長什麼樣子的？
 
 如[「圖20」](#fig_image_test_03)，規格書其實是使用了兩張圖作為展演的分鏡說明。上圖是說明當三個「神殿」符號堆疊在一起的時候，會擴展成一個如下圖的「宙斯長幅WILD圖騰」。這也是在考驗AI是否能正確理解，用戶的問題其實是在詢問下圖的內容。
 
 
 ![Figure 23](images/image7.png){#fig:image23 width=80%}
 
-[圖21：](#figur_gemini_image_test_03)圖21： Gemini無法描述「長幅WILD圖騰」長什麼樣子
+[圖21：](#figur_gemini_image_test_03)  Gemini無法描述「長幅WILD圖騰」長什麼樣子
 
 如[「圖21」](#fig_gemini_image_test_03)，AI從既有的文字中雖然已經找到這個圖騰的形狀及屬性，但就是沒有辦法描述出這個「長幅WILD圖騰」的實際內容。
 
@@ -499,7 +499,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 25](images/image27.png){#fig:image25 width=80%}
 
-[圖22：](#figur_gemini_image_test_04)圖22： Gemini嘗試透過其他資訊反推可能的答案
+[圖22：](#figur_gemini_image_test_04)  Gemini嘗試透過其他資訊反推可能的答案
 
 如[「圖22」](#fig_gemini_image_test_04)，這個回答稍微有點意外，但結論基本上還是同一個。AI一樣是無法真的理解規格書中圖像的內容，但它會嘗試從找到的所有文字，拼湊出可能的答案告訴用戶。
 
@@ -510,14 +510,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 26](images/image34.png){#fig:image26 width=80%}
 
-[圖23：](#figur_image_test_05)圖23： Info頁有幾頁內容？
+[圖23：](#figur_image_test_05)  Info頁有幾頁內容？
 
 如[「圖23」](#fig_image_test_05)，在「INFO」工作表中，最後一頁是「Page 3(派彩線數 50 LINES)」。如果只是問Info頁有幾頁內容，估計AI可透過”Page 3”得知有3頁，但「內容是什麼」這題就還是需要AI確實理解圖片內容才行，而且是三頁都要能理解。
 
 
 ![Figure 27](images/image42.png){#fig:image27 width=80%}
 
-[圖24：](#figur_gemini_image_test_05)圖24： Gemini找到3頁Info
+[圖24：](#figur_gemini_image_test_05)  Gemini找到3頁Info
 
 如[「圖24」](#fig_gemini_image_test_05)，不出所料，AI確實找到了3頁的Info，裡面有寫字的都回答出來了，但圖片的內容無一正確描述。
 
@@ -537,7 +537,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 | 5 | Info頁有幾頁內容？內容分別為何？ | 0% |
 | 總分 | 0% |
 
-[表3：](#table_image_test_results)表3： 內嵌圖片的正確率小結
+[表3：](#table_image_test_results)  內嵌圖片的正確率小結
 
 
 ### 表格理解
@@ -558,14 +558,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 28](images/image13.png){#fig:image28 width=80%}
 
-[圖25：](#figur_table_test_01)圖25： 「動畫」類的需求
+[圖25：](#figur_table_test_01)  「動畫」類的需求
 
 如[「圖25」](#fig_table_test_01)，我們先測試一個簡單的。從編號17的「Free Game瞇牌」到編號22的「Wild Symbol移動」6個項目就是動畫類的需求，儘管我們從編號1到編號16插入了合併儲存格，但這應該不影響AI判讀表格的內容。
 
 
 ![Figure 29](images/image43.png){#fig:image29 width=80%}
 
-[圖26：](#figur_gemini_table_test_01)圖26： 「動畫」類的需求有哪些？
+[圖26：](#figur_gemini_table_test_01)  「動畫」類的需求有哪些？
 
 如[「圖26」](#fig_gemini_table_test_01)，如預期，AI可以正確找到編號17到編號22的項目都算是「動畫」類型的製作內容。
 
@@ -578,7 +578,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 30](images/image37.png){#fig:image30 width=80%}
 
-[圖27：](#figur_gemini_table_test_02)圖27： 有哪些是「靜態」類的需求？
+[圖27：](#figur_gemini_table_test_02)  有哪些是「靜態」類的需求？
 
 如[「圖27」](#fig_gemini_table_test_02)，AI已可正確的解讀帶有合併儲存格的表格內容。隨著基礎模型的能力不斷進化，看來再複雜的表格問題應該遲早都可以被攻克。
 
@@ -589,14 +589,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 31](images/image23.png){#fig:image31 width=80%}
 
-[圖28：](#figur_table_test_03)圖28： 這個遊戲有使用「聽牌音」嗎？
+[圖28：](#figur_table_test_03)  這個遊戲有使用「聽牌音」嗎？
 
 如[「圖28」](#fig_table_test_03)，這是個很”狡猾”的問題。人類看到灰底的這一列，通常都會意識到，這應該是一筆有特殊意義的資料。以企劃人員而言，他們更是會很直覺的認為，這100%就是代表「不使用」的意思。但，AI會有同樣的”sense”嗎？
 
 
 ![Figure 32](images/image17.png){#fig:image32 width=80%}
 
-[圖29：](#figur_gemini_table_test_03)圖29： 有使用「聽牌音」嗎？
+[圖29：](#figur_gemini_table_test_03)  有使用「聽牌音」嗎？
 
 如[「圖29」](#fig_gemini_table_test_03)，AI果然誤解了文件中的意思，誤以為”有”使用「聽牌音」。
 
@@ -607,7 +607,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 33](images/image44.png){#fig:image33 width=80%}
 
-[圖30：](#figur_table_test_04)圖30： 共用/專屬音效有哪些？
+[圖30：](#figur_table_test_04)  共用/專屬音效有哪些？
 
 如[「圖30」](#fig_table_test_04)，這個題目另一種合併儲存格。典型的表格，欄位確實都是整齊排好的，但這次的「共用」及「遊戲」卻是在欄位列合併而成，用以表示同欄位的更高層分類。人類讀者一樣可以很容易理解這個概念，但AI是否一樣可以這樣理解？
 
@@ -617,7 +617,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 35](images/image53.png){#fig:image35 width=80%}
 
-[圖31：](#figur_gemini_table_test_04)圖31： Gemini找到共用/專屬音效
+[圖31：](#figur_gemini_table_test_04)  Gemini找到共用/專屬音效
 
 如[「圖31」](#fig_gemini_table_test_04)，不僅在「列」的合併儲存格有正確理解表格內容，看來在「欄」的合併儲存格也有正確的理解表格內容。
 
@@ -631,14 +631,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 37](images/image29.png){#fig:image37 width=80%}
 
-[圖32：](#figur_table_test_05)圖32： 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少KBits？
+[圖32：](#figur_table_test_05)  「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少KBits？
 
 如[「圖32」](#fig_table_test_05)，這是一個跨度較大的理解題。人類讀者基本上是可以理解文件的「結構」的，也就是說，最上面的「機種名稱」，「品質」，「格式」或「位元」等這些欄位，是用來宣告下方這些資料的共通屬性的。那，AI能嗎？
 
 
 ![Figure 38](images/image25.png){#fig:image38 width=80%}
 
-[圖33：](#figur_gemini_table_test_05)圖33： 「100倍獎線獎報獎」和「轉場動畫音效」的品質
+[圖33：](#figur_gemini_table_test_05)  「100倍獎線獎報獎」和「轉場動畫音效」的品質
 
 如[「圖33」](#fig_gemini_table_test_05)，AI看來也有像人類一樣理解文件的結構，給出了正確的答案。
 
@@ -656,7 +656,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 | 5 | 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少？ | 100% |
 | 總分 | 80% |
 
-[表4：](#table_table_test_results)表4： 表格理解的正確率小結
+[表4：](#table_table_test_results)  表格理解的正確率小結
 
 
 ## 內嵌圖片的萃取發現
@@ -676,7 +676,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 | 高價值符號 | 中等價值符號 | 低價值符號 |  |
 | 宙斯（Zeus）x5 = 250x4 = 150x3 = 50x2 = 5神殿（Temple）x5 = 200x4 = 100x3 = 25x2 = 5天馬（Pegasus）x5 = 200x4 = 100x3 = 25x2 = 5月桂冠（Laurel Wreath）x5 = 150x4 = 75x3 = 25 | 古幣（Coin）x5 = 150x4 = 75x3 = 25A（Ace）x5 = 100x4 = 50x3 = 10K（King）x5 = 100x4 = 50x3 = 10Q（Queen）x5 = 100x4 = 50x3 = 10 | J（Jack）x5 = 100x4 = 50x3 = 1010（Ten）x5 = 100x4 = 50x3 = 10 | Wild（百搭符號，宙斯）x5 = 250x4 = 150x3 = 50x2 = 5作用：可替代除 Scatter 以外的所有符號，提高中獎機率 |
 
-[表5：](#table_describe_symbols)表5： 用文字描述遊戲中的符號
+[表5：](#table_describe_symbols)  用文字描述遊戲中的符號
 
 如[「表5」](#tab_describe_symbols)(用表格是為了排版美觀，實際上輸出內容是連續文字內容)，當圖中的符號變成文字之後，同一個題目我們再問一次，是否能得到正確答案呢？
 
@@ -686,7 +686,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 40](images/image45.png){#fig:image40 width=80%}
 
-[圖34：](#figur_gemini_pass_image_test_01)圖34： Gemini可正確回答「一般symbol有哪些？」內嵌圖片題
+[圖34：](#figur_gemini_pass_image_test_01)  Gemini可正確回答「一般symbol有哪些？」內嵌圖片題
 
 如[「圖34」](#fig_gemini_pass_image_test_01)，這次AI就可以像其他的文字題一樣，正確說出一般symbol有哪些，連倍數表的內容都可以正確理解。也就是說，如果我們能將圖片的內容描述成純文字，經過這樣的萃取過程，我們幾乎就可以確保，AI能正確理解規格書內容，能真正成為我們能採取行動的知識。
 
@@ -703,7 +703,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 41](images/image4.png){#fig:image41 width=80%}
 
-[圖35：](#figur_describe_symbol_odds)圖35： 直接要求AI描述符號及倍數
+[圖35：](#figur_describe_symbol_odds)  直接要求AI描述符號及倍數
 
 如[「圖35」](#fig_describe_symbol_odds)，雖然說是”直接”，但還是必須要稍微解釋一下，這是老虎機的符號表，以及我們要AI做什麼。
 
@@ -716,7 +716,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 44](images/image18.png){#fig:image44 width=80%}
 
-[圖36：](#figur_gemini_can_describe_symbol_odds)圖36： Gemini可以直接描述符號表截圖中的符號及倍數
+[圖36：](#figur_gemini_can_describe_symbol_odds)  Gemini可以直接描述符號表截圖中的符號及倍數
 
 如[「圖36」](#fig_gemini_can_describe_symbol_odds)，AI不僅可以正確的描述出這些符號是什麼，甚至連「特殊百搭」是”全身的宙斯圖像，下方有WILD”這樣的描述都寫好了。至於那些「請注意」的內容，算是輔助資訊，也沒有寫錯，也可以成為知識庫的一部分。
 
@@ -729,7 +729,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 45](images/image33.png){#fig:image45 width=80%}
 
-[圖37：](#figur_describe_as_developer)圖37： 以「遊戲開發人員」的身份來描述
+[圖37：](#figur_describe_as_developer)  以「遊戲開發人員」的身份來描述
 
 如[「圖37」](#fig_describe_as_developer)，在我們的提詞中有幾個重要的項目。首先有宣告這是遊戲畫面的截圖，再來就是要以「遊戲開發人員」的身份去描述，要聚焦的重點是「介面」及「可能的規格」。
 
@@ -742,7 +742,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 48](images/image20.png){#fig:image48 width=80%}
 
-[圖38：](#figur_gemini_describe_main_game_as_developer)圖38： Gemini以開發者身份，詳細描述了主畫面中出現的重要元素
+[圖38：](#figur_gemini_describe_main_game_as_developer)  Gemini以開發者身份，詳細描述了主畫面中出現的重要元素
 
 如[「圖38」](#fig_gemini_describe_main_game_as_developer)，AI在帶入身份之後，真的是很徹頭徹尾的描述了所有開發者應該要注意的那些元素，即便是一顆「i」的按鈕都沒放過。這樣，我們就可以很大程度的把圖中的資訊給萃取出來，這些內容都是文字，都是可以完全被AI理解，可用來回答我們問題的知識。
 
@@ -764,7 +764,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 52](images/image49.png){#fig:image52 width=80%}
 
-[圖39：](#figur_gemini_describe_paylines)圖39： Gemini輸出「派彩線」資料
+[圖39：](#figur_gemini_describe_paylines)  Gemini輸出「派彩線」資料
 
 如[「圖39」](#fig_gemini_describe_paylines)，AI不但能正確理解「派彩線」的意涵，輸出高達50條線的所有文字資訊，甚至還可以幫忙轉出Python的源碼。有了這樣的知識，不只是企劃人員可以清楚的知道是哪50條線，甚至軟體人員都可以不用再一行行的複製貼上，AI產出的內容整塊就可以複製進來使用了。
 
@@ -777,7 +777,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 53](images/image32.png){#fig:image53 width=80%}
 
-[圖40：](#figur_describe_whole_info)圖40： 直接對整個Info頁描述內容
+[圖40：](#figur_describe_whole_info)  直接對整個Info頁描述內容
 
 如[「圖40」](#fig_describe_whole_info)，為了避免直接截一張大圖，解析度可能不足的狀況，我們直接截成三張圖。請AI詳細描述整個Info頁的內容。
 
@@ -787,7 +787,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 ![Figure 55](images/image54.png){#fig:image55 width=80%}
 
-[圖41：](#figur_gemini_describe_whole_info)圖41： Gemini分析整個Info頁
+[圖41：](#figur_gemini_describe_whole_info)  Gemini分析整個Info頁
 
 如[「圖41」](#fig_gemini_describe_whole_info)，AI並不會因為我們拆成三張圖，就以為這是3個不同的規格，起碼它認為這是一個Info頁中的3個區塊。但在「派彩線(50 LINES)」這一段我們就會發現一個奇怪的狀況，它只寫「1到50號派彩線…」這樣的內容，並沒有”詳細”輸出所有的內容。
 

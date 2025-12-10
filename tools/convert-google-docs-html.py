@@ -319,6 +319,8 @@ class GoogleDocsHTMLParser:
         text = re.sub(r'(\[(圖|表)\d+：\]\([^\)]+\))\2\d+：：', r'\1', text)
         # Remove duplicate table references: [表N：](#link)表N：： -> [表N：](#link)
         text = re.sub(r'(\[表\d+：\]\([^\)]+\))表\d+：：', r'\1', text)
+        # Remove duplicate figure/table references with single colon: [圖N：](#link)圖N： -> [圖N：](#link)
+        text = re.sub(r'(\[(圖|表)\d+：\]\([^\)]+\))\2\d+：\s*', r'\1 ', text)
         return text.strip()
         
     def _convert_citations(self, text: str) -> str:
@@ -477,6 +479,8 @@ class GoogleDocsHTMLParser:
         html_content = re.sub(r'(\[(圖|表)\d+：\]\([^\)]+\))\2\d+：：', r'\1', html_content)
         # Remove duplicate table references: [表N：](#link)表N：： -> [表N：](#link)
         html_content = re.sub(r'(\[表\d+：\]\([^\)]+\))表\d+：：', r'\1', html_content)
+        # Remove duplicate figure/table references with single colon: [圖N：](#link)圖N： -> [圖N：](#link)
+        html_content = re.sub(r'(\[(圖|表)\d+：\]\([^\)]+\))\2\d+：\s*', r'\1 ', html_content)
         
         # Clean up HTML entities
         html_content = html.unescape(html_content)

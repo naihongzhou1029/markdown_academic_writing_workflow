@@ -71,8 +71,8 @@ $(PDF): $(SRC) $(BIB) $(CSL)
 	@echo "Processing Mermaid diagrams..."
 	@mkdir -p images
 	@bash $(PROCESS_MERMAID_SCRIPT) $(SRC) $(MERMAID_TEMP_SRC) images
-	@echo "Using CJK font: $(CJK_FONT_SC)"
-	@bash $(REPLACE_FONTS_SCRIPT) $(MERMAID_TEMP_SRC) $(TEMP_SRC) "PingFang SC" "$(CJK_FONT_SC)" "PingFang TC" "$(CJK_FONT_TC)"
+	@echo "Using CJK font: $(CJK_FONT_TC)"
+	@bash $(REPLACE_FONTS_SCRIPT) $(MERMAID_TEMP_SRC) $(TEMP_SRC) "PingFang SC" "$(CJK_FONT_TC)" "PingFang TC" "$(CJK_FONT_TC)"
 	@pandoc $(TEMP_SRC) --standalone --filter pandoc-crossref --citeproc -V date=$(shell date +%Y-%m-%d) -o paper.tex
 	@bash $(FIX_LATEX_CSL_SCRIPT) paper.tex
 	@xelatex -interaction=nonstopmode paper.tex 2>&1 | tail -50
