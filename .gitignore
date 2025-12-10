@@ -52,3 +52,13 @@ dist-newstyle/
 
 # API keys
 .api_key
+
+# Post Process intermediate files
+paper.mermaid.tmp.md
+paper.tmp.md
+paper.tex
+paper.aux
+paper.log
+cover_page.tmp.tex
+cover.aux
+cover.log
