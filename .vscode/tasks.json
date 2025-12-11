@@ -2,9 +2,47 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "make-paper",
+            "label": "clean",
             "type": "shell",
-            "command": "make",
+            "command": "./make-docker.sh",
+            "args": ["clean"],
+            "osx": {
+                "command": "./make-docker.sh"
+            },
+            "linux": {
+                "command": "./make-docker.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": ["-ExecutionPolicy", "Bypass", "-File", "./make-docker.ps1", "clean"]
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "detail": "Clean generated PDF files"
+        },
+        {
+            "label": "paper",
+            "type": "shell",
+            "command": "./make-docker.sh",
+            "args": ["pdf"],
+            "osx": {
+                "command": "./make-docker.sh"
+            },
+            "linux": {
+                "command": "./make-docker.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": ["-ExecutionPolicy", "Bypass", "-File", "./make-docker.ps1", "pdf"]
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -18,13 +56,23 @@
                 "clear": false
             },
             "problemMatcher": [],
-            "detail": "Build the paper PDF using the Makefile default target"
+            "detail": "Build the paper PDF"
         },
         {
-            "label": "make-clean",
+            "label": "cover",
             "type": "shell",
-            "command": "make",
-            "args": ["clean"],
+            "command": "./make-docker.sh",
+            "args": ["cover"],
+            "osx": {
+                "command": "./make-docker.sh"
+            },
+            "linux": {
+                "command": "./make-docker.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": ["-ExecutionPolicy", "Bypass", "-File", "./make-docker.ps1", "cover"]
+            },
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -35,7 +83,61 @@
                 "clear": false
             },
             "problemMatcher": [],
-            "detail": "Clean generated PDF files"
+            "detail": "Build the cover PDF"
+        },
+        {
+            "label": "printed",
+            "type": "shell",
+            "command": "./make-docker.sh",
+            "args": ["printed"],
+            "osx": {
+                "command": "./make-docker.sh"
+            },
+            "linux": {
+                "command": "./make-docker.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": ["-ExecutionPolicy", "Bypass", "-File", "./make-docker.ps1", "printed"]
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "detail": "Build the printed PDF (cover + paper merged)"
+        },
+        {
+            "label": "zh_tw",
+            "type": "shell",
+            "command": "./make-docker.sh",
+            "args": ["zh_tw"],
+            "osx": {
+                "command": "./make-docker.sh"
+            },
+            "linux": {
+                "command": "./make-docker.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": ["-ExecutionPolicy", "Bypass", "-File", "./make-docker.ps1", "zh_tw"]
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "detail": "Translate to Traditional Chinese and build PDFs"
         }
     ]
 }
