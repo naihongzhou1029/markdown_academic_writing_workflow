@@ -202,7 +202,7 @@ numbersections: true
 
 組織應決定其流程運作和實現產品與服務符合性所需知識。這方面的知識應被保存,且可適用於需求的範圍。在處理變更需求和知識時,組織應考慮到其目前知識基礎,及決定如何獲得或使用所需的額外知識。
 
-但這也是一個概念而已。之後的研究比較有共識的部分，當屬A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology[@peeModelOrganisationalKnowledge2009]提出的5個成熟度等級，如[表1：](#table_1)
+但這也是一個概念而已。之後的研究比較有共識的部分，當屬A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology[@peeModelOrganisationalKnowledge2009]提出的5個成熟度等級，如[「表1」](#table_1)：
 
 
 | 成熟度 (Level) | 內涵 (Description) |
@@ -213,7 +213,7 @@ numbersections: true
 | Level 2 | 只分享例行及程序性的知識。 |
 | Level 1 | 知識未明確文件化，獨立零碎散落各部門。 |
 
-[「表1」]{#table_1}「知識管理」的成熟度
+[表1]{#table_1}「知識管理」的成熟度
 
 本研究主要的方向，主要是從等級1到等級3。關鍵在於散落在各部門的文件，是否能成為產生行動的依據。
 
@@ -221,7 +221,7 @@ numbersections: true
 ### 目前為止有無終極解法？
 
 
-早期的著作如《The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data》[@kimballDataWarehouseETL2004]，講述的都是純文字的資料處理(e.g. XML)或是資料庫的轉換。富比士的[統計](https://www.google.com/url?q=https://kommandotech.com/statistics/big-data-statistics/&sa=D&source=editors&ust=1765707182096225&usg=AOvVaw2zNOfKOBxaM42VSIxP_geB)統計也呼應了實務上的困境：企業中95%的資料都是無結構化(Unstructurized)型式的資料，也就是無法做為知識庫的資料。為了要能夠把無結構化的資料變成所謂的知識，各個時期的科技公司都有不同的做法，如[「圖2」](#fig:image2)：
+早期的著作如《The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data》[@kimballDataWarehouseETL2004]，講述的都是純文字的資料處理(e.g. XML)或是資料庫的轉換。富比士的[統計](https://www.google.com/url?q=https://kommandotech.com/statistics/big-data-statistics/&sa=D&source=editors&ust=1765715299410257&usg=AOvVaw2DhkJ0btCWRcbUq02NbMTj)統計也呼應了實務上的困境：企業中95%的資料都是無結構化(Unstructurized)型式的資料，也就是無法做為知識庫的資料。為了要能夠把無結構化的資料變成所謂的知識，各個時期的科技公司都有不同的做法，如[「圖2」](#fig:image2)：
 
 
 ![圖2：Evolution of the techniques used for information extraction from unstructured documents[@baviskarEfficientAutomatedProcessing2021]](images/image28.png){#fig:image2}
@@ -270,7 +270,7 @@ numbersections: true
 ## 目標文件及其驗收標準
 
 
-本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://www.google.com/url?q=https://youtu.be/rZyODkoJsp0&sa=D&source=editors&ust=1765707182103759&usg=AOvVaw3jBzARJpfUIO4RJViub2qS)IGS宙斯悦华软件批发测试中」，遊戲規格書是「[《宙斯》規格](https://www.google.com/url?q=https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp%3Dsharing&sa=D&source=editors&ust=1765707182104033&usg=AOvVaw0rl2-A3ZkZrTZhfSqRP0fH)《宙斯》規格」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
+本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://www.google.com/url?q=https://youtu.be/rZyODkoJsp0&sa=D&source=editors&ust=1765715299417045&usg=AOvVaw3h3Yk8MT6D7FfSYkFdE_ZQ)IGS宙斯悦华软件批发测试中」，遊戲規格書是「[《宙斯》規格](https://www.google.com/url?q=https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp%3Dsharing&sa=D&source=editors&ust=1765715299417211&usg=AOvVaw0QLJot2DO1UeW7HYFUyUwJ)《宙斯》規格」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
 
 測試驗證的方向可簡單分為以下三類：純文字理解，內建圖像理解，以及表格內容理解。目前對一般用戶而言，像是Gemini或是ChatGPT這樣的產品是接受度最高的，而且這些產品都有兩種推論(Reasoning)深度，一個是快速反應，另一個即為深入思考。如字義，快速反應的思考深度就不會太深，深入思考的反應速度就不快。以我們要驗證的方向而言，我們就會優先以快速反應作為第一層測試，若理解有偏差，就會改用深入思考的模式再行測試。測試的產品先以Gemini來測試，也會在ChatGPT上測試。整個測試的流程就是「Gemini 2.5 Flash ⇒ Gemini 2.5 Pro ⇒ ChatGPT 5 ⇒ ChatGPT 5 Reasoning」。
 
@@ -384,7 +384,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 | 5 | 「長條堆疊圖騰」在哪裡會出現？條件為何？何時消失？ | 60% |
 | 總分 | 72% |
 
-[表2]{#table_2}文字理解的正確率小結
+[「表2」]{#table_2}文字理解的正確率小結
 
 
 ### 內嵌圖片理解
@@ -489,7 +489,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 | 5 | Info頁有幾頁內容？內容分別為何？ | 0% |
 | 總分 | 0% |
 
-[表3]{#table_3}內嵌圖片的正確率小結
+[「表3」]{#table_3}內嵌圖片的正確率小結
 
 
 ### 表格理解
@@ -590,7 +590,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 | 5 | 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少？ | 100% |
 | 總分 | 80% |
 
-[表4]{#table_4}表格理解的正確率小結
+[「表4」]{#table_4}表格理解的正確率小結
 
 
 ## 內嵌圖片的萃取發現
@@ -610,9 +610,9 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 | 高價值符號 | 中等價值符號 | 低價值符號 |  |
 | 宙斯（Zeus）x5 = 250x4 = 150x3 = 50x2 = 5神殿（Temple）x5 = 200x4 = 100x3 = 25x2 = 5天馬（Pegasus）x5 = 200x4 = 100x3 = 25x2 = 5月桂冠（Laurel Wreath）x5 = 150x4 = 75x3 = 25 | 古幣（Coin）x5 = 150x4 = 75x3 = 25A（Ace）x5 = 100x4 = 50x3 = 10K（King）x5 = 100x4 = 50x3 = 10Q（Queen）x5 = 100x4 = 50x3 = 10 | J（Jack）x5 = 100x4 = 50x3 = 1010（Ten）x5 = 100x4 = 50x3 = 10 | Wild（百搭符號，宙斯）x5 = 250x4 = 150x3 = 50x2 = 5作用：可替代除 Scatter 以外的所有符號，提高中獎機率 |
 
-[表5]{#table_5}用文字描述遊戲中的符號
+[「表5」]{#table_5}用文字描述遊戲中的符號
 
-如[「表5」](#table_5)(用表格是為了排版美觀，實際上輸出內容是連續文字內容)，當圖中的符號變成文字之後，同一個題目我們再問一次，是否能得到正確答案呢？
+如[表5：](#table_5) (用表格是為了排版美觀，實際上輸出內容是連續文字內容)，當圖中的符號變成文字之後，同一個題目我們再問一次，是否能得到正確答案呢？
 
 
 ![圖34：Gemini可正確回答「一般symbol有哪些？」內嵌圖片題](images/image11.png){#fig:image39}
@@ -626,7 +626,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 ## 圖片知識萃取實驗
 
 
-聽起來很完美。那，[「表5」](#table_5)的內容是怎麼來的？在「[三大研究原則](#h.40ehl55fllns)三大研究原則」的前提下，我們不可能要透過人力，把這些內容給一字一句打出來。像[「圖16」](#fig:image17)的內容，或許OCR還有可能幫得上忙，但若是像[「圖20」](#fig:image22)的內容，OCR絕對是無法”辨識”出什麼內容的。我們需要的不是「辨識」，我們需要的是「描述」的能力。我們得試試怎麼樣可以透過GenAI的能力，儘量正確的描述出圖片裡面的內容，一但能掌握到原則，就可以透過撰寫工具程式來批次處理更多的文件，滿足三大原則的要求。
+聽起來很完美。那，[表5：](#table_5) 的內容是怎麼來的？在「[三大研究原則](#h.40ehl55fllns)三大研究原則」的前提下，我們不可能要透過人力，把這些內容給一字一句打出來。像[「圖16」](#fig:image17)的內容，或許OCR還有可能幫得上忙，但若是像[「圖20」](#fig:image22)的內容，OCR絕對是無法”辨識”出什麼內容的。我們需要的不是「辨識」，我們需要的是「描述」的能力。我們得試試怎麼樣可以透過GenAI的能力，儘量正確的描述出圖片裡面的內容，一但能掌握到原則，就可以透過撰寫工具程式來批次處理更多的文件，滿足三大原則的要求。
 
 
 ### 直接描述
