@@ -34,6 +34,7 @@ class GoogleDocsHTMLParser:
         self.content = []
         self.image_counter = 0
         self.citation_lookup = {}
+        self.figure_map = {}  # Maps figure numbers (圖1, 圖2, etc.) to figure labels (fig:image1, fig:image2, etc.)
         
     def load_citations(self):
         """Load citation lookup from collections.json."""
@@ -259,6 +260,9 @@ class GoogleDocsHTMLParser:
                     self._convert_image(child, parent_elem=element)
                 # Also check for images in paragraphs
                 elif child.name == 'p':
+                    # Skip paragraphs marked to skip (e.g., caption paragraphs)
+                    if child.get('data-skip') == 'true':
+                        continue
                     # Check if paragraph contains an image
                     img_in_p = child.find('img')
                     if img_in_p:
@@ -316,6 +320,25 @@ class GoogleDocsHTMLParser:
                     
         # Convert citations
         text = self._convert_citations(text)
+        # Replace figure reference links with correct figure labels
+        # Pattern: [「圖N」](#any_link) -> [「圖N」](#fig:imageN)
+        def replace_figure_link(match):
+            link_text = match.group(1)
+            # Extract figure number from link text
+            fig_match = re.search(r'[「]?[圖表](\d+)[」]?', link_text)
+            if fig_match:
+                fig_num = fig_match.group(1)
+                fig_key = f"圖{fig_num}"
+                if fig_key in self.figure_map:
+                    return f"[{link_text}](#{self.figure_map[fig_key]})"
+                # Also try with quotes
+                fig_key_quoted = f"「圖{fig_num}」"
+                if fig_key_quoted in self.figure_map:
+                    return f"[{link_text}](#{self.figure_map[fig_key_quoted]})"
+            return match.group(0)  # Return original if no match found
+        
+        text = re.sub(r'\[([「]?[圖表]\d+[」]?)\]\([^\)]+\)', replace_figure_link, text)
+        
         # Remove duplicate citations with links: [[@citation]](url)[@citation] -> [@citation]
         text = re.sub(r'\[\[(@[^\]]+)\]\]\([^\)]+\)\[@[^\]]+\]', r'[\1]', text)
         # Remove consecutive duplicate citations: [@citation][@citation] -> [@citation]
@@ -429,7 +452,18 @@ class GoogleDocsHTMLParser:
             label = f"fig:image{self.image_counter}"
             
             # Try to find caption in the following elements
-            caption = self._extract_figure_caption(img_elem, parent_elem)
+            caption, caption_para = self._extract_figure_caption(img_elem, parent_elem)
+            
+            # Extract figure number from caption and store mapping
+            if caption:
+                # Match patterns like "圖1", "圖 1", "「圖1」", etc.
+                fig_match = re.search(r'[「]?[圖表](\d+)[」]?', caption)
+                if fig_match:
+                    fig_num = fig_match.group(1)
+                    fig_key = f"圖{fig_num}"
+                    self.figure_map[fig_key] = label
+                    # Also map variations like "「圖1」"
+                    self.figure_map[f"「圖{fig_num}」"] = label
             
             # Include caption in alt text for List of Figures
             if caption:
@@ -438,8 +472,11 @@ class GoogleDocsHTMLParser:
                 self.content.append(f"\n![](images/{filename}){{#{label}}}\n\n")
     
     def _extract_figure_caption(self, img_elem, parent_elem=None):
-        """Extract figure caption from following paragraph or sibling elements."""
+        """Extract figure caption from following paragraph or sibling elements.
+        Returns (caption_text, caption_paragraph_element) where caption_text includes citations.
+        """
         caption_parts = []
+        caption_para = None
         
         # Strategy 1: Look in the same paragraph after the image
         if parent_elem and hasattr(parent_elem, 'children'):
@@ -452,6 +489,7 @@ class GoogleDocsHTMLParser:
                     text = child.get_text(strip=True)
                     if text:
                         caption_parts.append(text)
+                        caption_para = parent_elem
                         break
         
         # Strategy 2: Look at next sibling paragraph (most common case)
@@ -465,6 +503,7 @@ class GoogleDocsHTMLParser:
                 # Pattern: [圖N：](#link) description or 圖N： description
                 if caption_text and re.search(r'[圖表]\d+[：:]', caption_text):
                     caption_parts.append(caption_text)
+                    caption_para = next_p
         
         # Strategy 3: Look for caption in next few elements (broader search)
         if not caption_parts and parent_elem:
@@ -480,23 +519,58 @@ class GoogleDocsHTMLParser:
                         caption_text = next_elem.get_text(strip=True)
                         if caption_text and re.search(r'[圖表]\d+[：:]', caption_text):
                             caption_parts.append(caption_text)
+                            caption_para = next_elem
                             break
                     current = next_elem
                 else:
                     break
         
-        # Clean up the caption: remove link markers but keep the text
+        # Clean up the caption: remove link markers but keep the text, and extract citations
         if caption_parts:
             caption = ' '.join(caption_parts)
+            
+            # Extract citations from the caption paragraph
+            citations = []
+            if caption_para:
+                # Process the paragraph to convert citations, then extract them
+                processed_text = self._process_paragraph(caption_para)
+                # Find all Pandoc citations in the processed text
+                pandoc_citations = re.findall(r'\[@[^\]]+\]', processed_text)
+                citations.extend(pandoc_citations)
+            
             # Remove markdown link syntax but keep the text: [圖N：](#link) text -> 圖N： text
             caption = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', caption)
-            # Remove citation markers from caption (they'll be in the paragraph below)
+            # Remove citation markers from caption (we'll add them back properly)
             caption = re.sub(r'\[@[^\]]+\]', '', caption)
+            # Remove author-date citations from caption (they should already be converted by _process_paragraph)
+            caption = re.sub(r'\([^)]*(?:et al\.|&|,)\s*(?:19|20)\d{2}[^)]*\)', '', caption)
             # Clean up extra whitespace
             caption = re.sub(r'\s+', ' ', caption).strip()
-            return caption if caption else None
+            
+            # Add citations to caption if any were found
+            if citations:
+                # Remove duplicates while preserving order
+                seen = set()
+                unique_citations = []
+                for cit in citations:
+                    if cit not in seen:
+                        seen.add(cit)
+                        unique_citations.append(cit)
+                # Append citations to caption: 圖1： -> 圖1[@citation]：
+                if caption:
+                    # If caption ends with colon, insert citations before it
+                    if caption.endswith('：') or caption.endswith(':'):
+                        caption = caption[:-1] + ''.join(unique_citations) + caption[-1]
+                    else:
+                        caption = caption + ''.join(unique_citations)
+            
+            # Mark caption paragraph to skip if found
+            if caption_para:
+                caption_para['data-skip'] = 'true'
+            
+            return (caption if caption else None, caption_para)
         
-        return None
+        return (None, None)
             
     def _convert_html_to_markdown_basic(self, html_content: str):
         """Basic HTML to Markdown conversion without BeautifulSoup."""
