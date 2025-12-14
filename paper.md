@@ -202,7 +202,7 @@ numbersections: true
 
 組織應決定其流程運作和實現產品與服務符合性所需知識。這方面的知識應被保存,且可適用於需求的範圍。在處理變更需求和知識時,組織應考慮到其目前知識基礎,及決定如何獲得或使用所需的額外知識。
 
-但這也是一個概念而已。之後的研究比較有共識的部分，當屬A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology[@peeModelOrganisationalKnowledge2009]提出的5個成熟度等級，如[表1：](#table_km_maturity)
+但這也是一個概念而已。之後的研究比較有共識的部分，當屬A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology[@peeModelOrganisationalKnowledge2009]提出的5個成熟度等級，如[表1：](#table_1)
 
 
 | 成熟度 (Level) | 內涵 (Description) |
@@ -213,7 +213,7 @@ numbersections: true
 | Level 2 | 只分享例行及程序性的知識。 |
 | Level 1 | 知識未明確文件化，獨立零碎散落各部門。 |
 
-[「表1」](#fig:image1)「知識管理」的成熟度
+[「表1」](#table_1)「知識管理」的成熟度
 
 本研究主要的方向，主要是從等級1到等級3。關鍵在於散落在各部門的文件，是否能成為產生行動的依據。
 
@@ -221,17 +221,15 @@ numbersections: true
 ### 目前為止有無終極解法？
 
 
-早期的著作如《The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data》[@kimballDataWarehouseETL2004]，講述的都是純文字的資料處理(e.g. XML)或是資料庫的轉換。富比士的[統計](https://www.google.com/url?q=https://kommandotech.com/statistics/big-data-statistics/&sa=D&source=editors&ust=1765690875840807&usg=AOvVaw1C0DGcSyvTwViN68SPpfoV)統計也呼應了實務上的困境：企業中95%的資料都是無結構化(Unstructurized)型式的資料，也就是無法做為知識庫的資料。為了要能夠把無結構化的資料變成所謂的知識，各個時期的科技公司都有不同的做法，如[「圖2」](#fig:image2)：
+早期的著作如《The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data》[@kimballDataWarehouseETL2004]，講述的都是純文字的資料處理(e.g. XML)或是資料庫的轉換。富比士的[統計](https://www.google.com/url?q=https://kommandotech.com/statistics/big-data-statistics/&sa=D&source=editors&ust=1765707182096225&usg=AOvVaw2zNOfKOBxaM42VSIxP_geB)統計也呼應了實務上的困境：企業中95%的資料都是無結構化(Unstructurized)型式的資料，也就是無法做為知識庫的資料。為了要能夠把無結構化的資料變成所謂的知識，各個時期的科技公司都有不同的做法，如[「圖2」](#fig:image2)：
 
 
-![圖2：: Evolution of the techniques used for information extraction from unstructured documents[@baviskarEfficientAutomatedProcessing2021]](images/image28.png){#fig:image2}
+![圖2：Evolution of the techniques used for information extraction from unstructured documents[@baviskarEfficientAutomatedProcessing2021]](images/image28.png){#fig:image2}
 
-最早期是完全人工處理，後來導入了光學字元辨識(Optical Character Recognition,OCR)技術，再加上機器程序自動化(Robotics Processes Automation,RPA)後，僅管已經減少了不少人力，但對於資訊的頡取還是有不足之處，因為有的文件已毀損不清，有的內容語焉不詳。到了基於變換器的雙向編碼器表示技術（Bidirectional Encoder Representations from Transformers，BERT）這種基於自然語言處理（Natural Language Processing,NLP）的預訓練技術加入後，文字的處理品質有了極大的提升，文字幾乎已經不再是問題。真正困難的問題只剩下表格(Tables)類及訊息圖表(Figures, Diagrams and Infographics)類的資訊。這類的文件就非常依賴領域知識(Domain Knowledge)才能做正確的解讀，如金融領域類的知識萃取雖然比較成熟(Pejić Bach et al., 2019)。但技術上還沒有太大的突破，還是需要有不少的資料前處理(Text Pre-Processing),如[圖3：](#figur_ner_workflow)
+最早期是完全人工處理，後來導入了光學字元辨識(Optical Character Recognition,OCR)技術，再加上機器程序自動化(Robotics Processes Automation,RPA)後，僅管已經減少了不少人力，但對於資訊的頡取還是有不足之處，因為有的文件已毀損不清，有的內容語焉不詳。到了基於變換器的雙向編碼器表示技術（Bidirectional Encoder Representations from Transformers，BERT）這種基於自然語言處理（Natural Language Processing,NLP）的預訓練技術加入後，文字的處理品質有了極大的提升，文字幾乎已經不再是問題。真正困難的問題只剩下表格(Tables)類及訊息圖表(Figures, Diagrams and Infographics)類的資訊。這類的文件就非常依賴領域知識(Domain Knowledge)才能做正確的解讀，如金融領域類的知識萃取雖然比較成熟(Pejić Bach et al., 2019)。但技術上還沒有太大的突破，還是需要有不少的資料前處理(Text Pre-Processing),如[「圖3」](#fig:image3)：
 
 
-![](images/image34.png){#fig:image3}
-
-[「圖3」](#fig:image3) NAMED ENTITY RECOGNITION (NER) Workflow
+![圖3：NAMED ENTITY RECOGNITION (NER) Workflow](images/image34.png){#fig:image3}
 
 即便要使用類神經網路來訓練萃取，還是要經過不少處理，才能繼續進行「特徵提取(Feature Extraction)」的步驟。
 
@@ -262,7 +260,7 @@ numbersections: true
 
 ![](images/image60.png){#fig:image4}
 
-[圖4：](#figur_dik_meaning_value) 資料(Data)，資訊(Information)和知識(Knowledge)的意義及價值
+[圖4：](#fig:image4) 資料(Data)，資訊(Information)和知識(Knowledge)的意義及價值
 
 在「The wisdom hierarchy: representations of the DIKW hierarchy」[@rowleyWisdomHierarchyRepresentations2007]中，作者引用了「Business information management: improving performance using information systems」[@chaffeyBusinessInformationManagement2005]中提到的內容，說明了資料，資訊和知識的意義及價值的不同。如[「圖4」](#fig:image4)所示，知識和其他兩者最關鍵的不同，當屬其脈絡(Context)的成份有多少[@ackoffDataWisdom1989]，惟有加入足夠多的脈絡，知識才有可行動(Actionable)的價值和意義。
 
@@ -272,7 +270,7 @@ numbersections: true
 ## 目標文件及其驗收標準
 
 
-本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://www.google.com/url?q=https://youtu.be/rZyODkoJsp0&sa=D&source=editors&ust=1765690875844376&usg=AOvVaw1wltTSKB0evBTvNHWzfLyD)IGS宙斯悦华软件批发测试中」，遊戲規格書是「[《宙斯》規格](https://www.google.com/url?q=https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp%3Dsharing&sa=D&source=editors&ust=1765690875844468&usg=AOvVaw3T9nuS8TIWY3l20G52bEPK)《宙斯》規格」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
+本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://www.google.com/url?q=https://youtu.be/rZyODkoJsp0&sa=D&source=editors&ust=1765707182103759&usg=AOvVaw3jBzARJpfUIO4RJViub2qS)IGS宙斯悦华软件批发测试中」，遊戲規格書是「[《宙斯》規格](https://www.google.com/url?q=https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp%3Dsharing&sa=D&source=editors&ust=1765707182104033&usg=AOvVaw0rl2-A3ZkZrTZhfSqRP0fH)《宙斯》規格」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
 
 測試驗證的方向可簡單分為以下三類：純文字理解，內建圖像理解，以及表格內容理解。目前對一般用戶而言，像是Gemini或是ChatGPT這樣的產品是接受度最高的，而且這些產品都有兩種推論(Reasoning)深度，一個是快速反應，另一個即為深入思考。如字義，快速反應的思考深度就不會太深，深入思考的反應速度就不快。以我們要驗證的方向而言，我們就會優先以快速反應作為第一層測試，若理解有偏差，就會改用深入思考的模式再行測試。測試的產品先以Gemini來測試，也會在ChatGPT上測試。整個測試的流程就是「Gemini 2.5 Flash ⇒ Gemini 2.5 Pro ⇒ ChatGPT 5 ⇒ ChatGPT 5 Reasoning」。
 
@@ -386,7 +384,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 | 5 | 「長條堆疊圖騰」在哪裡會出現？條件為何？何時消失？ | 60% |
 | 總分 | 72% |
 
-[表2：](#table_plain_text_test_results) 文字理解的正確率小結
+[表2：](#table_2) 文字理解的正確率小結
 
 
 ### 內嵌圖片理解
@@ -491,7 +489,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 | 5 | Info頁有幾頁內容？內容分別為何？ | 0% |
 | 總分 | 0% |
 
-[表3：](#table_image_test_results) 內嵌圖片的正確率小結
+[表3：](#table_3) 內嵌圖片的正確率小結
 
 
 ### 表格理解
@@ -592,7 +590,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 | 5 | 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少？ | 100% |
 | 總分 | 80% |
 
-[表4：](#table_table_test_results) 表格理解的正確率小結
+[表4：](#table_4) 表格理解的正確率小結
 
 
 ## 內嵌圖片的萃取發現
@@ -612,9 +610,9 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 | 高價值符號 | 中等價值符號 | 低價值符號 |  |
 | 宙斯（Zeus）x5 = 250x4 = 150x3 = 50x2 = 5神殿（Temple）x5 = 200x4 = 100x3 = 25x2 = 5天馬（Pegasus）x5 = 200x4 = 100x3 = 25x2 = 5月桂冠（Laurel Wreath）x5 = 150x4 = 75x3 = 25 | 古幣（Coin）x5 = 150x4 = 75x3 = 25A（Ace）x5 = 100x4 = 50x3 = 10K（King）x5 = 100x4 = 50x3 = 10Q（Queen）x5 = 100x4 = 50x3 = 10 | J（Jack）x5 = 100x4 = 50x3 = 1010（Ten）x5 = 100x4 = 50x3 = 10 | Wild（百搭符號，宙斯）x5 = 250x4 = 150x3 = 50x2 = 5作用：可替代除 Scatter 以外的所有符號，提高中獎機率 |
 
-[表5：](#table_describe_symbols) 用文字描述遊戲中的符號
+[表5：](#table_5) 用文字描述遊戲中的符號
 
-如[「表5」](#fig:image5)(用表格是為了排版美觀，實際上輸出內容是連續文字內容)，當圖中的符號變成文字之後，同一個題目我們再問一次，是否能得到正確答案呢？
+如[「表5」](#table_5)(用表格是為了排版美觀，實際上輸出內容是連續文字內容)，當圖中的符號變成文字之後，同一個題目我們再問一次，是否能得到正確答案呢？
 
 
 ![圖34：Gemini可正確回答「一般symbol有哪些？」內嵌圖片題](images/image11.png){#fig:image39}
@@ -628,7 +626,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 ## 圖片知識萃取實驗
 
 
-聽起來很完美。那，[「表5」](#fig:image5)的內容是怎麼來的？在「[三大研究原則](#h.40ehl55fllns)三大研究原則」的前提下，我們不可能要透過人力，把這些內容給一字一句打出來。像[「圖16」](#fig:image17)的內容，或許OCR還有可能幫得上忙，但若是像[「圖20」](#fig:image22)的內容，OCR絕對是無法”辨識”出什麼內容的。我們需要的不是「辨識」，我們需要的是「描述」的能力。我們得試試怎麼樣可以透過GenAI的能力，儘量正確的描述出圖片裡面的內容，一但能掌握到原則，就可以透過撰寫工具程式來批次處理更多的文件，滿足三大原則的要求。
+聽起來很完美。那，[「表5」](#table_5)的內容是怎麼來的？在「[三大研究原則](#h.40ehl55fllns)三大研究原則」的前提下，我們不可能要透過人力，把這些內容給一字一句打出來。像[「圖16」](#fig:image17)的內容，或許OCR還有可能幫得上忙，但若是像[「圖20」](#fig:image22)的內容，OCR絕對是無法”辨識”出什麼內容的。我們需要的不是「辨識」，我們需要的是「描述」的能力。我們得試試怎麼樣可以透過GenAI的能力，儘量正確的描述出圖片裡面的內容，一但能掌握到原則，就可以透過撰寫工具程式來批次處理更多的文件，滿足三大原則的要求。
 
 
 ### 直接描述
@@ -720,8 +718,16 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 如[「圖42」](#fig:image57)，AI直接明說了，它做不到。這究竟是怎麼回事呢？明明在「[產出「派彩線」資料](#h.dv3rlbjd1y7a)產出「派彩線」資料」那次的測試很順利呀，怎麼這次卻做不到了呢？其實這就是目前各AI模型普遍的軟肋：「上下文空間不足(Insufficient Context Length)」的問題。
 
 
-## 上下文空間工程解法(Context Engineering Solution)
+## 上下文空間工程(Context Engineering)
 
+
+在規格書這個場景下，由於目前LLM對試算表的文件型式尚無法像人類一樣理解，因此，我們嘗試透過「圖片」這樣的媒介來讓LLM理解文件內容。
+
+
+### 反推驗證
+
+
+在《MQuant: Unleashing the Inference Potential of Multimodal Large Language Models via Full Static Quantization》(Yu et al., 2025)的研究中我們可以確認，理解圖像所需要的詞元(Tokens)數是遠超過純文字的。因此從前人的研究也可以印證我們在實測時推論的可能性，所以如果我們可以繼續按照我們的實驗結果繼續推論下去，是不是我們只要把規格書都描述成文字，只要將整份規格書的描述足夠詳細，這樣的知識是否就可以完全被100%使用，可以正確的指引我們在設計或實作面的開發方向，成為行動的依據？我們接下來就先試著反推驗證一次，看在”有正確答案”的前提下，之前的那些問題的正確率能提升多少。
 
 
 ### 「各個擊破再合併」的解法
@@ -732,16 +738,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig:image6)。完全正確。可見�
 Model)的正確率也會雪崩式的下跌：
 
 
-![圖44：常見的VLM在不同解析度下的正確率崩跌](images/image32.png){#fig:image58}
+![圖43：常見的VLM在不同解析度下的正確率崩跌](images/image32.png){#fig:image58}
 
-如[「圖44」](#fig:image58)，Microsoft發表的LLaVA，Alibaba發表的Qwen等這些頂尖模型，在FullHD的解析
-
-度下就大幅下降，更別說是到4K或8K了。在這篇論文中所採取的策略就如同論文的標題所述，是採取「各個擊破再合併」的策略，但它的策略並不那麼適合規格書的樣態：
+如[「圖43」](#fig:image58)，Microsoft發表的LLaVA，Alibaba發表的Qwen等這些頂尖模型，在FullHD的解析度下就大幅下降，更別說是到4K或8K了。在這篇論文中所採取的策略就如同論文的標題所述，是採取「各個擊破再合併」的策略，但它的策略並不那麼適合規格書的樣態：
 
 
-![圖45：「各個擊破再合併」的策略](images/image59.png){#fig:image59}
+![圖44：「各個擊破再合併」的策略](images/image59.png){#fig:image59}
 
-如[「圖45」](#fig:image59)，它的分割方式是無條件的等分。在這篇論文中的目標是要回答「找到藍色雨傘」這樣的問題，這算是正確的設計。但我們的目標是要正確的描述規格，等分的切法只會讓LLM描述出許多不符需求的雜訊，即便再經過合併，品質也會很難控制。
+如[「圖44」](#fig:image59)，它的分割方式是無條件的等分。在這篇論文中的目標是要回答「找到藍色雨傘」這樣的問題，這算是正確的設計。但我們的目標是要正確的描述規格，等分的切法只會讓LLM描述出許多不符需求的雜訊，即便再經過合併，品質也會很難控制。
 
 
 ### 「文件佈局分析」的解法
@@ -750,9 +754,9 @@ Model)的正確率也會雪崩式的下跌：
 這個問題的解法對應的關鍵字是「文件佈局分析(Document Layout Analysis, DLA)」. Microsoft知名的LayoutLMv3(Y. Huang et al., 2022)技術，也是高度依賴DLA提供輔助資料來達到Document AI的目標。目前比較成熟的DLA技術，則是來自於PP-DocLayout(Sun et al., 2025)這個模型的實作，它支援的元素分析非常多種：
 
 
-![圖46：PP-Layout的輸入和輸出](images/image29.png){#fig:image60}
+![圖45：PP-Layout的輸入和輸出](images/image29.png){#fig:image60}
 
-如[「圖46」](#fig:image60)，基本上我們會需要的，應該就只有圖，字，表為最大宗，頂多就是也把算式也含進來。透過這個模型產出的幾何資訊(Transformation)，再輔以適當的提詞，預期就可以描述出足夠詳細的規格書知識。
+如[「圖45」](#fig:image60)，基本上我們會需要的，應該就只有圖，字，表為最大宗，頂多就是也把算式也含進來。透過這個模型產出的幾何資訊(Transformation)，再輔以適當的提詞，預期就可以描述出足夠詳細的規格書知識。
 
 1. 
 
@@ -786,5 +790,6 @@ Model)的正確率也會雪崩式的下跌：
 - Song, Z., Fan, L., & Chen, S. (2008). Knowledge sharing and innovation capability: Does absorptive capacity function as a mediator?2008 International Conference on Management Science and Engineering 15th Annual Conference Proceedings, 971–976. https://doi.org/10.1109/ICMSE.2008.4669030
 - Sun, T., Cui, C., Du, Y., & Liu, Y. (2025).PP-DocLayout: A Unified Document Layout Detection Model to Accelerate Large-Scale Data Construction(No. arXiv:2503.17213). arXiv. https://doi.org/10.48550/arXiv.2503.17213
 - Wang, W., Ding, L., Zeng, M., Zhou, X., Shen, L., Luo, Y., & Tao, D. (2024).Divide, Conquer and Combine: A Training-Free Framework for High-Resolution Image Perception in Multimodal Large Language Models(No. arXiv:2408.15556). arXiv. https://doi.org/10.48550/arXiv.2408.15556
+- Yu, J., Zhou, S., Yang, D., Wang, S., Li, S., Hu, X., Xu, C., Xu, Z., Shu, C., & Yuan, Z. (2025).MQuant: Unleashing the Inference Potential of Multimodal Large Language Models via Full Static Quantization(No. arXiv:2502.00425). arXiv. https://doi.org/10.48550/arXiv.2502.00425
 - Zheng, L., Luo, G., & Peng, D. (2025). The impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience: The moderation of knowledge network cohesion.Journal of Intellectual Capital, 1–24. https://doi.org/10.1108/JIC-11-2024-0382
 

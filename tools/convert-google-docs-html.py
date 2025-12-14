@@ -33,8 +33,10 @@ class GoogleDocsHTMLParser:
         self.metadata = {}
         self.content = []
         self.image_counter = 0
+        self.table_counter = 0
         self.citation_lookup = {}
         self.figure_map = {}  # Maps figure numbers (圖1, 圖2, etc.) to figure labels (fig:image1, fig:image2, etc.)
+        self.table_map = {}  # Maps table numbers (表1, 表2, etc.) to table labels (table_km_maturity, etc.)
         
     def load_citations(self):
         """Load citation lookup from collections.json."""
@@ -320,13 +322,18 @@ class GoogleDocsHTMLParser:
                     
         # Convert citations
         text = self._convert_citations(text)
-        # Replace figure reference links with correct figure labels
+        # Replace figure and table reference links with correct labels
         # Pattern: [「圖N」](#any_link) -> [「圖N」](#fig:imageN)
-        def replace_figure_link(match):
+        # Pattern: [「表N」](#any_link) -> [「表N」](#table_id)
+        def replace_figure_table_link(match):
             link_text = match.group(1)
-            # Extract figure number from link text
-            fig_match = re.search(r'[「]?[圖表](\d+)[」]?', link_text)
+            link_href = match.group(2) if len(match.groups()) > 1 else ''
+            # Check if it's a figure (圖) or table (表)
+            fig_match = re.search(r'[「]?[圖](\d+)[」]?', link_text)
+            table_match = re.search(r'[「]?[表](\d+)[」]?', link_text)
+            
             if fig_match:
+                # Handle figure reference
                 fig_num = fig_match.group(1)
                 fig_key = f"圖{fig_num}"
                 # Try to find in figure_map first
@@ -339,9 +346,22 @@ class GoogleDocsHTMLParser:
                 # If not found in map, construct the label directly: fig:image{N}
                 # This handles cases where the map lookup fails but we know the figure number
                 return f"[{link_text}](#fig:image{fig_num})"
+            elif table_match:
+                # Handle table reference
+                table_num = table_match.group(1)
+                table_key = f"表{table_num}"
+                # Try to find in table_map first
+                if table_key in self.table_map:
+                    return f"[{link_text}](#{self.table_map[table_key]})"
+                # Also try with quotes
+                table_key_quoted = f"「表{table_num}」"
+                if table_key_quoted in self.table_map:
+                    return f"[{link_text}](#{self.table_map[table_key_quoted]})"
+                # Always use table_{num} format
+                return f"[{link_text}](#table_{table_num})"
             return match.group(0)  # Return original if no match found
         
-        text = re.sub(r'\[([「]?[圖表]\d+[」]?)\]\([^\)]+\)', replace_figure_link, text)
+        text = re.sub(r'\[([「]?[圖表]\d+[」]?[：:]?)\]\(([^\)]+)\)', replace_figure_table_link, text)
         
         # Remove duplicate citations with links: [[@citation]](url)[@citation] -> [@citation]
         text = re.sub(r'\[\[(@[^\]]+)\]\]\([^\)]+\)\[@[^\]]+\]', r'[\1]', text)
@@ -444,6 +464,26 @@ class GoogleDocsHTMLParser:
                 markdown_rows.insert(1, separator)
                 
             self.content.append("\n" + "\n".join(markdown_rows) + "\n\n")
+            
+            # Try to find caption in the following paragraph
+            caption, caption_para, table_id = self._extract_table_caption(table_elem)
+            if caption and table_id:
+                # Extract table number from caption and store mapping
+                table_match = re.search(r'[「]?[表](\d+)[」]?', caption)
+                if table_match:
+                    table_num = table_match.group(1)
+                    table_key = f"表{table_num}"
+                    self.table_map[table_key] = table_id
+                    # Also map variations like "「表1」"
+                    self.table_map[f"「表{table_num}」"] = table_id
+                
+                # Add caption with table ID using Pandoc attribute syntax
+                # The caption is already formatted as [「表N」]{#table_id}rest_of_caption
+                self.content.append(f"{caption}\n\n")
+                
+                # Mark caption paragraph to skip if found
+                if caption_para:
+                    caption_para['data-skip'] = 'true'
             
     def _convert_image(self, img_elem, parent_elem=None):
         """Convert image to Markdown format with caption in alt text."""
@@ -575,6 +615,60 @@ class GoogleDocsHTMLParser:
             return (caption if caption else None, caption_para)
         
         return (None, None)
+    
+    def _extract_table_caption(self, table_elem):
+        """Extract table caption from following paragraph.
+        Returns (caption_text, caption_paragraph_element, table_id).
+        """
+        caption_parts = []
+        caption_para = None
+        table_id = None
+        
+        # Look for caption in the next paragraph after the table
+        next_p = table_elem.find_next('p')
+        if next_p:
+            # Get the raw text from the paragraph (before any markdown processing)
+            caption_text = next_p.get_text(strip=True)
+            # Check if it looks like a table caption
+            # Pattern: [表N：](#link) description or 表N： description or [「表N」](#link) description
+            if caption_text and re.search(r'[表]\d+', caption_text):
+                caption_para = next_p
+                
+                # Extract table number from the caption text
+                table_match = re.search(r'[「]?[表](\d+)[」]?', caption_text)
+                if table_match:
+                    table_num = table_match.group(1)
+                    # Always generate table ID as table_{num}
+                    table_id = f"table_{table_num}"
+                    
+                    # Extract the table reference part (e.g., "「表1」")
+                    table_ref_match = re.search(r'[「]?[表]\d+[」]?', caption_text)
+                    if table_ref_match:
+                        table_ref = table_ref_match.group(0)
+                        
+                        # Find the rest of the caption after any link containing the table reference
+                        # Pattern: [「表1」](#table_1)「知識管理」的成熟度
+                        # We want to extract "「知識管理」的成熟度"
+                        # First, try to find text after a markdown link pattern
+                        link_pattern = r'\[[^\]]*[「]?[表]\d+[」]?[^\]]*\]\([^\)]+\)'
+                        link_match = re.search(link_pattern, caption_text)
+                        if link_match:
+                            # Get text after the link
+                            rest_of_caption = caption_text[link_match.end():].strip()
+                        else:
+                            # No link found, remove the table reference and any colon
+                            caption_clean = re.sub(r'[「]?[表]\d+[」]?[：:]?\s*', '', caption_text)
+                            rest_of_caption = caption_clean.strip()
+                        
+                        # Format: [「表N」]{#table_id}rest_of_caption (using curly braces for Pandoc attributes)
+                        # Use double curly braces in f-string to produce single curly braces in output
+                        if rest_of_caption:
+                            full_caption = f"[{table_ref}]{{#{table_id}}}{rest_of_caption}"
+                        else:
+                            full_caption = f"[{table_ref}]{{#{table_id}}}"
+                        return (full_caption, caption_para, table_id)
+        
+        return (None, None, None)
             
     def _convert_html_to_markdown_basic(self, html_content: str):
         """Basic HTML to Markdown conversion without BeautifulSoup."""
