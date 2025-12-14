@@ -421,18 +421,14 @@ class GoogleDocsHTMLParser:
     def _convert_image(self, img_elem):
         """Convert image to Markdown format."""
         src = img_elem.get('src', '')
-        alt = img_elem.get('alt', '')
         
         # Extract image filename
         if 'images/' in src:
             filename = src.split('images/')[-1].split('?')[0]  # Remove query params if any
             self.image_counter += 1
             label = f"fig:image{self.image_counter}"
-            # Use alt text or generate default
-            if not alt:
-                alt = f"Figure {self.image_counter}"
             # Copy image will be handled separately
-            self.content.append(f"\n![{alt}](images/{filename}){{#{label} width=80%}}\n\n")
+            self.content.append(f"\n![](images/{filename}){{#{label}}}\n\n")
             
     def _convert_html_to_markdown_basic(self, html_content: str):
         """Basic HTML to Markdown conversion without BeautifulSoup."""
@@ -448,12 +444,11 @@ class GoogleDocsHTMLParser:
         # Convert images
         def replace_image(match):
             src = match.group(1)
-            alt = match.group(2) if match.group(2) else ""
             if 'images/' in src:
                 filename = src.split('images/')[-1]
                 self.image_counter += 1
                 label = f"fig:image{self.image_counter}"
-                return f"\n![{alt}](images/{filename}){{#{label} width=80%}}\n\n"
+                return f"\n![](images/{filename}){{#{label}}}\n\n"
             return match.group(0)
             
         html_content = re.sub(r'<img[^>]*src=["\']([^"\']*)["\'][^>]*alt=["\']([^"\']*)["\']', replace_image, html_content, flags=re.IGNORECASE)
@@ -584,6 +579,7 @@ header-includes:
 - \\usepackage{{xeCJK}}
 - \\setCJKmainfont{{Noto Sans CJK TC}}
 - \\usepackage[a4paper,margin=1in]{{geometry}}
+- \\usepackage{{placeins}}
 - |
     \\usepackage{{etoolbox}}
     \\AtBeginEnvironment{{CSLReferences}}{{
@@ -594,6 +590,7 @@ header-includes:
     \\pretocmd{{\\listoffigures}}{{\\clearpage}}{{}}{{}}
     \\pretocmd{{\\listoftables}}{{\\clearpage}}{{}}{{}}
     \\apptocmd{{\\listoftables}}{{\\clearpage}}{{}}{{}}
+    \\pretocmd{{\\section}}{{\\FloatBarrier}}{{}}{{}}
 figPrefix: "圖"
 tblPrefix: "表"
 rangeDelim: "–"

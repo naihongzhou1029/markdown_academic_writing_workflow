@@ -8,6 +8,7 @@
 		"files.encoding": "utf8",
 		"makefile.configureOnOpen": false,
 		"terminal.integrated.inheritEnv": true,
+		"terminal.integrated.tabs.focusMode": "singleClick",
 		"terminal.integrated.profiles.windows": {
 			"Command Prompt": {
 				"path": [

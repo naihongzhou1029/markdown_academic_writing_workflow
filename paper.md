@@ -18,6 +18,7 @@ header-includes:
 - \usepackage{xeCJK}
 - \setCJKmainfont{Noto Sans CJK TC}
 - \usepackage[a4paper,margin=1in]{geometry}
+- \usepackage{placeins}
 - |
     \usepackage{etoolbox}
     \AtBeginEnvironment{CSLReferences}{
@@ -28,6 +29,7 @@ header-includes:
     \pretocmd{\listoffigures}{\clearpage}{}{}
     \pretocmd{\listoftables}{\clearpage}{}{}
     \apptocmd{\listoftables}{\clearpage}{}{}
+    \pretocmd{\section}{\FloatBarrier}{}{}
 figPrefix: "圖"
 tblPrefix: "表"
 rangeDelim: "–"
@@ -175,10 +177,10 @@ numbersections: true
 
 現今有許多知識密集性產業，只是輸出的型式不同而已。在個案遊戲公司就是一個鮮明的例子。拜科技進步所賜，製作遊戲已非高技術門檻的目標，成熟的遊戲引擎已可讓國中生就可以製作出一個可運行的遊戲。但若是要製作出高品質或是受歡迎的遊戲產品，這當中牽涉的環節就相當多。所謂的「環節」，就是各家遊戲公司或工作室所掌握的「內隱知識(Tacit Knowledge)」。
 
-不論是遊戲產業或是工程領域，通常會稱呼這類知識叫做「Know-How」。許多的研究都表明，有組織有效率的「知識管理流程(Knowledge Management Process,KMP)」，會給企業帶來更多的「創新能力(Innovation Creation, IC)」以及更好的「組織效能(Organization Performance, OP)」[@mardaniRelationshipKnowledgeManagement2018]。為什麼呢？除了讓組織裡的成員能在更好的基礎上，去思考解決問題的可能性，研究表明，更好的KMP通常代表著具有更創新的空間[@huangMediatingEffectKnowledge2009]能讓成員去發展想法，更創新的想法就會有更高的機率去促成更好的OP[@grantKnowledgeManagementKnowledgeBased2006]。KMP, IC和OP三者的關係如[「圖1」](#fig_relationship_between_kmp_ic_op)：
+不論是遊戲產業或是工程領域，通常會稱呼這類知識叫做「Know-How」。許多的研究都表明，有組織有效率的「知識管理流程(Knowledge Management Process,KMP)」，會給企業帶來更多的「創新能力(Innovation Creation, IC)」以及更好的「組織效能(Organization Performance, OP)」[@mardaniRelationshipKnowledgeManagement2018]。為什麼呢？除了讓組織裡的成員能在更好的基礎上，去思考解決問題的可能性，研究表明，更好的KMP通常代表著具有更創新的空間(J. Huang & Li, 2009)能讓成員去發展想法，更創新的想法就會有更高的機率去促成更好的OP[@grantKnowledgeManagementKnowledgeBased2006]。KMP, IC和OP三者的關係如[「圖1」](#fig_relationship_between_kmp_ic_op)：
 
 
-![KMP, IC和OP的影響關係](images/image24.png){#fig:image1 width=80%}
+![](images/image24.png){#fig:image1}
 
 [圖1：](#figur_relationship_between_kmp_ic_op) [@mardaniRelationshipKnowledgeManagement2018]
 
@@ -221,17 +223,17 @@ numbersections: true
 ### 目前為止有無終極解法？
 
 
-早期的著作如《The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data》[@kimballDataWarehouseETL2004]，講述的都是純文字的資料處理(e.g. XML)或是資料庫的轉換。富比士的[統計](https://www.google.com/url?q=https://kommandotech.com/statistics/big-data-statistics/&sa=D&source=editors&ust=1765337410062691&usg=AOvVaw2z0f16aeRStLm7rrc_xl4U)統計也呼應了實務上的困境：企業中95%的資料都是無結構化(Unstructurized)型式的資料，也就是無法做為知識庫的資料。為了要能夠把無結構化的資料變成所謂的知識，各個時期的科技公司都有不同的做法，如[「圖2」](#fig_techs_use_for_information_extraction)：
+早期的著作如《The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data》[@kimballDataWarehouseETL2004]，講述的都是純文字的資料處理(e.g. XML)或是資料庫的轉換。富比士的[統計](https://www.google.com/url?q=https://kommandotech.com/statistics/big-data-statistics/&sa=D&source=editors&ust=1765543189342258&usg=AOvVaw3GMosp2a8gREaBtZD9lq70)統計也呼應了實務上的困境：企業中95%的資料都是無結構化(Unstructurized)型式的資料，也就是無法做為知識庫的資料。為了要能夠把無結構化的資料變成所謂的知識，各個時期的科技公司都有不同的做法，如[「圖2」](#fig_techs_use_for_information_extraction)：
 
 
-![Figure 2](images/image28.png){#fig:image2 width=80%}
+![](images/image28.png){#fig:image2}
 
 [圖2：](#figur_techs_use_for_information_extraction) : Evolution of the techniques used for information extraction from unstructured documents [@baviskarEfficientAutomatedProcessing2021]
 
 最早期是完全人工處理，後來導入了光學字元辨識(Optical Character Recognition,OCR)技術，再加上機器程序自動化(Robotics Processes Automation,RPA)後，僅管已經減少了不少人力，但對於資訊的頡取還是有不足之處，因為有的文件已毀損不清，有的內容語焉不詳。到了基於變換器的雙向編碼器表示技術（Bidirectional Encoder Representations from Transformers，BERT）這種基於自然語言處理（Natural Language Processing,NLP）的預訓練技術加入後，文字的處理品質有了極大的提升，文字幾乎已經不再是問題。真正困難的問題只剩下表格(Tables)類及訊息圖表(Figures, Diagrams and Infographics)類的資訊。這類的文件就非常依賴領域知識(Domain Knowledge)才能做正確的解讀，如金融領域類的知識萃取雖然比較成熟(Pejić Bach et al., 2019)。但技術上還沒有太大的突破，還是需要有不少的資料前處理(Text Pre-Processing),如[圖3：](#figur_ner_workflow)
 
 
-![Figure 3](images/image33.png){#fig:image3 width=80%}
+![](images/image34.png){#fig:image3}
 
 [「圖3」](#fig_ner_workflow) NAMED ENTITY RECOGNITION (NER) Workflow
 
@@ -262,7 +264,7 @@ numbersections: true
 本研究的重點目標為「萃取」。為了儘可能保證研究的客觀性和一致性，在這裡我們針對「萃取」進行一個兼具理論和實務的定義。
 
 
-![Figure 4](images/image59.png){#fig:image4 width=80%}
+![](images/image60.png){#fig:image4}
 
 [圖4：](#figur_dik_meaning_value) 資料(Data)，資訊(Information)和知識(Knowledge)的意義及價值
 
@@ -274,7 +276,7 @@ numbersections: true
 ## 目標文件及其驗收標準
 
 
-本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://www.google.com/url?q=https://youtu.be/rZyODkoJsp0&sa=D&source=editors&ust=1765337410075011&usg=AOvVaw0rdgxQbHrGsLyQgrzynWHh)IGS宙斯悦华软件批发测试中」，遊戲規格書是「[《宙斯》規格](https://www.google.com/url?q=https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp%3Dsharing&sa=D&source=editors&ust=1765337410075287&usg=AOvVaw0q-59SlstRCL5uLNSebnaL)《宙斯》規格」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
+本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://www.google.com/url?q=https://youtu.be/rZyODkoJsp0&sa=D&source=editors&ust=1765543189354646&usg=AOvVaw3r5ecM1fTtsO22R9-uzoLo)IGS宙斯悦华软件批发测试中」，遊戲規格書是「[《宙斯》規格](https://www.google.com/url?q=https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp%3Dsharing&sa=D&source=editors&ust=1765543189354936&usg=AOvVaw2iKKJLZn4cn0FobGUGu5O2)《宙斯》規格」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
 
 測試驗證的方向可簡單分為以下三類：純文字理解，內建圖像理解，以及表格內容理解。目前對一般用戶而言，像是Gemini或是ChatGPT這樣的產品是接受度最高的，而且這些產品都有兩種推論(Reasoning)深度，一個是快速反應，另一個即為深入思考。如字義，快速反應的思考深度就不會太深，深入思考的反應速度就不快。以我們要驗證的方向而言，我們就會優先以快速反應作為第一層測試，若理解有偏差，就會改用深入思考的模式再行測試。測試的產品先以Gemini來測試，也會在ChatGPT上測試。整個測試的流程就是「Gemini 2.5 Flash ⇒ Gemini 2.5 Pro ⇒ ChatGPT 5 ⇒ ChatGPT 5 Reasoning」。
 
@@ -299,14 +301,14 @@ numbersections: true
 
 
 
-![Figure 5](images/image10.png){#fig:image5 width=80%}
+![](images/image10.png){#fig:image5}
 
 [圖5：](#figur_plain_texts_test_01) 倍數表(Odds Table)內容
 
 在規格書的內容如[「圖5」](#fig_plain_texts_test_01)。純文字的內容算是連續排列，AI應可讀取完整內容，要測試的主要是AI的預訓練模型知識中，能否直接理解老虎機遊戲(Slot Game)常見行話(Jargon)以及會不會被其他內容誤解。3x5是「3列5欄」，但可以是15輪，也可以是5輪。至於有多少個「符號(Symbol)」也是一樣的道理，這個領域對轉出來的東西行話確實也就是「Symbol」。
 
 
-![Figure 6](images/image42.png){#fig:image6 width=80%}
+![](images/image43.png){#fig:image6}
 
 [圖6：](#figur_gemini_plain_texts_test_01) 「這個遊戲有多少個符號？是幾輪幾線的遊戲？」的對話內容
 
@@ -317,17 +319,17 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 7](images/image9.png){#fig:image7 width=80%}
+![](images/image9.png){#fig:image7}
 
 
-![Figure 8](images/image10.png){#fig:image8 width=80%}
+![](images/image10.png){#fig:image8}
 
 [圖7：](#figur_gemini_plain_texts_answer_02) 免費遊戲的條件
 
 答案如[「圖7」](#fig_gemini_plain_texts_answer_02)。這裡要測試AI是否能夠理解「免費遊戲」跟「免費旋轉」是同一件事。而且在不同的位置，都有似是而非，模梭兩可的內容，還帶有一些”雜訊”，像是「MG出現3/4/5顆」或是「(FG不出現)」，都是測試的一部分。
 
 
-![Figure 9](images/image40.png){#fig:image9 width=80%}
+![](images/image41.png){#fig:image9}
 
 [圖8：](#figur_gemini_plain_texts_test_02) Gemini回答「免費遊戲的條件是？」
 
@@ -338,14 +340,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 10](images/image13.png){#fig:image10 width=80%}
+![](images/image13.png){#fig:image10}
 
 [圖9：](#figur_plain_texts_test_03) 主遊戲的特殊玩法及觸發條件
 
 如[「圖9」](#fig_plain_texts_test_03)，答案在「Feature」這張工作表(Worksheet)中。試算表類型的文件和一般的文件最大的不同就是，它會含有不同的工作表，以區隔不同主題的內容。當然，這也是方便人類閱讀的設計之一，但AI是否能理解這還是在同一份文件的內容？會不會AI只看得到「規格文件(第一張工作表)」的內容而已？這是這項測試主要驗證的目標。
 
 
-![Figure 11](images/image12.png){#fig:image11 width=80%}
+![](images/image12.png){#fig:image11}
 
 [圖10：](#figur_gemini_plain_texts_test_03) Gemini回答「在主遊戲有什麼特殊玩法？觸發條件是？」
 
@@ -356,21 +358,21 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 12](images/image6.png){#fig:image12 width=80%}
+![](images/image6.png){#fig:image12}
 
 [圖11：](#figur_plain_texts_test_04) 跟特殊遊戲(Feature Game)有關的音效
 
 如[「圖11」](#fig_plain_texts_test_04)，在題目上我們再做了一個變化，同樣也是老虎機遊戲領域內的一個行話「特殊遊戲(Feature Game)」。這個行話的定義就比較會有分岐，有人認為特殊遊戲是綁定遊戲主題，有特殊玩法的「獎勵遊戲(Bonus Game)」；也有人認為只要不是主遊戲，其他像是免費遊戲，獎勵遊戲還是其他不同玩法的遊戲，因為絕大多數的設計也必然是綁定主題，或是法規需求的，所以皆可通稱為特殊遊戲，是一個分類名。我們也透過這樣的驗證，來瞭解AI對這個領域的認知是否跟我們的一致？如果它找不到答案，看看它的推論理由為何。
 
 
-![Figure 13](images/image30.png){#fig:image13 width=80%}
+![](images/image31.png){#fig:image13}
 
 [圖12：](#figur_gemini_plain_texts_test_04) Gemini找不到和「特殊遊戲」相關的音效
 
 如[「圖12」](#fig_gemini_plain_texts_test_04)，Gemini 2.5 Flash 明確反映規格書中沒有相關的內容。它的理由是僅將「整輪Wild」這樣的玩法視為是一種特殊玩法。可即便如此，它仍然沒有將[「圖12」](#fig_gemini_plain_texts_test_04)中的「三顆堆疊Symbol變成Wild音效」視為特殊遊戲相關的音效。因此，接下來我們將進行深入思考的階段(如[「圖13」](#fig_gemini_plain_texts_test_05_with_pro))來測試看看，”多想想”能不能找到該有的答案。
 
 
-![Figure 14](images/image55.png){#fig:image14 width=80%}
+![](images/image56.png){#fig:image14}
 
 [圖13：](#figur_gemini_plain_texts_test_05_with_pro) 切換到Gemini 2.5 Pro詢問同一個問題
 
@@ -381,14 +383,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 15](images/image20.png){#fig:image15 width=80%}
+![](images/image20.png){#fig:image15}
 
 [圖14：](#figur_plain_texts_test_05) 「長條堆疊圖騰」規格
 
 如[「圖14」](#fig_plain_texts_test_05)，這需要AI先理解「長條堆疊圖騰」，在規格書中其實被拆成2段說明。一個是「堆疊圖騰」，另一個則是「長幅WILD圖騰」。這就是實務上的知識庫，和單純的搜尋的不同之處，如果僅是搜尋「長條堆疊圖騰」是搜不到”正確”答案的，因為其實在規格書是有另一種說法的，但只要是有內隱知識的企劃人員，都會理解那就是同一回事。其次，在規格書中，這個流程也被拆成多段分別說明了，我們要測試的目標，就是看看AI能否串連所有的文字一併理解。
 
 
-![Figure 16](images/image17.png){#fig:image16 width=80%}
+![](images/image17.png){#fig:image16}
 
 [圖15：](#figur_gemini_plain_texts_test_05) Gemini無法找到「消失時間」
 
@@ -431,14 +433,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 17](images/image2.png){#fig:image17 width=80%}
+![](images/image2.png){#fig:image17}
 
 [圖16：](#figur_image_test_01) 「一般symbol」有哪些？
 
 如[「圖16」](#fig_image_test_01)，我們可以看到，規格書並沒有針對這些符號作出解釋或描述。我們幾乎可以預期得到，這個題目如果拿去詢問AI的話，在沒有文字的情況下，AI應該是無法正確的回答的。
 
 
-![Figure 18](images/image16.png){#fig:image18 width=80%}
+![](images/image16.png){#fig:image18}
 
 [圖17：](#figur_gemini_image_test_01) 沒有列出這11個一般symbol的具體名稱
 
@@ -449,14 +451,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 19](images/image3.png){#fig:image19 width=80%}
+![](images/image3.png){#fig:image19}
 
 [圖18：](#figur_image_test_02) 「特殊symbol」長什麼樣子？
 
 如[「圖18」](#fig_image_test_02)，和前一題類似，儘管在圖的右側有”SCATTER”這樣的文字註解，但其實正確答案並不是”SCATTER”，這個特殊symbol的描述應該是”紅底金字的FREE GAME”這類的內容，我們來看看AI會怎麼回答。
 
 
-![Figure 20](images/image1.png){#fig:image20 width=80%}
+![](images/image1.png){#fig:image20}
 
 [圖19：](#figur_gemini_image_test_02) Gemini無法描述「特殊symbol」長什麼樣子
 
@@ -467,17 +469,17 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 21](images/image26.png){#fig:image21 width=80%}
+![](images/image26.png){#fig:image21}
 
 
-![Figure 22](images/image38.png){#fig:image22 width=80%}
+![](images/image39.png){#fig:image22}
 
 [圖20：](#figur_image_test_03) 「長幅WILD圖騰」是長什麼樣子的？
 
 如[「圖20」](#fig_image_test_03)，規格書其實是使用了兩張圖作為展演的分鏡說明。上圖是說明當三個「神殿」符號堆疊在一起的時候，會擴展成一個如下圖的「宙斯長幅WILD圖騰」。這也是在考驗AI是否能正確理解，用戶的問題其實是在詢問下圖的內容。
 
 
-![Figure 23](images/image8.png){#fig:image23 width=80%}
+![](images/image8.png){#fig:image23}
 
 [圖21：](#figur_gemini_image_test_03) Gemini無法描述「長幅WILD圖騰」長什麼樣子
 
@@ -490,10 +492,10 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 其實這一題所需要理解的圖，也是[「圖20」](#fig_image_test_03)這一張。主要的按鈕就是「開始旋轉」，「最大押注」，「快速」，「+/-」或「購買」的這些。玩家的資產就是最上方「福」的右邊那串數字，「贏分」是正下方的數字，累積彩金是「購買」鈕的右側數字。接下來就看看AI能找到多少。
 
 
-![Figure 24](images/image48.png){#fig:image24 width=80%}
+![](images/image49.png){#fig:image24}
 
 
-![Figure 25](images/image29.png){#fig:image25 width=80%}
+![](images/image30.png){#fig:image25}
 
 [圖22：](#figur_gemini_image_test_04) Gemini嘗試透過其他資訊反推可能的答案
 
@@ -504,14 +506,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 26](images/image36.png){#fig:image26 width=80%}
+![](images/image37.png){#fig:image26}
 
 [圖23：](#figur_image_test_05) Info頁有幾頁內容？
 
 如[「圖23」](#fig_image_test_05)，在「INFO」工作表中，最後一頁是「Page 3(派彩線數 50 LINES)」。如果只是問Info頁有幾頁內容，估計AI可透過”Page 3”得知有3頁，但「內容是什麼」這題就還是需要AI確實理解圖片內容才行，而且是三頁都要能理解。
 
 
-![Figure 27](images/image44.png){#fig:image27 width=80%}
+![](images/image45.png){#fig:image27}
 
 [圖24：](#figur_gemini_image_test_05) Gemini找到3頁Info
 
@@ -552,14 +554,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 28](images/image14.png){#fig:image28 width=80%}
+![](images/image14.png){#fig:image28}
 
 [圖25：](#figur_table_test_01) 「動畫」類的需求
 
 如[「圖25」](#fig_table_test_01)，我們先測試一個簡單的。從編號17的「Free Game瞇牌」到編號22的「Wild Symbol移動」6個項目就是動畫類的需求，儘管我們從編號1到編號16插入了合併儲存格，但這應該不影響AI判讀表格的內容。
 
 
-![Figure 29](images/image45.png){#fig:image29 width=80%}
+![](images/image46.png){#fig:image29}
 
 [圖26：](#figur_gemini_table_test_01) 「動畫」類的需求有哪些？
 
@@ -572,7 +574,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 如[「圖25」](#fig_table_test_01)，這就是對著「合併儲存格」測試。即便在2025年09月的Gemini，仍然無法正確的理解合併儲存格的內容，現在我們再試試看是否有進步。
 
 
-![Figure 30](images/image39.png){#fig:image30 width=80%}
+![](images/image40.png){#fig:image30}
 
 [圖27：](#figur_gemini_table_test_02) 有哪些是「靜態」類的需求？
 
@@ -583,14 +585,14 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 31](images/image25.png){#fig:image31 width=80%}
+![](images/image25.png){#fig:image31}
 
 [圖28：](#figur_table_test_03) 這個遊戲有使用「聽牌音」嗎？
 
 如[「圖28」](#fig_table_test_03)，這是個很”狡猾”的問題。人類看到灰底的這一列，通常都會意識到，這應該是一筆有特殊意義的資料。以企劃人員而言，他們更是會很直覺的認為，這100%就是代表「不使用」的意思。但，AI會有同樣的”sense”嗎？
 
 
-![Figure 32](images/image18.png){#fig:image32 width=80%}
+![](images/image18.png){#fig:image32}
 
 [圖29：](#figur_gemini_table_test_03) 有使用「聽牌音」嗎？
 
@@ -601,17 +603,17 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 33](images/image46.png){#fig:image33 width=80%}
+![](images/image47.png){#fig:image33}
 
 [圖30：](#figur_table_test_04) 共用/專屬音效有哪些？
 
 如[「圖30」](#fig_table_test_04)，這個題目另一種合併儲存格。典型的表格，欄位確實都是整齊排好的，但這次的「共用」及「遊戲」卻是在欄位列合併而成，用以表示同欄位的更高層分類。人類讀者一樣可以很容易理解這個概念，但AI是否一樣可以這樣理解？
 
 
-![Figure 34](images/image51.png){#fig:image34 width=80%}
+![](images/image52.png){#fig:image34}
 
 
-![Figure 35](images/image57.png){#fig:image35 width=80%}
+![](images/image58.png){#fig:image35}
 
 [圖31：](#figur_gemini_table_test_04) Gemini找到共用/專屬音效
 
@@ -622,17 +624,17 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 36](images/image22.png){#fig:image36 width=80%}
+![](images/image22.png){#fig:image36}
 
 
-![Figure 37](images/image32.png){#fig:image37 width=80%}
+![](images/image33.png){#fig:image37}
 
 [圖32：](#figur_table_test_05) 「100倍獎線獎報獎」和「轉場動畫音效」的品質是多少KBits？
 
 如[「圖32」](#fig_table_test_05)，這是一個跨度較大的理解題。人類讀者基本上是可以理解文件的「結構」的，也就是說，最上面的「機種名稱」，「品質」，「格式」或「位元」等這些欄位，是用來宣告下方這些資料的共通屬性的。那，AI能嗎？
 
 
-![Figure 38](images/image27.png){#fig:image38 width=80%}
+![](images/image27.png){#fig:image38}
 
 [圖33：](#figur_gemini_table_test_05) 「100倍獎線獎報獎」和「轉場動畫音效」的品質
 
@@ -677,10 +679,10 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 如[「表5」](#tab_describe_symbols)(用表格是為了排版美觀，實際上輸出內容是連續文字內容)，當圖中的符號變成文字之後，同一個題目我們再問一次，是否能得到正確答案呢？
 
 
-![Figure 39](images/image11.png){#fig:image39 width=80%}
+![](images/image11.png){#fig:image39}
 
 
-![Figure 40](images/image47.png){#fig:image40 width=80%}
+![](images/image48.png){#fig:image40}
 
 [圖34：](#figur_gemini_pass_image_test_01) Gemini可正確回答「一般symbol有哪些？」內嵌圖片題
 
@@ -697,20 +699,20 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 
 
 
-![Figure 41](images/image4.png){#fig:image41 width=80%}
+![](images/image4.png){#fig:image41}
 
 [圖35：](#figur_describe_symbol_odds) 直接要求AI描述符號及倍數
 
 如[「圖35」](#fig_describe_symbol_odds)，雖然說是”直接”，但還是必須要稍微解釋一下，這是老虎機的符號表，以及我們要AI做什麼。
 
 
-![Figure 42](images/image60.png){#fig:image42 width=80%}
+![](images/image61.png){#fig:image42}
 
 
-![Figure 43](images/image5.png){#fig:image43 width=80%}
+![](images/image5.png){#fig:image43}
 
 
-![Figure 44](images/image19.png){#fig:image44 width=80%}
+![](images/image19.png){#fig:image44}
 
 [圖36：](#figur_gemini_can_describe_symbol_odds) Gemini可以直接描述符號表截圖中的符號及倍數
 
@@ -723,20 +725,20 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 對於單純的帶圖的表格及文字，我們幾乎直接叫AI描述就解決了。但若是像[「圖20」](#fig_image_test_03)那樣的遊戲介面，只是叫它”描述”出來固然還是可以得到不少內容，可如果我們想要更多更關鍵的內容，我們可以帶入「遊戲開發者」的身份來叫AI描述：
 
 
-![Figure 45](images/image35.png){#fig:image45 width=80%}
+![](images/image36.png){#fig:image45}
 
 [圖37：](#figur_describe_as_developer) 以「遊戲開發人員」的身份來描述
 
 如[「圖37」](#fig_describe_as_developer)，在我們的提詞中有幾個重要的項目。首先有宣告這是遊戲畫面的截圖，再來就是要以「遊戲開發人員」的身份去描述，要聚焦的重點是「介面」及「可能的規格」。
 
 
-![Figure 46](images/image15.png){#fig:image46 width=80%}
+![](images/image15.png){#fig:image46}
 
 
-![Figure 47](images/image37.png){#fig:image47 width=80%}
+![](images/image38.png){#fig:image47}
 
 
-![Figure 48](images/image21.png){#fig:image48 width=80%}
+![](images/image21.png){#fig:image48}
 
 [圖38：](#figur_gemini_describe_main_game_as_developer) Gemini以開發者身份，詳細描述了主畫面中出現的重要元素
 
@@ -749,16 +751,16 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 在[「圖23」](#fig_image_test_05)中，我們知道規格書有「派彩線」的相關資料，這是50條派彩線的內容。但，這也是一個圖像資訊。如果我們沒有將其文字化，AI一樣是沒有辦法回答這部分的問題的。我們一樣可以透過遊戲開發者的身份，要求AI輸出”方便開發者引入程式”的型式的資料：
 
 
-![Figure 49](images/image49.png){#fig:image49 width=80%}
+![](images/image50.png){#fig:image49}
 
 
-![Figure 50](images/image43.png){#fig:image50 width=80%}
+![](images/image44.png){#fig:image50}
 
 
-![Figure 51](images/image53.png){#fig:image51 width=80%}
+![](images/image54.png){#fig:image51}
 
 
-![Figure 52](images/image52.png){#fig:image52 width=80%}
+![](images/image53.png){#fig:image52}
 
 [圖39：](#figur_gemini_describe_paylines) Gemini輸出「派彩線」資料
 
@@ -771,31 +773,31 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 目前為止，我們的實驗都是一小塊一小塊的截圖測試，結果都讓人很滿意。如果一小塊驗證都沒問題了，那我們是否可以一口氣給一整頁，然後叫AI全部描述出來就好了？
 
 
-![Figure 53](images/image7.png){#fig:image53 width=80%}
+![](images/image7.png){#fig:image53}
 
 [圖40：](#figur_describe_whole_info) 直接對整個Info頁描述內容
 
 如[「圖40」](#fig_describe_whole_info)，為了避免直接截一張大圖，解析度可能不足的狀況，我們直接截成三張圖。請AI詳細描述整個Info頁的內容。
 
 
-![Figure 54](images/image54.png){#fig:image54 width=80%}
+![](images/image55.png){#fig:image54}
 
 
-![Figure 55](images/image41.png){#fig:image55 width=80%}
+![](images/image42.png){#fig:image55}
 
 [圖41：](#figur_gemini_describe_whole_info) Gemini分析整個Info頁
 
 如[「圖41」](#fig_gemini_describe_whole_info)，AI並不會因為我們拆成三張圖，就以為這是3個不同的規格，起碼它認為這是一個Info頁中的3個區塊。但在「派彩線(50 LINES)」這一段我們就會發現一個奇怪的狀況，它只寫「1到50號派彩線…」這樣的內容，並沒有”詳細”輸出所有的內容。即便我們繼續要求下去，對AI而言，它就是沒有足夠的資訊：
 
 
-![Figure 56](images/image50.png){#fig:image56 width=80%}
+![](images/image51.png){#fig:image56}
 
 
-![Figure 57](images/image23.png){#fig:image57 width=80%}
+![](images/image23.png){#fig:image57}
 
-[圖](#figur_gemini_cant_describe_paylines)圖 AI無法轉換所有複雜路徑
+[圖42：](#figur_gemini_cant_describe_paylines) AI無法轉換所有複雜路徑
 
-如[圖](#fig_gemini_cant_describe_paylines)圖，AI直接明說了，它做不到。這究竟是怎麼回事呢？明明在「[產出「派彩線」資料](#h.dv3rlbjd1y7a)產出「派彩線」資料」那次的測試很順利呀，怎麼這次卻做不到了呢？其實這就是目前各AI模型普遍的軟肋：「上下文空間不足(Insufficient Context Length)」的問題。
+如[「圖42」](#fig_gemini_cant_describe_paylines)，AI直接明說了，它做不到。這究竟是怎麼回事呢？明明在「[產出「派彩線」資料](#h.dv3rlbjd1y7a)產出「派彩線」資料」那次的測試很順利呀，怎麼這次卻做不到了呢？其實這就是目前各AI模型普遍的軟肋：「上下文空間不足(Insufficient Context Length)」的問題。
 
 
 ## 上下文空間工程解法(Context Engineering Solution)
@@ -805,27 +807,40 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 ### 「各個擊破再合併」的解法
 
 
-在《Divide, Conquer and Combine: A Training-Free Framework for High-Resolution Image Perception in Multimodal Large Language Models》(Wang et al., 2024) 中也是在處理同一個問題，當面對4K或甚至8K的圖像的時候，即便是專屬的VLM(Visual Language Model)的正確率也會雪崩式的下跌：
+在《Divide, Conquer and Combine: A Training-Free Framework for High-Resolution Image Perception in Multimodal Large Language Models》(Wang et al., 2024) 中也是在處理同一個問題，當面對4K或甚至8K的圖像的時候，即便是專屬的VLM(Visual Language
+
+Model)的正確率也會雪崩式的下跌：
 
 
-![Figure 58](images/image31.png){#fig:image58 width=80%}
+![](images/image32.png){#fig:image58}
 
-[圖](#figur_vlm_degrade)圖 常見的VLM在不同解析度下的正確率崩跌
+[圖44：](#figur_vlm_degrade) 常見的VLM在不同解析度下的正確率崩跌
 
-如[圖](#fig_vlm_degrade)圖，Microsoft發表的LLaVA，Alibaba發表的Qwen等這些頂尖模型，在FullHD的解析
+如[「圖44」](#fig_vlm_degrade)，Microsoft發表的LLaVA，Alibaba發表的Qwen等這些頂尖模型，在FullHD的解析
 
 度下就大幅下降，更別說是到4K或8K了。在這篇論文中所採取的策略就如同論文的標題所述，是採取「各個擊破再合併」的策略，但它的策略並不那麼適合規格書的樣態：
 
 
-![Figure 59](images/image58.png){#fig:image59 width=80%}
+![](images/image59.png){#fig:image59}
 
-[圖](#figur_dc2)圖 「各個擊破再合併」的策略
+[圖45：](#figur_dc2) 「各個擊破再合併」的策略
 
-如[圖](#fig_dc2)圖，它的分割方式是無條件的等分。在這篇論文中的目標是要回答「找到藍色雨傘」這樣的問題，這算是正確的設計。但我們的目標是要正確的描述規格，等分的切法只會讓LLM描述出許多不符需求的雜訊，即便再經過合併，品質也會很難控制。
+如[「圖45」](#fig_dc2)，它的分割方式是無條件的等分。在這篇論文中的目標是要回答「找到藍色雨傘」這樣的問題，這算是正確的設計。但我們的目標是要正確的描述規格，等分的切法只會讓LLM描述出許多不符需求的雜訊，即便再經過合併，品質也會很難控制。
 
 
-### 「頁面結構(Layout Structure)」的解法
+### 「文件佈局分析」的解法
 
+
+這個問題的解法對應的關鍵字是「文件佈局分析(Document Layout Analysis, DLA)」. Microsoft知名的LayoutLMv3(Y. Huang et al., 2022)技術，也是高度依賴DLA提供輔助資料來達到Document AI的目標。目前比較成熟的DLA技術，則是來自於PP-DocLayout(Sun et al., 2025)這個模型的實作，它支援的元素分析非常多種：
+
+
+![](images/image29.png){#fig:image60}
+
+[圖46：](#figur_pp_layout) PP-Layout的輸入和輸出
+
+如[「圖46」](#fig_pp_layout)，基本上我們會需要的，應該就只有圖，字，表為最大宗，頂多就是也把算式也含進來。透過這個模型產出的幾何資訊(Transformation)，再輔以適當的提詞，預期就可以描述出足夠詳細的規格書知識。
+
+1. 
 
 
 # 第四章 結論與建議
@@ -846,6 +861,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 - Chaffey, D., & Wood, S. (2005).Business information management: Improving performance using information systems. Financial Times Prentice Hall.
 - Grant, R. (2006). Knowledge Management and the Knowledge-Based Economy. In L. Prusak & E. Matson (Eds.),Knowledge Management and Organizational Learning(pp. 15–29). Oxford University PressOxford. https://doi.org/10.1093/oso/9780199291793.003.0002
 - Huang, J., & Li, Y. (2009). The mediating effect of knowledge management on social interaction and innovation performance.International Journal of Manpower,30(3), 285–301. https://doi.org/10.1108/01437720910956772
+- Huang, Y., Lv, T., Cui, L., Lu, Y., & Wei, F. (2022).LayoutLMv3: Pre-training for Document AI with Unified Text and Image Masking(No. arXiv:2204.08387). arXiv. https://doi.org/10.48550/arXiv.2204.08387
 - Kimball, R., & Caserta, J. (2004).The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data. Wiley.
 - Mardani, A., Nikoosokhan, S., Moradi, M., & Doustar, M. (2018). The Relationship Between Knowledge Management and Innovation Performance.The Journal of High Technology Management Research,29(1), 12–26. https://doi.org/10.1016/j.hitech.2018.04.002
 - Palacios Marqués, D., & José Garrigós Simón, F. (2006). The effect of knowledge management practices on firm performance.Journal of Knowledge Management,10(3), 143–156. https://doi.org/10.1108/13673270610670911
@@ -854,6 +870,7 @@ Gemini 2.5 Flash 的回答如[「圖6」](#fig_gemini_plain_texts_test_01)。完
 - Popadiuk, S., & Choo, C. W. (2006). Innovation and knowledge creation: How are these concepts related?International Journal of Information Management,26(4), 302–312. https://doi.org/10.1016/j.ijinfomgt.2006.03.011
 - Rowley, J. (2007). The wisdom hierarchy: Representations of the DIKW hierarchy.Journal of Information Science,33(2), 163–180. https://doi.org/10.1177/0165551506070706
 - Song, Z., Fan, L., & Chen, S. (2008). Knowledge sharing and innovation capability: Does absorptive capacity function as a mediator?2008 International Conference on Management Science and Engineering 15th Annual Conference Proceedings, 971–976. https://doi.org/10.1109/ICMSE.2008.4669030
+- Sun, T., Cui, C., Du, Y., & Liu, Y. (2025).PP-DocLayout: A Unified Document Layout Detection Model to Accelerate Large-Scale Data Construction(No. arXiv:2503.17213). arXiv. https://doi.org/10.48550/arXiv.2503.17213
 - Wang, W., Ding, L., Zeng, M., Zhou, X., Shen, L., Luo, Y., & Tao, D. (2024).Divide, Conquer and Combine: A Training-Free Framework for High-Resolution Image Perception in Multimodal Large Language Models(No. arXiv:2408.15556). arXiv. https://doi.org/10.48550/arXiv.2408.15556
 - Zheng, L., Luo, G., & Peng, D. (2025). The impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience: The moderation of knowledge network cohesion.Journal of Intellectual Capital, 1–24. https://doi.org/10.1108/JIC-11-2024-0382
 
