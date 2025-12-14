@@ -256,14 +256,14 @@ class GoogleDocsHTMLParser:
                     if child.get('data-skip') != 'true':
                         self._convert_table(child)
                 elif child.name == 'img':
-                    self._convert_image(child)
+                    self._convert_image(child, parent_elem=element)
                 # Also check for images in paragraphs
                 elif child.name == 'p':
                     # Check if paragraph contains an image
                     img_in_p = child.find('img')
                     if img_in_p:
-                        # Convert image first
-                        self._convert_image(img_in_p)
+                        # Convert image first (pass parent paragraph for caption extraction)
+                        self._convert_image(img_in_p, parent_elem=child)
                         # Then process remaining paragraph text
                         para_text = self._process_paragraph(child)
                         # Remove image alt text from paragraph if it's duplicated
@@ -418,8 +418,8 @@ class GoogleDocsHTMLParser:
                 
             self.content.append("\n" + "\n".join(markdown_rows) + "\n\n")
             
-    def _convert_image(self, img_elem):
-        """Convert image to Markdown format."""
+    def _convert_image(self, img_elem, parent_elem=None):
+        """Convert image to Markdown format with caption in alt text."""
         src = img_elem.get('src', '')
         
         # Extract image filename
@@ -427,8 +427,76 @@ class GoogleDocsHTMLParser:
             filename = src.split('images/')[-1].split('?')[0]  # Remove query params if any
             self.image_counter += 1
             label = f"fig:image{self.image_counter}"
-            # Copy image will be handled separately
-            self.content.append(f"\n![](images/{filename}){{#{label}}}\n\n")
+            
+            # Try to find caption in the following elements
+            caption = self._extract_figure_caption(img_elem, parent_elem)
+            
+            # Include caption in alt text for List of Figures
+            if caption:
+                self.content.append(f"\n![{caption}](images/{filename}){{#{label}}}\n\n")
+            else:
+                self.content.append(f"\n![](images/{filename}){{#{label}}}\n\n")
+    
+    def _extract_figure_caption(self, img_elem, parent_elem=None):
+        """Extract figure caption from following paragraph or sibling elements."""
+        caption_parts = []
+        
+        # Strategy 1: Look in the same paragraph after the image
+        if parent_elem and hasattr(parent_elem, 'children'):
+            found_img = False
+            for child in parent_elem.children:
+                if child == img_elem:
+                    found_img = True
+                    continue
+                if found_img and hasattr(child, 'get_text'):
+                    text = child.get_text(strip=True)
+                    if text:
+                        caption_parts.append(text)
+                        break
+        
+        # Strategy 2: Look at next sibling paragraph (most common case)
+        if not caption_parts and parent_elem:
+            # Use find_next to search for the next paragraph element
+            # This works regardless of whether parent is p, div, or other element
+            next_p = parent_elem.find_next('p')
+            if next_p:
+                caption_text = next_p.get_text(strip=True)
+                # Check if it looks like a figure caption
+                # Pattern: [圖N：](#link) description or 圖N： description
+                if caption_text and re.search(r'[圖表]\d+[：:]', caption_text):
+                    caption_parts.append(caption_text)
+        
+        # Strategy 3: Look for caption in next few elements (broader search)
+        if not caption_parts and parent_elem:
+            # Check up to 3 following elements
+            current = parent_elem
+            for _ in range(3):
+                if not current:
+                    break
+                # Try next sibling
+                next_elem = current.find_next_sibling()
+                if next_elem:
+                    if next_elem.name == 'p':
+                        caption_text = next_elem.get_text(strip=True)
+                        if caption_text and re.search(r'[圖表]\d+[：:]', caption_text):
+                            caption_parts.append(caption_text)
+                            break
+                    current = next_elem
+                else:
+                    break
+        
+        # Clean up the caption: remove link markers but keep the text
+        if caption_parts:
+            caption = ' '.join(caption_parts)
+            # Remove markdown link syntax but keep the text: [圖N：](#link) text -> 圖N： text
+            caption = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', caption)
+            # Remove citation markers from caption (they'll be in the paragraph below)
+            caption = re.sub(r'\[@[^\]]+\]', '', caption)
+            # Clean up extra whitespace
+            caption = re.sub(r'\s+', ' ', caption).strip()
+            return caption if caption else None
+        
+        return None
             
     def _convert_html_to_markdown_basic(self, html_content: str):
         """Basic HTML to Markdown conversion without BeautifulSoup."""
@@ -444,14 +512,21 @@ class GoogleDocsHTMLParser:
         # Convert images
         def replace_image(match):
             src = match.group(1)
+            alt_text = match.group(2) if len(match.groups()) > 1 else ''
             if 'images/' in src:
                 filename = src.split('images/')[-1]
                 self.image_counter += 1
                 label = f"fig:image{self.image_counter}"
-                return f"\n![](images/{filename}){{#{label}}}\n\n"
+                # Use alt text as caption if available, otherwise empty
+                if alt_text:
+                    return f"\n![{alt_text}](images/{filename}){{#{label}}}\n\n"
+                else:
+                    return f"\n![](images/{filename}){{#{label}}}\n\n"
             return match.group(0)
             
+        # Try to match images with alt text first
         html_content = re.sub(r'<img[^>]*src=["\']([^"\']*)["\'][^>]*alt=["\']([^"\']*)["\']', replace_image, html_content, flags=re.IGNORECASE)
+        # Then match images without alt text
         html_content = re.sub(r'<img[^>]*src=["\']([^"\']*)["\']', replace_image, html_content, flags=re.IGNORECASE)
         
         # Convert paragraphs
