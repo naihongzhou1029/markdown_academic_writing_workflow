@@ -42,6 +42,9 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Install placeins LaTeX package for FloatBarrier support
+RUN tlmgr update --self && tlmgr install placeins
+
 # Keep the same entrypoint as base image
 ENTRYPOINT [""]
 
