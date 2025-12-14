@@ -624,14 +624,40 @@ class GoogleDocsHTMLParser:
         caption_para = None
         table_id = None
         
-        # Look for caption in the next paragraph after the table
-        next_p = table_elem.find_next('p')
-        if next_p:
-            # Get the raw text from the paragraph (before any markdown processing)
+        # Look for caption in the next few paragraphs to skip empty ones
+        current = table_elem
+        
+        # Check next 3 paragraphs that are NOT inside the table
+        search_count = 0
+        while search_count < 3:
+            next_p = current.find_next('p')
+            if not next_p:
+                break
+            
+            # Update current for next iteration
+            current = next_p
+            
+            # Skip paragraphs inside the table itself
+            is_inside_table = False
+            for parent in next_p.parents:
+                if parent == table_elem:
+                    is_inside_table = True
+                    break
+            if is_inside_table:
+                continue
+                
+            search_count += 1
+                
+            # Get the raw text from the paragraph
             caption_text = next_p.get_text(strip=True)
+            
+            # If empty, continue to next p
+            if not caption_text:
+                continue
+                
             # Check if it looks like a table caption
             # Pattern: [表N：](#link) description or 表N： description or [「表N」](#link) description
-            if caption_text and re.search(r'[表]\d+', caption_text):
+            if re.search(r'[表]\d+', caption_text):
                 caption_para = next_p
                 
                 # Extract table number from the caption text
