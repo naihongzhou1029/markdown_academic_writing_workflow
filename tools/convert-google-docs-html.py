@@ -329,12 +329,16 @@ class GoogleDocsHTMLParser:
             if fig_match:
                 fig_num = fig_match.group(1)
                 fig_key = f"圖{fig_num}"
+                # Try to find in figure_map first
                 if fig_key in self.figure_map:
                     return f"[{link_text}](#{self.figure_map[fig_key]})"
                 # Also try with quotes
                 fig_key_quoted = f"「圖{fig_num}」"
                 if fig_key_quoted in self.figure_map:
                     return f"[{link_text}](#{self.figure_map[fig_key_quoted]})"
+                # If not found in map, construct the label directly: fig:image{N}
+                # This handles cases where the map lookup fails but we know the figure number
+                return f"[{link_text}](#fig:image{fig_num})"
             return match.group(0)  # Return original if no match found
         
         text = re.sub(r'\[([「]?[圖表]\d+[」]?)\]\([^\)]+\)', replace_figure_link, text)
