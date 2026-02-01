@@ -7,9 +7,10 @@ bibliography:
 csl: chicago-author-date.csl
 link-citations: true
 pdf-engine: xelatex
+fontsize: 12pt
 CJKmainfont: "PingFang TC"
 toc: true
-toc-depth: 2
+toc-depth: 4
 lof: true
 lot: true
 lang: zh-Hant
@@ -29,9 +30,12 @@ header-includes:
 - \def\fps@figure{H}
 - \makeatother
 - \usepackage{titlesec}
-- \titleformat{\paragraph}[hang]{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+- \titleformat{\section}{\normalfont\fontsize{17}{21}}{\thesection}{1em}{}
+- \titleformat{\subsection}{\normalfont\fontsize{16}{20}}{\thesubsection}{1em}{}
+- \titleformat{\subsubsection}{\normalfont\fontsize{15}{19}}{\thesubsubsection}{1em}{}
+- \titleformat{\paragraph}[hang]{\normalfont\fontsize{14}{18}}{\theparagraph}{1em}{}
 - \titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1em}
-- \titleformat{\subparagraph}[hang]{\normalfont\normalsize\bfseries}{\thesubparagraph}{1em}{}
+- \titleformat{\subparagraph}[hang]{\normalfont\fontsize{13}{17}}{\thesubparagraph}{1em}{}
 - \titlespacing*{\subparagraph}{0pt}{3.25ex plus 1ex minus .2ex}{1em}
 - |
     \usepackage{etoolbox}
