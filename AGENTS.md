@@ -25,3 +25,7 @@ This file provides specific instructions and constraints for AI agents (like you
 - **Builds**: Always prefer `./make-docker.sh` (or its OS-specific variant) for builds. This ensures dependencies are handled via Docker.
 - **Dependencies**: Remind users that the toolchain is containerized. The `make deps` target is for local development only and should not be recommended for standard usage.
 - **Expansion**: When adding support for new languages or targets, follow the pattern established by the `zh_tw` directory and its associated Make targets and scripts.
+
+### Cursor Agent CLI Skills
+
+- **Convert conversation figure**: Use the skill in `.cursor/skills/convert-conversation-figure/` when asked to replace a conversation screenshot with a styled blockquote in Markdown. The full workflow is also documented in `.agent/workflows/convert-conversation-figure.md`.
