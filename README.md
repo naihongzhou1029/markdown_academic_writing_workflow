@@ -70,7 +70,7 @@ This project uses **Docker** to provide a consistent, reproducible build environ
 - **`tools/`**: Helper scripts for translation, font detection, validation, and post-processing.
   - **`validate-and-fix-translated-md.sh`**: AI-powered validation to fix formatting errors in translated Markdown.
 - **`Dockerfile`**: Defines the `pandocker-with-tools:latest` image used for builds.
-- **Windows wrappers** (`make-docker.bat`, `make-docker.ps1`): Legacy helpers for running Dockerized builds from Windows shells.
+- **`devops.ps1`**: PowerShell implementation for Windows, mirrors `devops.sh`.
 
 ### Basic Usage: Build the Example PDF
 
@@ -79,18 +79,14 @@ This project uses Docker to ensure a consistent build environment. All toolchain
 **Using the devops script (recommended):**
 
 - **Linux/macOS/WSL**: Use `./devops.sh`
-- **Windows CMD**: Use `make-docker.bat` (invokes Docker from CMD)
-- **Windows PowerShell**: Use `./make-docker.ps1` (invokes Docker from PowerShell)
+- **Windows PowerShell**: Use `./devops.ps1` (invokes Docker from PowerShell)
 
 ```bash
 # Linux/macOS/WSL
 ./devops.sh
 
-# Windows CMD
-make-docker.bat
-
 # Windows PowerShell
-./make-docker.ps1
+./devops.ps1
 ```
 
 These commands will:
@@ -98,7 +94,7 @@ These commands will:
 2. Build a derived image `pandocker-with-tools:latest` (with `jq` and `curl` pre-installed) if it doesn't exist
 3. Create an ephemeral Docker container from the derived image
 4. Mount the current directory into the container
-5. Run the appropriate build entrypoint inside the container (`devops.sh` or, for legacy flows, `make`)
+5. Run the appropriate build entrypoint inside the container (`devops.sh` on Linux/macOS/WSL, `devops.ps1` invokes `devops.sh` in container on Windows)
 6. Automatically remove the container after the build completes
 
 **Note**: The first run will build the derived image, which may take a few minutes. Subsequent runs will use the cached image, making builds faster.
@@ -126,9 +122,9 @@ docker run --rm \
 
 The build pipeline (as orchestrated by `devops.sh`) handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `printed.pdf` (cover + paper merged).
 
-### Alternative: Development Operations Center (`devops.sh`)
+### Alternative: Development Operations Center (`devops.sh` / `devops.ps1`)
 
-For a streamlined development experience, the repository includes `devops.sh`, a unified script that consolidates the core Dockerized build operations into a single command-line interface.
+For a streamlined development experience, the repository includes `devops.sh` (Linux/macOS/WSL) and `devops.ps1` (Windows PowerShell), unified scripts that consolidate the core Dockerized build operations into a single command-line interface. Both scripts accept the same targets.
 
 **Features:**
 - **Unified interface**: Single script for all build operations
@@ -154,27 +150,26 @@ For a streamlined development experience, the repository includes `devops.sh`, a
 **Examples:**
 
 ```bash
-# Build everything (default)
-./devops.sh
+# Linux/macOS/WSL
+./devops.sh           # Build everything (default)
+./devops.sh pdf       # Build only the paper PDF
+./devops.sh cover     # Build only the cover page
+./devops.sh clean     # Clean all generated files
+./devops.sh help      # Show help
 
-# Build only the paper PDF
-./devops.sh pdf
-
-# Build only the cover page
-./devops.sh cover
-
-# Clean all generated files
-./devops.sh clean
-
-# Show help
-./devops.sh help
+# Windows PowerShell (same targets)
+./devops.ps1
+./devops.ps1 pdf
+./devops.ps1 cover
+./devops.ps1 clean
+./devops.ps1 help
 ```
 
 **When to use:**
 - Use `devops.sh` for quick, iterative development and manual builds
-- Use the Windows wrapper scripts (`make-docker.bat`, `make-docker.ps1`) when invoking Dockerized builds from Windows shells
+- Use `devops.ps1` when invoking Dockerized builds from Windows PowerShell
 
-**Note**: The `devops.sh` script now includes the `zh_tw` (translation) target as well, so both English and Traditional Chinese pipelines are available via a single entrypoint.
+**Note**: Both `devops.sh` and `devops.ps1` include the `zh_tw` (translation) target, so both English and Traditional Chinese pipelines are available via a single entrypoint.
 
 ### Optional: Translate to Traditional Chinese (`zh_tw` target)
 
@@ -191,11 +186,8 @@ To run the full translation and build the Traditional Chinese PDFs (including me
 # Linux/macOS/WSL
 ./devops.sh zh_tw
 
-# Windows CMD
-make-docker.bat zh_tw
-
 # Windows PowerShell
-./make-docker.ps1 zh_tw
+./devops.ps1 zh_tw
 ```
 
 The resulting files are written under the `zh_tw/` directory, mirroring the structure of the original English workflow.

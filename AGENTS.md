@@ -22,7 +22,7 @@ This file provides specific instructions and constraints for AI agents (like you
 
 ### Operational Guidance
 
-- **Builds**: Always prefer `./devops.sh` for builds on Linux/macOS/WSL, or the OS-specific wrapper scripts on Windows. This ensures all work runs inside the `pandocker-with-tools` Docker image.
+- **Builds**: Always prefer `./devops.sh` for builds on Linux/macOS/WSL, or `./devops.ps1` on Windows PowerShell. This ensures all work runs inside the `pandocker-with-tools` Docker image.
 - **Dependencies**: Remind users that the toolchain is containerized. The `make deps` target is for local development only and should not be recommended for standard usage.
 - **Expansion**: When adding support for new languages or targets, follow the pattern established by the `zh_tw` directory and its associated Make targets and scripts.
 
