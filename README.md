@@ -45,6 +45,7 @@ The project demonstrates how to produce a fully typeset scholarly PDF—complete
   - Paper PDFs use the current date in `YYYY-MM-DD` format (injected via Pandoc's `-V date` flag).
   - Cover PDFs use the current date in `Month DD, YYYY` format (injected via `tools/inject-date.sh` script).
   - This ensures documents always reflect their build date without manual updates to `paper.md` or `cover_page.tex`.
+ - **Mermaid diagram rendering**: Fenced code blocks with language `mermaid` are preprocessed into high‑resolution PNG images using `@mermaid-js/mermaid-cli` inside the Docker container, so diagrams appear as crisp figures in the final PDFs for both English and Traditional Chinese builds.
 
 ### Toolchain Requirements
 
@@ -69,6 +70,7 @@ This project uses **Docker** to provide a consistent, reproducible build environ
 - **`devops.sh`**: Unified development operations script for running the Dockerized build pipeline.
 - **`tools/`**: Helper scripts for translation, font detection, validation, and post-processing.
   - **`validate-and-fix-translated-md.sh`**: AI-powered validation to fix formatting errors in translated Markdown.
+  - **`process-mermaid.sh`**: Preprocesses Markdown sources to turn Mermaid code blocks into PNG images before Pandoc runs.
 - **`Dockerfile`**: Defines the `pandocker-with-tools:latest` image used for builds.
 - **`devops.ps1`**: PowerShell implementation for Windows, mirrors `devops.sh`.
 
@@ -121,6 +123,28 @@ docker run --rm \
 ```
 
 The build pipeline (as orchestrated by `devops.sh`) handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `printed.pdf` (cover + paper merged).
+
+### Mermaid Diagram Support
+
+Remarcademic can render Mermaid diagrams into the final PDFs without any manual pre-processing.
+
+- **How to write diagrams**: Use fenced code blocks with language `mermaid` in `paper.md` (and translated Markdown). For example:
+
+    ```mermaid
+    flowchart LR
+        A[Start] --> B[End]
+    ```
+
+- **What happens during the build**:
+  - A helper script (`tools/process-mermaid.sh`) scans the Markdown for `mermaid` code blocks.
+  - Each block is rendered to a high‑resolution PNG image (scale factor 3×) via `@mermaid-js/mermaid-cli` running inside the Docker container.
+  - The original code block is replaced with an image reference (for example, `![Mermaid diagram](images/mermaid-1.png)`), so Pandoc and LaTeX treat the diagram as a normal figure.
+
+- **Outputs and cleanup**:
+  - Generated images are written under `images/mermaid-*.png`.
+  - `./devops.sh clean` removes these generated images and intermediate Markdown files.
+
+All standard build targets (`pdf`, `printed`, `zh_tw`, etc.) invoke the Mermaid processing step automatically; no extra commands are required.
 
 ### Alternative: Development Operations Center (`devops.sh` / `devops.ps1`)
 
