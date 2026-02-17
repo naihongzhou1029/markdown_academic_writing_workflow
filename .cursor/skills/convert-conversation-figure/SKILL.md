@@ -56,7 +56,7 @@ Use standard Markdown blockquotes (`>`):
 - Role labels: plain text `User` and `AI`.
 - Use a full-width colon (`：`) after the role name.
 - Insert an empty blockquote line (`>`) between User and AI for separation.
-- Preserve lists/bullets in the response where possible and follow the pattern of typical list style of Markdown texts.
+- Preserve lists/bullets in the response where possible and follow the pattern of typical list style of Markdown texts, but don't use bold styles. Place blank lines above and below the list as well.
 - Wrap any `@`-prefixed text (e.g. `@Google`, `@User`) in backticks: `` `@Google` `` to avoid citation parsing.
 
 ## 5. Apply Changes

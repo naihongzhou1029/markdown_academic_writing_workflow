@@ -1,0 +1,50 @@
+---
+description: CCB (Concise, Conventional and Bilingual) commit message standards. Use when composing, preparing, or reviewing commit messages, or when the user asks to commit with "ccb" or follow commit conventions.
+alwaysApply: true
+---
+
+# Commit Message Conventions (CCB)
+
+- **Follow conventional commits**
+  - Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`, `perf`, `build`, `ci`, `revert`, `style`
+  - Prefer scoped subjects when helpful, e.g. `feat(game): ...`, `fix(build): ...`
+
+- **Subject line rules**
+  - Imperative mood (e.g., `add`, `fix`, `refactor`)
+  - Max 72 characters
+  - No trailing period
+  - Capture the **purpose** of the change, not just the mechanical action
+
+- **Body content**
+  - Include a body when the change is non-trivial or alters behavior in a meaningful way
+  - Briefly explain:
+    - **What** changed (at a high level)
+    - **Why** it changed (intent, bug, impact)
+    - Any important risks, limitations, or follow-ups
+  - Avoid restating raw file lists that `git diff --stat` already shows
+
+- **Bilingual output when preparing messages**
+  - When the agent is asked to prepare commit messages (see `.cursor/prepare-commit-messages.md`), it MUST:
+    - First output the full commit message in **Traditional Chinese**
+    - Insert a single blank line
+    - Then output a full **English** duplicate of the message (same structure and meaning)
+
+- **Export to git's commit message file**
+  - When the agent composes or prepares a commit message, it MUST write to `.git/COMMIT_EDITMSG` the full bilingual message: Traditional Chinese first, a single blank line, then the English duplicate (same structure and meaning as the chat output).
+  - The user can then run `git commit -F .git/COMMIT_EDITMSG` to commit with that message without opening an editor.
+
+- **Content hygiene**
+  - Do NOT include IDE-specific deep links or protocol URLs (e.g. `cci://...`)
+  - Refer to files and modules by plain names or inline code formatting (e.g. `game_logic.cpp`)
+  - Avoid generic subjects like `update code` or `fix stuff`
+
+## When to Use
+
+- User asks to commit with "ccb" or "commit message conventions"
+- Composing or preparing a commit message
+- Reviewing or correcting commit message style
+
+## Instructions
+
+- Apply the conventions above to any commit message you generate or suggest.
+- When committing on the user's behalf, write the final message to `.git/COMMIT_EDITMSG` and use `git commit -F .git/COMMIT_EDITMSG` (or inform the user to run it).
