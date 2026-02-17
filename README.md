@@ -67,6 +67,7 @@ This project uses **Docker** to provide a consistent, reproducible build environ
 - **`AGENTS.md`**: Technical constraints and instructions specifically for AI agents.
 - **`paper.md`**: The primary English manuscript. Contains YAML metadata for document configuration.
 - **`Makefile`**: Orchestrates the build process (targets: `pdf`, `cover`, `printed`, `zh_tw`, `clean`).
+- **`devops.sh`**: Unified development operations script merging Makefile and Docker wrapper functionality.
 - **`tools/`**: Helper scripts for translation, font detection, validation, and post-processing.
   - **`validate-and-fix-translated-md.sh`**: AI-powered validation to fix formatting errors in translated Markdown.
 - **`Dockerfile`**: Defines the `pandocker-with-tools:latest` image used for builds.
@@ -125,6 +126,56 @@ docker run --rm \
 ```
 
 The `Makefile` handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `printed.pdf` (cover + paper merged).
+
+### Alternative: Development Operations Center (`devops.sh`)
+
+For a streamlined development experience, the repository includes `devops.sh`, a unified script that merges operations from both `Makefile` and `make-docker.sh` into a single command-line interface.
+
+**Features:**
+- **Unified interface**: Single script for all build operations
+- **Docker management**: Automatically handles image pulling and building
+- **Color-coded output**: INFO (green), WARN (yellow), ERROR (red) for better readability
+- **Smart builds**: Detects existing artifacts and builds dependencies as needed
+- **No dependency checking**: Simplified workflow without Make's dependency graph
+
+**Available targets:**
+
+```bash
+./devops.sh [target]
+
+# Targets:
+#   pdf       - Build the main paper PDF
+#   cover     - Build the cover page PDF
+#   printed   - Build the printed version (cover + paper) [default]
+#   clean     - Remove all generated files
+#   deps      - Show information about dependencies
+#   help      - Show usage information
+```
+
+**Examples:**
+
+```bash
+# Build everything (default)
+./devops.sh
+
+# Build only the paper PDF
+./devops.sh pdf
+
+# Build only the cover page
+./devops.sh cover
+
+# Clean all generated files
+./devops.sh clean
+
+# Show help
+./devops.sh help
+```
+
+**When to use:**
+- Use `devops.sh` for quick, iterative development and manual builds
+- Use `make-docker.sh` (or `.bat`/`.ps1`) when you need Make's dependency tracking or integration with existing Make workflows
+
+**Note**: The `devops.sh` script does not include the `zh_tw` (translation) target. For translation workflows, use the `make-docker.sh` wrapper with the Makefile.
 
 ### Optional: Translate to Traditional Chinese (`zh_tw` target)
 
