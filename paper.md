@@ -983,7 +983,7 @@ AI 的回答如上，明確反映規格書中沒有相關的內容。它的理�
 
 在《MQuant: Unleashing the Inference Potential of Multimodal Large Language Models via Full Static Quantization》[@yuMQuantUnleashingInference2025] 的研究中我們可以確認：
 
-![Prefill visual tokens counts across different MLLMs as the image splits/resolution increases](image/2026-02-17-15-30-18.png){#fig:image52}
+![Prefill visual tokens counts across different MLLMs as the image splits/resolution increases](images/2026-02-17-15-30-18.png){#fig:image52}
 
 如「[@fig:image52]」所示，理解圖像所需要的詞元(Tokens)數是遠超過純文字的。從前人的研究也可以印證我們在實測時推論的可能性，所以如果我們可以繼續按照我們的實驗結果繼續推論下去，是不是我們只要把規格書都描述成文字，只要將整份規格書的描述足夠詳細，這樣的知識是否就可以完全被100%使用，可以正確的指引我們在設計或實作面的開發方向，成為行動的依據？我們接下來就先試著反推驗證一次，看在”有正確答案”的前提下，之前的那些問題的正確率能提升多少。
 
