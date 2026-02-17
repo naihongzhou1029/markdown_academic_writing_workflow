@@ -399,8 +399,8 @@ main() {
     ensure_base_image
     ensure_derived_image
     
-    # Default target is 'printed'
-    TARGET="${1:-printed}"
+    # Default target is 'pdf'
+    TARGET="${1:-pdf}"
     
     case "$TARGET" in
         pdf)
