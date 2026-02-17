@@ -54,7 +54,7 @@ header-includes:
       skipbelow=12pt
     ]{quote}
     \AtBeginEnvironment{CSLReferences}{
-      \newpage\section*{References}%
+      \newpage\section*{參考文獻}%
       \setlength{\parindent}{0pt}%
     }
     \pretocmd{\tableofcontents}{\clearpage}{}{}
@@ -979,23 +979,19 @@ AI 的回答如上，明確反映規格書中沒有相關的內容。它的理�
 
 在規格書這個場景下，由於目前LLM對試算表的文件型式尚無法像人類一樣理解，因此，我們嘗試透過圖片這樣的媒介來讓LLM理解文件內容。但由於過去並沒有設定規格書的寫作規範，實務上我們會面對的規格書的長相及"面積"都非常的不同。即便技術上我們可以透過圖片加LLM理解並輸出規格書的內容，但當我們實際把整張規格書丟進LLM時，從結果看來卻發現LLM會有"罷工"的表現。對此，我們推論的假設是，這應該是超過了LLM的上下文空間。
 
-### 反推驗證
+### 已知研究及解法
 
-在《MQuant: Unleashing the Inference Potential of Multimodal Large Language Models via Full Static Quantization》(Yu et al., 2025)的研究中我們可以確認：
+在《MQuant: Unleashing the Inference Potential of Multimodal Large Language Models via Full Static Quantization》[@yuMQuantUnleashingInference2025] 的研究中我們可以確認：
 
 ![Prefill visual tokens counts across different MLLMs as the image splits/resolution increases](image/2026-02-17-15-30-18.png){#fig:image52}
 
 如「[@fig:image52]」所示，理解圖像所需要的詞元(Tokens)數是遠超過純文字的。從前人的研究也可以印證我們在實測時推論的可能性，所以如果我們可以繼續按照我們的實驗結果繼續推論下去，是不是我們只要把規格書都描述成文字，只要將整份規格書的描述足夠詳細，這樣的知識是否就可以完全被100%使用，可以正確的指引我們在設計或實作面的開發方向，成為行動的依據？我們接下來就先試著反推驗證一次，看在”有正確答案”的前提下，之前的那些問題的正確率能提升多少。
 
-### 「各個擊破再合併」的解法
-
-在《Divide, Conquer and Combine: A Training-Free Framework for High-Resolution Image Perception in Multimodal Large Language Models》(Wang et al., 2024) 中也是在處理同一個問題，當面對4K或甚至8K的圖像的時候，即便是專屬的VLM(Visual Language
-
-Model)的正確率也會雪崩式的下跌：
+在《Divide, Conquer and Combine: A Training-Free Framework for High-Resolution Image Perception in Multimodal Large Language Models》[@wangDivideConquerCombine2024] 中也是在處理同一個問題，當面對4K或甚至8K的圖像的時候，即便是專屬的VLM(Visual Language Model)的正確率也會雪崩式的下跌：
 
 ![常見的VLM在不同解析度下的正確率崩跌](images/image32.png){#fig:image58}
 
-如「[@fig:image58]」，Microsoft發表的LLaVA，Alibaba發表的Qwen等這些頂尖模型，在FullHD的解析度下就大幅下降，更別說是到4K或8K了。在這篇論文中所採取的策略就如同論文的標題所述，是採取「各個擊破再合併」的策略，但它的策略並不那麼適合規格書的樣態：
+如「[@fig:image58]」，Microsoft發表的LLaVA，Alibaba發表的Qwen等這些頂尖模型，在FullHD的解析度下就大幅下降，更別說是到4K或8K了。在這篇論文中所採取的策略就如同論文的標題所述，是採取「各個擊破再合併」的策略，但它的策略並不那麼適合規格書的場景：
 
 ![「各個擊破再合併」的策略](images/image59.png){#fig:image59}
 
@@ -1003,7 +999,7 @@ Model)的正確率也會雪崩式的下跌：
 
 ### 「文件佈局分析」的解法
 
-這個問題的解法對應的關鍵字是「文件佈局分析(Document Layout Analysis, DLA)」. Microsoft知名的LayoutLMv3(Y. Huang et al., 2022)技術，也是高度依賴DLA提供輔助資料來達到Document AI的目標。目前比較成熟的DLA技術，則是來自於PP-DocLayout(Sun et al., 2025)這個模型的實作，它支援的元素分析非常多種：
+對於這個問題，本文提出的解法是「文件佈局分析(Document Layout Analysis, DLA)」. 早期的實作是來自於Microsoft知名的LayoutLMv3[@huangLayoutLMv3PretrainingDocument2022]技術，這樣的技術就是要來滿足「Document AI」的目標。目前比較成熟的DLA技術，則是來自於PP-DocLayout[@sunPPDocLayoutUnifiedDocument2025]這個模型的實作，它支援的元素分析非常多種：
 
 ![PP-Layout的輸入和輸出](images/image29.png){#fig:image60}
 
@@ -1015,24 +1011,3 @@ Model)的正確率也會雪崩式的下跌：
 
 ## 未來發展建議
 
-參考文獻
-
-- Ackoff, R. L. (1989). From Data to Wisdom.Journal of Applied Systems Analysis,16, 3–9.
-- Ajmal, M., Helo, P., & Kekäle, T. (2010). Critical factors for knowledge management in project business.Journal of Knowledge Management,14(1), 156–168. https://doi.org/10.1108/13673271011015633
-- Baviskar, D., Ahirrao, S., Potdar, V., & Kotecha, K. (2021). Efficient Automated Processing of the Unstructured Documents Using Artificial Intelligence: A Systematic Literature Review and Future Directions.IEEE Access,9, 72894–72936. https://doi.org/10.1109/ACCESS.2021.3072900
-- Chaffey, D., & Wood, S. (2005).Business information management: Improving performance using information systems. Financial Times Prentice Hall.
-- Grant, R. (2006). Knowledge Management and the Knowledge-Based Economy. In L. Prusak & E. Matson (Eds.),Knowledge Management and Organizational Learning(pp. 15–29). Oxford University PressOxford. https://doi.org/10.1093/oso/9780199291793.003.0002
-- Huang, J., & Li, Y. (2009). The mediating effect of knowledge management on social interaction and innovation performance.International Journal of Manpower,30(3), 285–301. https://doi.org/10.1108/01437720910956772
-- Huang, Y., Lv, T., Cui, L., Lu, Y., & Wei, F. (2022).LayoutLMv3: Pre-training for Document AI with Unified Text and Image Masking(No. arXiv:2204.08387). arXiv. https://doi.org/10.48550/arXiv.2204.08387
-- Kimball, R., & Caserta, J. (2004).The data warehouse ETL toolkit: Practical techniques for extracting, cleaning, conforming, and delivering data. Wiley.
-- Mardani, A., Nikoosokhan, S., Moradi, M., & Doustar, M. (2018). The Relationship Between Knowledge Management and Innovation Performance.The Journal of High Technology Management Research,29(1), 12–26. https://doi.org/10.1016/j.hitech.2018.04.002
-- Palacios Marqués, D., & José Garrigós Simón, F. (2006). The effect of knowledge management practices on firm performance.Journal of Knowledge Management,10(3), 143–156. https://doi.org/10.1108/13673270610670911
-- Pee, L. G., & Kankanhalli, A. (2009). A Model of Organisational Knowledge Management Maturity Based on People, Process, and Technology.Journal of Information & Knowledge Management,08(02), 79–99. https://doi.org/10.1142/S0219649209002270
-- Pejić Bach, M., Krstić, Ž., Seljan, S., & Turulja, L. (2019). Text Mining for Big Data Analysis in Financial Sector: A Literature Review.Sustainability,11(5), 1277. https://doi.org/10.3390/su11051277
-- Popadiuk, S., & Choo, C. W. (2006). Innovation and knowledge creation: How are these concepts related?International Journal of Information Management,26(4), 302–312. https://doi.org/10.1016/j.ijinfomgt.2006.03.011
-- Rowley, J. (2007). The wisdom hierarchy: Representations of the DIKW hierarchy.Journal of Information Science,33(2), 163–180. https://doi.org/10.1177/0165551506070706
-- Song, Z., Fan, L., & Chen, S. (2008). Knowledge sharing and innovation capability: Does absorptive capacity function as a mediator?2008 International Conference on Management Science and Engineering 15th Annual Conference Proceedings, 971–976. https://doi.org/10.1109/ICMSE.2008.4669030
-- Sun, T., Cui, C., Du, Y., & Liu, Y. (2025).PP-DocLayout: A Unified Document Layout Detection Model to Accelerate Large-Scale Data Construction(No. arXiv:2503.17213). arXiv. https://doi.org/10.48550/arXiv.2503.17213
-- Wang, W., Ding, L., Zeng, M., Zhou, X., Shen, L., Luo, Y., & Tao, D. (2024).Divide, Conquer and Combine: A Training-Free Framework for High-Resolution Image Perception in Multimodal Large Language Models(No. arXiv:2408.15556). arXiv. https://doi.org/10.48550/arXiv.2408.15556
-- Yu, J., Zhou, S., Yang, D., Wang, S., Li, S., Hu, X., Xu, C., Xu, Z., Shu, C., & Yuan, Z. (2025).MQuant: Unleashing the Inference Potential of Multimodal Large Language Models via Full Static Quantization(No. arXiv:2502.00425). arXiv. https://doi.org/10.48550/arXiv.2502.00425
-- Zheng, L., Luo, G., & Peng, D. (2025). The impact of multi-dimensional social capital in collaborative R&D networks on firm innovation resilience: The moderation of knowledge network cohesion.Journal of Intellectual Capital, 1–24. https://doi.org/10.1108/JIC-11-2024-0382
