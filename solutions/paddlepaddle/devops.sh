@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# DevOps helper for PaddleOCR layout_detection.py
+# DevOps helper for PaddleOCR segment.py
 # - Creates an isolated Python 3.11+ virtual environment
 # - Installs required Python dependencies
-# - Provides a simple "run" target to execute layout_detection.py
+# - Provides a simple "run" target to execute segment.py
 
 set -euo pipefail
 
@@ -55,7 +55,7 @@ deps() {
   pip install --upgrade pip
 
   print_info "Installing PaddleOCR layout detection dependencies..."
-  # Package set derived from imports in layout_detection.py
+  # Package set derived from imports in segment.py
   pip install \
     "paddlepaddle>=2.6.0" \
     "paddleocr>=2.7.0" \
@@ -82,8 +82,8 @@ run_layout() {
   ensure_venv
   activate_venv
 
-  print_info "Running layout_detection.py on: $image_path"
-  python "$SCRIPT_DIR/layout_detection.py" "$image_path"
+  print_info "Running segment.py on: $image_path"
+  python "$SCRIPT_DIR/segment.py" "$image_path"
 }
 
 show_help() {
@@ -92,12 +92,12 @@ DevOps helper for PaddleOCR layout detection
 
 Usage:
   ./devops.sh deps              # Create venv and install dependencies
-  ./devops.sh run <image_path>  # Run layout_detection.py on an image
+  ./devops.sh run <image_path>  # Run segment.py on an image
   ./devops.sh help              # Show this help
 
 Notes:
 - This script manages a local virtual environment in ".venv" under this directory.
-- layout_detection.py currently targets Python 3.11 (PaddlePaddle does not yet support 3.14).
+- segment.py currently targets Python 3.11 (PaddlePaddle does not yet support 3.14).
 EOF
 }
 

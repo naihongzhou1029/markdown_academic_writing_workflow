@@ -2,13 +2,14 @@
 Layout Detection Script for PaddleOCR
 
 IMPORTANT: This script requires Python 3.11 (PaddlePaddle doesn't support Python 3.14 yet).
-Run with: py -3.11 layout_detection.py <image_path>
+Run with: py -3.11 segment.py <image_path>
 """
 
 from paddleocr import LayoutDetection
 import cv2
 import numpy as np
 import argparse
+import os
 
 # Configuration options to try:
 # 1. Increase img_size for better detection of smaller regions
@@ -58,6 +59,16 @@ def preprocess_image(image_path, max_size=1920, enhance_contrast=True):
 parser = argparse.ArgumentParser(description='Layout Detection Script for PaddleOCR')
 parser.add_argument('image_path', help='Path to the input image file')
 args = parser.parse_args()
+
+# Derive deterministic output image name based on input
+input_path = args.image_path
+input_basename = os.path.splitext(os.path.basename(input_path))[0]
+input_ext = os.path.splitext(os.path.basename(input_path))[1] or ".png"
+
+output_dir = "./output"
+os.makedirs(output_dir, exist_ok=True)
+seg_filename = f"{input_basename}_seg{input_ext}"
+seg_path = os.path.join(output_dir, seg_filename)
 
 # Method 1: Direct file path (simplest)
 # output = model.predict(args.image_path, batch_size=1)
@@ -119,8 +130,24 @@ for res in output:
         res['boxes'] = filter_nested_boxes(res['boxes'])
 
     res.print()
-    res.save_to_img(save_path="./output/")
-    res.save_to_json(save_path="./output/res.json")
+
+    # Track files before saving so we can rename the newly generated image
+    before_files = set(os.listdir(output_dir))
+
+    # Let PaddleOCR write its visualization image(s) into the output directory
+    res.save_to_img(save_path=output_dir)
+
+    # Persist raw detection data
+    res.save_to_json(save_path=os.path.join(output_dir, "segments.json"))
+
+    # Rename the first new image to <input_basename>_seg.<ext>
+    after_files = set(os.listdir(output_dir))
+    new_files = sorted(f for f in after_files - before_files if os.path.splitext(f)[1].lower() in {".png", ".jpg", ".jpeg", ".bmp"})
+    if new_files:
+        src_path = os.path.join(output_dir, new_files[0])
+        if src_path != seg_path:
+            os.replace(src_path, seg_path)
+            print(f"Saved segmented layout image as: {seg_path}")
     
     # Print detection statistics
     # Access boxes from the result structure (res is a dict-like object)
