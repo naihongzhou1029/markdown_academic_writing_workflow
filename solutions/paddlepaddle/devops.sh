@@ -68,22 +68,43 @@ deps() {
 run_layout() {
   if [ $# -lt 1 ]; then
     print_error "Missing image path."
-    echo "Usage: $0 run <image_path>"
+    echo "Usage: $0 run <image_path> [--layout-threshold <float>]"
     exit 1
   fi
 
   local image_path="$1"
+  shift || true
 
   if [ ! -f "$image_path" ]; then
     print_error "Image file not found: $image_path"
     exit 1
   fi
 
+  # Optional args forwarded to segment.py
+  local seg_args=()
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --layout-threshold)
+        if [ -z "${2:-}" ]; then
+          print_error "Missing value for --layout-threshold"
+          exit 1
+        fi
+        seg_args+=("--layout-threshold" "$2")
+        shift 2
+        ;;
+      *)
+        print_error "Unknown option for run: $1"
+        echo "Usage: $0 run <image_path> [--layout-threshold <float>]"
+        exit 1
+        ;;
+    esac
+  done
+
   ensure_venv
   activate_venv
 
   print_info "Running segment.py on: $image_path"
-  python "$SCRIPT_DIR/segment.py" "$image_path"
+  python "$SCRIPT_DIR/segment.py" "$image_path" "${seg_args[@]}"
 }
 
 show_help() {
@@ -91,9 +112,9 @@ show_help() {
 DevOps helper for PaddleOCR layout detection
 
 Usage:
-  ./devops.sh deps              # Create venv and install dependencies
-  ./devops.sh run <image_path>  # Run segment.py on an image
-  ./devops.sh help              # Show this help
+  ./devops.sh deps                                   # Create venv and install dependencies
+  ./devops.sh run <image_path> [--layout-threshold]  # Run segment.py on an image
+  ./devops.sh help                                   # Show this help
 
 Notes:
 - This script manages a local virtual environment in ".venv" under this directory.

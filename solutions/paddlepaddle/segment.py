@@ -58,6 +58,24 @@ def preprocess_image(image_path, max_size=1920, enhance_contrast=True):
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Layout Detection Script for PaddleOCR')
 parser.add_argument('image_path', help='Path to the input image file')
+parser.add_argument(
+    '--box-width-scale',
+    type=float,
+    default=1.0,
+    help='Horizontal scale factor for layout boxes in the visualization image (1.0 = original width).',
+)
+parser.add_argument(
+    '--box-height-scale',
+    type=float,
+    default=1.0,
+    help='Vertical scale factor for layout boxes in the visualization image (1.0 = original height).',
+)
+parser.add_argument(
+    '--layout-threshold',
+    type=float,
+    default=None,
+    help='Score threshold for layout detection boxes (lower = more boxes, None = use model default).',
+)
 args = parser.parse_args()
 
 # Derive deterministic output image name based on input
@@ -69,13 +87,20 @@ output_dir = "./output"
 os.makedirs(output_dir, exist_ok=True)
 seg_filename = f"{input_basename}_seg{input_ext}"
 seg_path = os.path.join(output_dir, seg_filename)
+json_filename = f"{input_basename}_seg.json"
+json_path = os.path.join(output_dir, json_filename)
 
 # Method 1: Direct file path (simplest)
 # output = model.predict(args.image_path, batch_size=1)
 
 # Method 2: Preprocess first (recommended for large or low-contrast images)
 image = preprocess_image(args.image_path, max_size=1920, enhance_contrast=True)
-output = model.predict(image, batch_size=1)
+
+predict_kwargs = {}
+if args.layout_threshold is not None:
+    predict_kwargs["threshold"] = args.layout_threshold
+
+output = model.predict(image, batch_size=1, **predict_kwargs)
 
 # Process results
 def get_box_coords(box):
@@ -122,12 +147,107 @@ def filter_nested_boxes(boxes):
     
     return [b for k, b in enumerate(boxes) if k not in to_remove]
 
+
+def shrink_boxes_inplace(boxes, width_scale: float = 1.0, height_scale: float = 1.0):
+    """
+    Shrink detected layout boxes around their centers before visualization.
+    This only affects the red rectangles drawn into the *_seg.png image and
+    keeps the underlying detection results otherwise intact.
+    """
+    if not boxes:
+        return boxes
+    if width_scale == 1.0 and height_scale == 1.0:
+        return boxes
+
+    for box in boxes:
+        coords = get_box_coords(box)
+        if not coords:
+            continue
+
+        x1, y1, x2, y2 = coords
+        cx = (x1 + x2) / 2.0
+        cy = (y1 + y2) / 2.0
+
+        half_w = (x2 - x1) * width_scale / 2.0
+        half_h = (y2 - y1) * height_scale / 2.0
+
+        nx1 = int(round(cx - half_w))
+        ny1 = int(round(cy - half_h))
+        nx2 = int(round(cx + half_w))
+        ny2 = int(round(cy + half_h))
+
+        # Ensure coordinates remain valid and ordered
+        if nx2 <= nx1 or ny2 <= ny1:
+            continue
+
+        if 'bbox' in box:
+            box['bbox'] = [nx1, ny1, nx2, ny2]
+        elif 'coordinate' in box:
+            box['coordinate'] = [nx1, ny1, nx2, ny2]
+
+    return boxes
+
+
+def annotate_image_with_classes(image_path: str, boxes):
+    """
+    Overlay class id / label text near each detected box on the
+    visualization image produced by PaddleOCR.
+    """
+    if not boxes:
+        return
+
+    img = cv2.imread(image_path)
+    if img is None:
+        print(f"Warning: could not read image for annotation: {image_path}")
+        return
+
+    for box in boxes:
+        coords = get_box_coords(box)
+        if not coords:
+            continue
+
+        x1, y1, x2, y2 = coords
+        x1_i, y1_i = int(x1), int(y1)
+
+        cls_id = box.get("cls_id", "")
+        label = str(box.get("label", ""))
+        # Example: "2:text" or "2" if label missing
+        if label:
+            text = f"{cls_id}:{label}"
+        else:
+            text = str(cls_id)
+
+        # Draw text slightly above the top-left corner of the box
+        text_pos = (x1_i, max(0, y1_i - 5))
+        cv2.putText(
+            img,
+            text,
+            text_pos,
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (0, 0, 255),
+            1,
+            cv2.LINE_AA,
+        )
+
+    cv2.imwrite(image_path, img)
+
 for res in output:
     # Filter nested images before processing
     if 'res' in res and 'boxes' in res['res']:
-        res['res']['boxes'] = filter_nested_boxes(res['res']['boxes'])
+        boxes = filter_nested_boxes(res['res']['boxes'])
+        res['res']['boxes'] = shrink_boxes_inplace(
+            boxes,
+            width_scale=args.box_width_scale,
+            height_scale=args.box_height_scale,
+        )
     elif 'boxes' in res:
-        res['boxes'] = filter_nested_boxes(res['boxes'])
+        boxes = filter_nested_boxes(res['boxes'])
+        res['boxes'] = shrink_boxes_inplace(
+            boxes,
+            width_scale=args.box_width_scale,
+            height_scale=args.box_height_scale,
+        )
 
     res.print()
 
@@ -138,30 +258,34 @@ for res in output:
     res.save_to_img(save_path=output_dir)
 
     # Persist raw detection data
-    res.save_to_json(save_path=os.path.join(output_dir, "segments.json"))
+    res.save_to_json(save_path=json_path)
 
     # Rename the first new image to <input_basename>_seg.<ext>
     after_files = set(os.listdir(output_dir))
-    new_files = sorted(f for f in after_files - before_files if os.path.splitext(f)[1].lower() in {".png", ".jpg", ".jpeg", ".bmp"})
+    new_files = sorted(
+        f
+        for f in after_files - before_files
+        if os.path.splitext(f)[1].lower() in {".png", ".jpg", ".jpeg", ".bmp"}
+    )
     if new_files:
         src_path = os.path.join(output_dir, new_files[0])
         if src_path != seg_path:
             os.replace(src_path, seg_path)
             print(f"Saved segmented layout image as: {seg_path}")
-    
-    # Print detection statistics
+
     # Access boxes from the result structure (res is a dict-like object)
+    boxes = None
     if 'res' in res and 'boxes' in res['res']:
         boxes = res['res']['boxes']
-        print(f"\nDetected {len(boxes)} layout regions")
-        # Print detected labels
-        labels = [box['label'] for box in boxes]
-        label_counts = {}
-        for label in labels:
-            label_counts[label] = label_counts.get(label, 0) + 1
-        print(f"Label distribution: {label_counts}")
     elif 'boxes' in res:
         boxes = res['boxes']
+
+    # Optionally annotate the visualization with cls_id / label
+    if boxes is not None and os.path.exists(seg_path):
+        annotate_image_with_classes(seg_path, boxes)
+
+    # Print detection statistics
+    if boxes is not None:
         print(f"\nDetected {len(boxes)} layout regions")
         labels = [box['label'] for box in boxes]
         label_counts = {}
