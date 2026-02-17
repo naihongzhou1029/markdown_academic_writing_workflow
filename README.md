@@ -6,7 +6,7 @@ The project demonstrates how to produce a fully typeset scholarly PDF—complete
 
 ### Project Goals
 
-- **Sustainable Academic Workflow**: Demonstrate a reliable, plain-text academic writing process using `paper.md`, Pandoc, LaTeX, Zotero/Better BibTeX, and a `Makefile`-driven build.
+- **Sustainable Academic Workflow**: Demonstrate a reliable, plain-text academic writing process using `paper.md`, Pandoc, LaTeX, Zotero/Better BibTeX, and a containerized build pipeline.
 - **Multilingual Support**: Show how to translate manuscripts (e.g., to Traditional Chinese) using LLM-based scripts and rebuild typeset PDFs from the translated sources.
 - **Reproducibility**: Use Docker to provide a consistent environment where the same source always produces the same output.
 
@@ -66,26 +66,25 @@ This project uses **Docker** to provide a consistent, reproducible build environ
 - **`README.md`**: High-level description of the workflow, toolchain, and build commands.
 - **`AGENTS.md`**: Technical constraints and instructions specifically for AI agents.
 - **`paper.md`**: The primary English manuscript. Contains YAML metadata for document configuration.
-- **`Makefile`**: Orchestrates the build process (targets: `pdf`, `cover`, `printed`, `zh_tw`, `clean`).
-- **`devops.sh`**: Unified development operations script merging Makefile and Docker wrapper functionality.
+- **`devops.sh`**: Unified development operations script for running the Dockerized build pipeline.
 - **`tools/`**: Helper scripts for translation, font detection, validation, and post-processing.
   - **`validate-and-fix-translated-md.sh`**: AI-powered validation to fix formatting errors in translated Markdown.
 - **`Dockerfile`**: Defines the `pandocker-with-tools:latest` image used for builds.
-- **`make-docker.sh`** (and `.bat`/`.ps1`): Wrappers for running `make` inside the Docker container.
+- **Windows wrappers** (`make-docker.bat`, `make-docker.ps1`): Legacy helpers for running Dockerized builds from Windows shells.
 
 ### Basic Usage: Build the Example PDF
 
-This project uses Docker to ensure a consistent build environment. All toolchains (Pandoc, LaTeX, Make, etc.) run inside the `dalibo/pandocker` container.
+This project uses Docker to ensure a consistent build environment. All toolchains (Pandoc, LaTeX, etc.) run inside the `dalibo/pandocker` container.
 
-**Using the Docker wrapper (recommended):**
+**Using the devops script (recommended):**
 
-- **Linux/macOS/WSL**: Use `./make-docker.sh`
-- **Windows CMD**: Use `make-docker.bat`
-- **Windows PowerShell**: Use `./make-docker.ps1`
+- **Linux/macOS/WSL**: Use `./devops.sh`
+- **Windows CMD**: Use `make-docker.bat` (invokes Docker from CMD)
+- **Windows PowerShell**: Use `./make-docker.ps1` (invokes Docker from PowerShell)
 
 ```bash
 # Linux/macOS/WSL
-./make-docker.sh
+./devops.sh
 
 # Windows CMD
 make-docker.bat
@@ -94,12 +93,12 @@ make-docker.bat
 ./make-docker.ps1
 ```
 
-This will:
+These commands will:
 1. Check for the base image `dalibo/pandocker:latest-full` and pull it if needed
 2. Build a derived image `pandocker-with-tools:latest` (with `jq` and `curl` pre-installed) if it doesn't exist
 3. Create an ephemeral Docker container from the derived image
 4. Mount the current directory into the container
-5. Run `make` inside the container
+5. Run the appropriate build entrypoint inside the container (`devops.sh` or, for legacy flows, `make`)
 6. Automatically remove the container after the build completes
 
 **Note**: The first run will build the derived image, which may take a few minutes. Subsequent runs will use the cached image, making builds faster.
@@ -108,13 +107,13 @@ This will:
 
 **Direct Docker invocation:**
 
-Alternatively, you can run make directly inside the container. First, build the derived image:
+Alternatively, you can run the build directly inside the container. First, build the derived image:
 
 ```bash
 docker build -t pandocker-with-tools:latest -f Dockerfile .
 ```
 
-Then run make:
+Then run the build:
 
 ```bash
 docker run --rm \
@@ -122,14 +121,14 @@ docker run --rm \
     -v "$(pwd)":/workspace \
     -w /workspace \
     pandocker-with-tools:latest \
-    make
+    bash -lc "./devops.sh printed"
 ```
 
-The `Makefile` handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `printed.pdf` (cover + paper merged).
+The build pipeline (as orchestrated by `devops.sh`) handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `printed.pdf` (cover + paper merged).
 
 ### Alternative: Development Operations Center (`devops.sh`)
 
-For a streamlined development experience, the repository includes `devops.sh`, a unified script that merges operations from both `Makefile` and `make-docker.sh` into a single command-line interface.
+For a streamlined development experience, the repository includes `devops.sh`, a unified script that consolidates the core Dockerized build operations into a single command-line interface.
 
 **Features:**
 - **Unified interface**: Single script for all build operations
@@ -173,13 +172,13 @@ For a streamlined development experience, the repository includes `devops.sh`, a
 
 **When to use:**
 - Use `devops.sh` for quick, iterative development and manual builds
-- Use `make-docker.sh` (or `.bat`/`.ps1`) when you need Make's dependency tracking or integration with existing Make workflows
+- Use the Windows wrapper scripts (`make-docker.bat`, `make-docker.ps1`) when invoking Dockerized builds from Windows shells
 
-**Note**: The `devops.sh` script does not include the `zh_tw` (translation) target. For translation workflows, use the `make-docker.sh` wrapper with the Makefile.
+**Note**: The `devops.sh` script now includes the `zh_tw` (translation) target as well, so both English and Traditional Chinese pipelines are available via a single entrypoint.
 
 ### Optional: Translate to Traditional Chinese (`zh_tw` target)
 
-This project also demonstrates how to leverage an LLM-backed translation pipeline, driven entirely from the `Makefile`, to produce a Traditional Chinese version of the paper:
+This project also demonstrates how to leverage an LLM-backed translation pipeline, driven entirely from the translation scripts, to produce a Traditional Chinese version of the paper:
 
 - **Source**: The original English manuscript in `paper.md` and the NTUST cover page in `cover_page.tex`.
 - **LLM translation**: Make targets call translation scripts (`tools/translate.sh`) that invoke a large language model defined by `LLM_MODEL` (default `gemini-2.5-flash`) using an API key stored in `.api_key`. These scripts generate translated Markdown and LaTeX into the `zh_tw/` directory.
@@ -189,7 +188,14 @@ This project also demonstrates how to leverage an LLM-backed translation pipelin
 To run the full translation and build the Traditional Chinese PDFs (including merged cover+paper):
 
 ```bash
-./make-docker.sh zh_tw
+# Linux/macOS/WSL
+./devops.sh zh_tw
+
+# Windows CMD
+make-docker.bat zh_tw
+
+# Windows PowerShell
+./make-docker.ps1 zh_tw
 ```
 
 The resulting files are written under the `zh_tw/` directory, mirroring the structure of the original English workflow.

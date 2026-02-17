@@ -17,7 +17,7 @@ DERIVED_IMAGE_NAME="pandocker-with-tools"
 DERIVED_IMAGE_TAG="latest"
 DERIVED_IMAGE="${DERIVED_IMAGE_NAME}:${DERIVED_IMAGE_TAG}"
 
-# File names
+# File names (primary EN build)
 PDF="paper.pdf"
 SRC="paper.md"
 BIB="references.json"
@@ -31,8 +31,18 @@ TEMP_SRC="paper.tmp.md"
 MERMAID_TEMP_SRC="paper.mermaid.tmp.md"
 COVER_TEMP_TEX="cover_page.tmp.tex"
 
+# Translation / zh_tw paths
+LLM_MODEL="gemini-2.5-flash"
+ZH_TW_DIR="zh_tw"
+ZH_TW_SRC="$ZH_TW_DIR/paper.md"
+ZH_TW_COVER="$ZH_TW_DIR/cover_page.tex"
+ZH_TW_PDF="$ZH_TW_DIR/paper.pdf"
+ZH_TW_COVER_PDF="$ZH_TW_DIR/cover.pdf"
+ZH_TW_PRINTED_PDF="$ZH_TW_DIR/printed.pdf"
+
 # Get absolute path of current directory
 WORK_DIR=$(pwd)
+API_KEY_FILE="$WORK_DIR/.api_key"
 
 # Color codes for output
 RED='\033[0;31m'
@@ -193,6 +203,150 @@ build_printed() {
     fi
 }
 
+# Translate main manuscript to Traditional Chinese (Markdown)
+translate_zh_tw_markdown() {
+    print_info "Translating $SRC to Traditional Chinese markdown in $ZH_TW_DIR/"
+
+    run_in_docker "
+        mkdir -p $ZH_TW_DIR
+        CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
+        CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
+        echo 'Translating $SRC to Traditional Chinese...'
+        bash tools/translate.sh $SRC $ZH_TW_SRC 'English' 'Traditional Chinese' '$LLM_MODEL' '.api_key'
+        echo 'Validating and fixing formatting errors in translation...'
+        bash tools/validate-and-fix-translated-md.sh $SRC $ZH_TW_SRC '$LLM_MODEL' '.api_key'
+        echo 'Post-processing translated markdown...'
+        bash tools/postprocess-translated-md.sh $ZH_TW_SRC \"\$CJK_FONT_TC\"
+    "
+}
+
+# Translate cover LaTeX to Traditional Chinese
+translate_zh_tw_cover() {
+    print_info "Translating $COVER_TEX to Traditional Chinese LaTeX in $ZH_TW_DIR/"
+
+    run_in_docker "
+        mkdir -p $ZH_TW_DIR
+        CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
+        CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
+        echo 'Translating $COVER_TEX to Traditional Chinese...'
+        bash tools/translate.sh $COVER_TEX $ZH_TW_COVER 'English' 'Traditional Chinese' '$LLM_MODEL' '.api_key'
+        echo 'Post-processing translated LaTeX...'
+        bash tools/postprocess-translated-tex.sh $ZH_TW_COVER 'PingFang TC' \"\$CJK_FONT_TC\"
+    "
+}
+
+# Build zh_tw paper PDF from translated markdown
+build_zh_tw_pdf() {
+    print_info "Building zh_tw paper PDF: $ZH_TW_PDF"
+
+    run_in_docker "
+        echo 'Building PDF from translated markdown...'
+        echo 'Processing Mermaid diagrams...'
+        mkdir -p images
+        bash tools/create-symlinks.sh $ZH_TW_DIR $BIB $CSL 'bibliography.bib'
+        if [ -d images ]; then
+            if [ -e $ZH_TW_DIR/images ]; then rm -rf $ZH_TW_DIR/images; fi
+            ( cd $ZH_TW_DIR && ln -sf ../images images )
+        fi
+        bash tools/process-mermaid.sh $ZH_TW_SRC $ZH_TW_DIR/paper.mermaid.tmp.md images
+        CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
+        CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
+        echo \"Using CJK font: \$CJK_FONT_TC\"
+        bash tools/replace-fonts.sh $ZH_TW_DIR/paper.mermaid.tmp.md $ZH_TW_DIR/paper.tmp.md 'PingFang SC' \"\$CJK_FONT_TC\"
+        ( cd $ZH_TW_DIR && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography='bibliography.bib' --csl=chicago-author-date.csl -V date=\$(date +%Y-%m-%d) -o paper.tex )
+        bash tools/fix-latex-csl.sh $ZH_TW_DIR/paper.tex
+        ( cd $ZH_TW_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
+        ( cd $ZH_TW_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
+        if [ ! -f '$ZH_TW_PDF' ]; then exit 1; fi
+        bash tools/cleanup-temp.sh $ZH_TW_DIR/paper.mermaid.tmp.md $ZH_TW_DIR/paper.tmp.md $ZH_TW_DIR/paper.tex $ZH_TW_DIR/paper.aux $ZH_TW_DIR/paper.log
+        echo 'Cleaned up intermediate translation files'
+    "
+
+    if [ -f "$WORK_DIR/$ZH_TW_PDF" ]; then
+        print_info "Successfully generated zh_tw paper PDF: $ZH_TW_PDF"
+    else
+        print_error "Failed to generate $ZH_TW_PDF"
+        exit 1
+    fi
+}
+
+# Build zh_tw cover PDF from translated LaTeX
+build_zh_tw_cover_pdf() {
+    print_info "Building zh_tw cover PDF: $ZH_TW_COVER_PDF"
+
+    # Ensure logo exists (reuse main-cover logic)
+    if [ ! -f "$WORK_DIR/$LOGO_FILE" ]; then
+        print_info "Fetching NTUST logo..."
+        run_in_docker "bash tools/download-logo.sh $LOGO_FILE $LOGO_URL"
+    fi
+
+    run_in_docker "
+        echo 'Building cover PDF from translated LaTeX...'
+        MAIN_FONT=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^MAIN_FONT=' | cut -d= -f2)
+        MAIN_FONT=\${MAIN_FONT:-Liberation Serif}
+        CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
+        CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
+        echo \"Using main font: \$MAIN_FONT, CJK font: \$CJK_FONT_TC\"
+        bash tools/copy-logo.sh $LOGO_FILE $ZH_TW_DIR
+        bash tools/replace-fonts.sh $ZH_TW_COVER $ZH_TW_DIR/cover_page.tmp.tex 'Times New Roman' \"\$MAIN_FONT\" 'PingFang TC' \"\$CJK_FONT_TC\"
+        bash tools/inject-date.sh $ZH_TW_DIR/cover_page.tmp.tex
+        ( cd $ZH_TW_DIR && xelatex -interaction=nonstopmode -jobname=cover cover_page.tmp.tex )
+        bash tools/cleanup-temp.sh $ZH_TW_DIR/cover_page.tmp.tex $ZH_TW_DIR/cover.aux $ZH_TW_DIR/cover.log
+        echo 'Cleaned up intermediate translation files'
+    "
+
+    if [ -f "$WORK_DIR/$ZH_TW_COVER_PDF" ]; then
+        print_info "Successfully generated zh_tw cover PDF: $ZH_TW_COVER_PDF"
+    else
+        print_error "Failed to generate $ZH_TW_COVER_PDF"
+        exit 1
+    fi
+}
+
+# Merge zh_tw cover + paper into printed PDF
+build_zh_tw_printed() {
+    print_info "Merging zh_tw cover + paper into: $ZH_TW_PRINTED_PDF"
+
+    if [ ! -f "$WORK_DIR/$ZH_TW_COVER_PDF" ]; then
+        build_zh_tw_cover_pdf
+    fi
+
+    if [ ! -f "$WORK_DIR/$ZH_TW_PDF" ]; then
+        build_zh_tw_pdf
+    fi
+
+    run_in_docker "bash tools/merge-pdfs.sh $ZH_TW_COVER_PDF $ZH_TW_PDF $ZH_TW_PRINTED_PDF"
+
+    if [ -f "$WORK_DIR/$ZH_TW_PRINTED_PDF" ]; then
+        print_info "Successfully generated: $ZH_TW_PRINTED_PDF"
+    else
+        print_error "Failed to generate $ZH_TW_PRINTED_PDF"
+        exit 1
+    fi
+}
+
+# Build Traditional Chinese version (zh_tw)
+build_zh_tw() {
+    print_info "Building Traditional Chinese version: zh_tw"
+
+    # Require API key file before running translation targets
+    if [ ! -f "$API_KEY_FILE" ]; then
+        print_error "API key file not found: $API_KEY_FILE"
+        print_error "Create it with your Gemini API key before running zh_tw."
+        echo "Example: echo \"<your-key>\" > .api_key && chmod 600 .api_key" >&2
+        exit 1
+    fi
+
+    # Run full translation + build pipeline
+    translate_zh_tw_markdown
+    translate_zh_tw_cover
+    build_zh_tw_pdf
+    build_zh_tw_cover_pdf
+    build_zh_tw_printed
+
+    print_info "Translation to Traditional Chinese completed. PDFs generated in $ZH_TW_DIR/"
+}
+
 # Clean generated files
 clean() {
     print_info "Cleaning generated files..."
@@ -221,6 +375,7 @@ Available targets:
   pdf       - Build the main paper PDF
   cover     - Build the cover page PDF
   printed   - Build the printed version (cover + paper) [default]
+  zh_tw     - Run the Traditional Chinese translation pipeline
   clean     - Remove all generated files
   deps      - Show information about dependencies
   help      - Show this help message
@@ -256,6 +411,9 @@ main() {
             ;;
         printed)
             build_printed
+            ;;
+        zh_tw)
+            build_zh_tw
             ;;
         clean)
             clean
