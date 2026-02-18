@@ -44,7 +44,6 @@ images/mermaid-*.png
 *.swp
 *.swo
 .idea/
-.vscode/
 .cache/
 
 # Cabal build artifacts (from local pandoc-crossref builds)
