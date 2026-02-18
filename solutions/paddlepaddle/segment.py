@@ -10,6 +10,9 @@ import cv2
 import numpy as np
 import argparse
 import os
+import sys
+
+import yaml
 
 # Configuration options to try:
 # 1. Increase img_size for better detection of smaller regions
@@ -23,6 +26,30 @@ import os
 # Note: img_size parameter is not supported for PP-DocLayout-L model
 # The model will automatically handle image sizing
 model = LayoutDetection(model_name="PP-DocLayout-L")
+
+def load_profile():
+    """Load shared configuration from profile.yaml (if present)."""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    profile_path = os.path.join(script_dir, "profile.yaml")
+    if not os.path.isfile(profile_path):
+        return {}
+    try:
+        with open(profile_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+        if not isinstance(data, dict):
+            return {}
+        return data
+    except Exception as e:
+        print(f"Warning: failed to load profile.yaml: {e}", file=sys.stderr)
+        return {}
+
+
+_PROFILE = load_profile()
+_LAYOUT_CFG = _PROFILE.get("layout") or {}
+
+TEXT_BOX_WIDTH_FACTOR = float(_LAYOUT_CFG.get("text_box_width_factor", 1.05))
+TEXT_BOX_HEIGHT_FACTOR = float(_LAYOUT_CFG.get("text_box_height_factor", 1.8))
+
 
 # Optional: Preprocess image to improve detection
 def preprocess_image(image_path, max_size=1920, enhance_contrast=True):
@@ -171,8 +198,9 @@ def shrink_boxes_inplace(boxes, width_scale: float = 1.0, height_scale: float = 
     Scale detected layout boxes around their centers before visualization.
     Values < 1.0 shrink boxes, values > 1.0 enlarge them.
     A label-specific factor is applied on top:
-      - text/paragraph/paragraph_title: width +5% (×1.05), height +80% (×1.8)
-      - image/figure/picture: no scaling (×1.0)
+      - text/paragraph/paragraph_title: width/height factors from profile.yaml
+        (defaults: width +5% (×1.05), height +80% (×1.8))
+      - image/figure/picture: no additional scaling beyond base factors
     This affects both the rectangles in the *_seg.png image and
     the coordinates saved into the *_seg.json file.
     """
@@ -192,8 +220,8 @@ def shrink_boxes_inplace(boxes, width_scale: float = 1.0, height_scale: float = 
         h_scale = height_scale
 
         if any(t in label for t in text_labels):
-            w_scale *= 1.05
-            h_scale *= 1.8
+            w_scale *= TEXT_BOX_WIDTH_FACTOR
+            h_scale *= TEXT_BOX_HEIGHT_FACTOR
         # image/figure/picture: no extra scaling (keep base width_scale/height_scale)
 
         x1, y1, x2, y2 = coords

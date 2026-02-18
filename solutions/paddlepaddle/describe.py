@@ -28,8 +28,45 @@ import sys
 import urllib.request
 import urllib.error
 
+import yaml
+
 import cv2
 import numpy as np
+
+
+def load_profile():
+    """Load shared configuration from profile.yaml (if present)."""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    profile_path = os.path.join(script_dir, "profile.yaml")
+    if not os.path.isfile(profile_path):
+        return {}
+    try:
+        with open(profile_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+        if not isinstance(data, dict):
+            return {}
+        return data
+    except Exception as e:
+        print(f"Warning: failed to load profile.yaml: {e}", file=sys.stderr)
+        return {}
+
+
+_PROFILE = load_profile()
+_LLM_CFG = _PROFILE.get("llm") or {}
+
+DEFAULT_DESCRIBE_IMAGE_BASE_PROMPT = (
+    "You are describing a cropped region from a document or UI image. "
+    "Below is the text content that has already been extracted from surrounding regions (in order). "
+    "Describe concisely what is shown in THIS image region (e.g. chart, diagram, screenshot, photo). "
+    "One or two sentences in plain language. Do not repeat the surrounding text.\n\n"
+    "Surrounding text so far:\n"
+)
+
+DESCRIBE_IMAGE_BASE_PROMPT = _LLM_CFG.get(
+    "describe_image_prompt", DEFAULT_DESCRIBE_IMAGE_BASE_PROMPT
+)
+
+DEFAULT_LLM_MODEL = _LLM_CFG.get("model", "gemini-3-flash-preview")
 
 
 def get_box_coords(box):
@@ -148,13 +185,7 @@ def describe_image_with_llm(crop_bgr, context_so_far, model, api_key):
         return ""
     _, buf = cv2.imencode(".png", crop_bgr)
     b64 = base64.b64encode(buf.tobytes()).decode("ascii")
-    prompt = (
-        "You are describing a cropped region from a document or UI image. "
-        "Below is the text content that has already been extracted from surrounding regions (in order). "
-        "Describe concisely what is shown in THIS image region (e.g. chart, diagram, screenshot, photo). "
-        "One or two sentences in plain language. Do not repeat the surrounding text.\n\n"
-        "Surrounding text so far:\n"
-    )
+    prompt = DESCRIBE_IMAGE_BASE_PROMPT
     if context_so_far.strip():
         prompt += context_so_far.strip() + "\n\n"
     prompt += "Describe only this image region:"
@@ -200,8 +231,11 @@ def main():
     )
     parser.add_argument(
         "--model",
-        default="gemini-3-flash-preview",
-        help="Gemini model for image description (default: gemini-3-flash-preview).",
+        default=DEFAULT_LLM_MODEL,
+        help=(
+            "Gemini model for image description "
+            f"(default: {DEFAULT_LLM_MODEL})."
+        ),
     )
     parser.add_argument(
         "--ocr-lang",
