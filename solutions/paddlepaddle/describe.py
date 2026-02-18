@@ -94,31 +94,10 @@ def extract_text_ocr(crop_bgr, ocr_engine):
     return "\n".join(lines).strip()
 
 
-def describe_image_with_llm(crop_bgr, context_so_far, model, api_key):
-    """Describe the image crop using Gemini vision; context_so_far is prior description text."""
-    if crop_bgr is None or crop_bgr.size == 0:
-        return ""
-    _, buf = cv2.imencode(".png", crop_bgr)
-    b64 = base64.b64encode(buf.tobytes()).decode("ascii")
-
-    prompt = (
-        "You are describing a cropped region from a document or UI image. "
-        "Below is the text content that has already been extracted from surrounding regions (in order). "
-        "Describe concisely what is shown in THIS image region (e.g. chart, diagram, screenshot, photo). "
-        "One or two sentences in plain language. Do not repeat the surrounding text.\n\n"
-        "Surrounding text so far:\n"
-    )
-    if context_so_far.strip():
-        prompt += context_so_far.strip() + "\n\n"
-    prompt += "Describe only this image region:"
-
-    parts = [
-        {"text": prompt},
-        {"inline_data": {"mime_type": "image/png", "data": b64}},
-    ]
+def _call_gemini(parts, model, api_key):
+    """Send a Gemini generateContent request and return the response text."""
     payload = {"contents": [{"parts": parts}]}
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
-
     try:
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
@@ -131,7 +110,6 @@ def describe_image_with_llm(crop_bgr, context_so_far, model, api_key):
         raise RuntimeError(f"Gemini API HTTP error {e.code}: {body}") from e
     except urllib.error.URLError as e:
         raise RuntimeError(f"Gemini API request failed: {e.reason}") from e
-
     if "error" in response_data:
         raise RuntimeError(
             f"Gemini API error: {response_data['error'].get('message', response_data['error'])}"
@@ -140,6 +118,51 @@ def describe_image_with_llm(crop_bgr, context_so_far, model, api_key):
         return ""
     part = response_data["candidates"][0]["content"]["parts"][0]
     return (part.get("text") or "").strip()
+
+
+def correct_ocr_with_llm(raw_text, crop_bgr, model, api_key):
+    """Fix garbled/truncated OCR text using Gemini vision on the original crop."""
+    if crop_bgr is None or crop_bgr.size == 0:
+        return raw_text
+    _, buf = cv2.imencode(".png", crop_bgr)
+    b64 = base64.b64encode(buf.tobytes()).decode("ascii")
+    prompt = (
+        "You are correcting OCR output from a document that may contain Traditional Chinese, "
+        "Simplified Chinese, and English mixed together.\n"
+        "The image shows the original text region. The OCR engine produced the following raw text:\n\n"
+        f"{raw_text}\n\n"
+        "Return ONLY the corrected text. Fix garbled characters, missing characters (e.g. truncated "
+        "punctuation at line ends), and wrong digits. Preserve the original line structure. "
+        "Do NOT add any explanation or extra content."
+    )
+    parts = [
+        {"text": prompt},
+        {"inline_data": {"mime_type": "image/png", "data": b64}},
+    ]
+    return _call_gemini(parts, model, api_key)
+
+
+def describe_image_with_llm(crop_bgr, context_so_far, model, api_key):
+    """Describe the image crop using Gemini vision; context_so_far is prior description text."""
+    if crop_bgr is None or crop_bgr.size == 0:
+        return ""
+    _, buf = cv2.imencode(".png", crop_bgr)
+    b64 = base64.b64encode(buf.tobytes()).decode("ascii")
+    prompt = (
+        "You are describing a cropped region from a document or UI image. "
+        "Below is the text content that has already been extracted from surrounding regions (in order). "
+        "Describe concisely what is shown in THIS image region (e.g. chart, diagram, screenshot, photo). "
+        "One or two sentences in plain language. Do not repeat the surrounding text.\n\n"
+        "Surrounding text so far:\n"
+    )
+    if context_so_far.strip():
+        prompt += context_so_far.strip() + "\n\n"
+    prompt += "Describe only this image region:"
+    parts = [
+        {"text": prompt},
+        {"inline_data": {"mime_type": "image/png", "data": b64}},
+    ]
+    return _call_gemini(parts, model, api_key)
 
 
 def load_metadata(path):
@@ -177,13 +200,19 @@ def main():
     )
     parser.add_argument(
         "--model",
-        default="gemini-2.5-flash",
-        help="Gemini model for image description (default: gemini-2.5-flash).",
+        default="gemini-3-flash-preview",
+        help="Gemini model for image description (default: gemini-3-flash-preview).",
     )
     parser.add_argument(
         "--ocr-lang",
         default="ch",
         help="PaddleOCR language code: ch (Simplified+Traditional Chinese), chinese_cht (Traditional only), en (English). (default: ch).",
+    )
+    parser.add_argument(
+        "--correct-ocr",
+        action="store_true",
+        default=False,
+        help="After OCR, send each text crop + raw result to Gemini for correction (requires API key).",
     )
     parser.add_argument(
         "--export-text-crops-dir",
@@ -268,6 +297,11 @@ def main():
                 cv2.imwrite(crop_path, crop)
             text = extract_text_ocr(crop, ocr_engine)
             if text:
+                if args.correct_ocr and api_key:
+                    try:
+                        text = correct_ocr_with_llm(text, crop, args.model, api_key)
+                    except Exception as e:
+                        print(f"Warning: OCR correction failed for box {i}: {e}", file=sys.stderr)
                 if label == "paragraph_title":
                     description_blocks.append(f"## {text}")
                 else:

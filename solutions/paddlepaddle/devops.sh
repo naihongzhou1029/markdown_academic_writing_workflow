@@ -125,13 +125,29 @@ seg_layout() {
 tell_descriptions() {
   if [ $# -lt 2 ]; then
     print_error "Missing metadata JSON and/or image path."
-    echo "Usage: $0 tell <metadata.json> <image_path> [output_dir]"
+    echo "Usage: $0 tell <metadata.json> <image_path> [output_dir] [--correct-ocr]"
     exit 1
   fi
 
   local metadata_json="$1"
   local image_path="$2"
-  local output_dir="${3:-.}"
+  shift 2
+
+  local output_dir="."
+  local correct_ocr_flag=()
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --correct-ocr)
+        correct_ocr_flag=("--correct-ocr")
+        shift
+        ;;
+      *)
+        output_dir="$1"
+        shift
+        ;;
+    esac
+  done
 
   if [ ! -f "$metadata_json" ]; then
     print_error "Metadata file not found: $metadata_json"
@@ -145,10 +161,10 @@ tell_descriptions() {
   ensure_venv
   activate_venv
 
-  print_info "Running describe.py (API key: $API_KEY_FILE, model: $GEMINI_MODEL)"
+  print_info "Running describe.py (API key: $API_KEY_FILE${correct_ocr_flag:+, OCR correction enabled})"
   python "$SCRIPT_DIR/describe.py" \
     --api-key-file "$API_KEY_FILE" \
-    --model "$GEMINI_MODEL" \
+    "${correct_ocr_flag[@]}" \
     "$metadata_json" "$image_path" "$output_dir"
 }
 
@@ -190,7 +206,7 @@ DevOps helper for PaddleOCR layout detection
 Usage:
   ./devops.sh deps                                          # Create venv and install dependencies
   ./devops.sh seg <image_path> [--layout-threshold <float>]  # Run segment.py on an image
-  ./devops.sh tell <metadata.json> <image_path> [output_dir] # Run describe.py (uses repo .api_key)
+  ./devops.sh tell <metadata.json> <image_path> [output_dir] [--correct-ocr] # Run describe.py (uses repo .api_key)
   ./devops.sh croppings <metadata.json> <image_path> [output_dir] # Run describe.py and export text crops
   ./devops.sh help                                           # Show this help
 
