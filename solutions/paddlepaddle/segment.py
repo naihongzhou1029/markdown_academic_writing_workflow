@@ -148,6 +148,24 @@ def filter_nested_boxes(boxes):
     return [b for k, b in enumerate(boxes) if k not in to_remove]
 
 
+def sort_boxes_top_to_down(boxes):
+    """
+    Sort layout boxes in reading order: top-to-down, then left-to-right for same row.
+    Uses top edge (y1) then left edge (x1). Coordinate format: [x1, y1, x2, y2].
+    """
+    if not boxes:
+        return boxes
+
+    def sort_key(box):
+        coords = get_box_coords(box)
+        if not coords:
+            return (0, 0)
+        x1, y1, x2, y2 = coords
+        return (y1, x1)
+
+    return sorted(boxes, key=sort_key)
+
+
 def shrink_boxes_inplace(boxes, width_scale: float = 1.0, height_scale: float = 1.0):
     """
     Shrink detected layout boxes around their centers before visualization.
@@ -236,18 +254,20 @@ for res in output:
     # Filter nested images before processing
     if 'res' in res and 'boxes' in res['res']:
         boxes = filter_nested_boxes(res['res']['boxes'])
-        res['res']['boxes'] = shrink_boxes_inplace(
+        boxes = shrink_boxes_inplace(
             boxes,
             width_scale=args.box_width_scale,
             height_scale=args.box_height_scale,
         )
+        res['res']['boxes'] = sort_boxes_top_to_down(boxes)
     elif 'boxes' in res:
         boxes = filter_nested_boxes(res['boxes'])
-        res['boxes'] = shrink_boxes_inplace(
+        boxes = shrink_boxes_inplace(
             boxes,
             width_scale=args.box_width_scale,
             height_scale=args.box_height_scale,
         )
+        res['boxes'] = sort_boxes_top_to_down(boxes)
 
     res.print()
 

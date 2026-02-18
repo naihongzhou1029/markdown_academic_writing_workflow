@@ -6,6 +6,10 @@ bibliography:
   - bibliography.bib
 csl: chicago-author-date.csl
 link-citations: true
+colorlinks: true
+linkcolor: blue
+urlcolor: blue
+citecolor: blue
 pdf-engine: xelatex
 fontsize: 12pt
 CJKmainfont: "PingFang TC"
@@ -62,6 +66,12 @@ header-includes:
     \pretocmd{\listoftables}{\clearpage}{}{}
     \apptocmd{\listoftables}{\clearpage}{}{}
     \pretocmd{\section}{\clearpage\FloatBarrier}{}{}
+    \let\originc\includegraphics
+    \newcommand{\borderedinc}[2][]{\setlength{\fboxrule}{0.4pt}\setlength{\fboxsep}{2pt}\fbox{\originc[#1]{#2}}}
+    \AtBeginEnvironment{figure}{\let\includegraphics\borderedinc}
+    \AtEndEnvironment{figure}{\let\includegraphics\originc}
+    \usepackage[normalem]{ulem}
+    \AtBeginDocument{\let\oldhref\href\renewcommand{\href}[2]{\uline{\oldhref{#1}{#2}}}}
 numbersections: true
 ---
 # 緒論
@@ -202,7 +212,7 @@ GenAI產品和技術迭代迅速，為統一評估可行性標準，將會以202
 
 ## 目標文件及其驗收標準
 
-本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://www.google.com/url?q=https://youtu.be/rZyODkoJsp0&sa=D&source=editors&ust=1765715299417045&usg=AOvVaw3h3Yk8MT6D7FfSYkFdE_ZQ)」，遊戲規格書是「[《宙斯》規格](https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp=sharing)」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
+本研究的目標遊戲是【宙斯】，在YouTube可以找到參考影片「[IGS宙斯悦华软件批发测试中](https://youtu.be/rZyODkoJsp0)」，遊戲規格書是「[《宙斯》規格](https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp=sharing)」。這類的遊戲在業界通常簡稱為老虎機(Slot Game Machine)，玩法也是變化萬千，但在本文研究範圍及資源有限，且驗證標準要儘量一致的情況下，我們就以這一款產品為目標。
 
 測試驗證的方向可簡單分為以下三類：純文字理解，內建圖像理解，以及表格內容理解。為了加速驗證假設是否正確，我們選擇用 **Gemini 3 的便捷(Fast), 思考(Thinking)以及專業(Pro)三種模式，對同樣的問題進行實際測試** 。這三種模式主要是[思考深度的差異](https://vertu.com/lifestyle/gemini-3-flash-outperforms-pro-in-coding-while-pro-suffers-critical-memory-issues/)，同時也是速度和深度的差異。如字義，便捷模式的思考主要是類似「膝反射」式，完全依賴模型預訓練知識及快速簡單推論的回答。思考模式會針對問題進行反思推論，是否有不合邏輯之處，而專業模式是拆解問題，進行多層次，接近「第一性原理(The First Principles)」的推論及思考。驗證的流程會先以便捷模式為優先，如果答案已經足夠，則不進行其他模式的後續驗證。若不行，則會進行其他兩個模式的驗證，確認同一個問題是否在更深的推論能力下即可得到品質足夠的答案。透過這三個程度的驗證就可以知道，以目前大語言模型的能力，能有多少程度正確理解規格書上的內容，進而成為可供我們採取下一步行動的知識。
 
@@ -639,63 +649,63 @@ AI 的回答如上，明確反映規格書中沒有相關的內容。它的理�
 
 > ### 高價值符號
 >
-> 1. 宙斯（Zeus）  
->    * x5 = 250  
->    * x4 = 150  
->    * x3 = 50  
->    * x2 = 5  
-> 2. 神殿（Temple）  
->    * x5 = 200  
->    * x4 = 100  
->    * x3 = 25  
->    * x2 = 5  
-> 3. 天馬（Pegasus）  
->    * x5 = 200  
->    * x4 = 100  
->    * x3 = 25  
->    * x2 = 5  
-> 4. 月桂冠（Laurel Wreath）  
->    * x5 = 150  
->    * x4 = 75  
+> 1. 宙斯（Zeus）
+>    * x5 = 250
+>    * x4 = 150
+>    * x3 = 50
+>    * x2 = 5
+> 2. 神殿（Temple）
+>    * x5 = 200
+>    * x4 = 100
+>    * x3 = 25
+>    * x2 = 5
+> 3. 天馬（Pegasus）
+>    * x5 = 200
+>    * x4 = 100
+>    * x3 = 25
+>    * x2 = 5
+> 4. 月桂冠（Laurel Wreath）
+>    * x5 = 150
+>    * x4 = 75
 >    * x3 = 25
 >
 > ### 中等價值符號
 >
-> 5. 古幣（Coin）  
->    * x5 = 150  
->    * x4 = 75  
->    * x3 = 25  
-> 6. A（Ace）  
->    * x5 = 100  
->    * x4 = 50  
->    * x3 = 10  
-> 7. K（King）  
->    * x5 = 100  
->    * x4 = 50  
->    * x3 = 10  
-> 8. Q（Queen）  
->    * x5 = 100  
->    * x4 = 50  
+> 5. 古幣（Coin）
+>    * x5 = 150
+>    * x4 = 75
+>    * x3 = 25
+> 6. A（Ace）
+>    * x5 = 100
+>    * x4 = 50
+>    * x3 = 10
+> 7. K（King）
+>    * x5 = 100
+>    * x4 = 50
+>    * x3 = 10
+> 8. Q（Queen）
+>    * x5 = 100
+>    * x4 = 50
 >    * x3 = 10
 >
 > ### 低價值符號
 >
-> 9. J（Jack）  
->    * x5 = 100  
->    * x4 = 50  
->    * x3 = 10  
-> 10. 10（Ten）  
->    * x5 = 100  
->    * x4 = 50  
+> 9. J（Jack）
+>    * x5 = 100
+>    * x4 = 50
+>    * x3 = 10
+> 10. 10（Ten）
+>    * x5 = 100
+>    * x4 = 50
 >    * x3 = 10
 >
 > ### 特殊符號
 >
-> 11. Wild（百搭符號，宙斯）  
->    * x5 = 250  
->    * x4 = 150  
->    * x3 = 50  
->    * x2 = 5  
+> 11. Wild（百搭符號，宙斯）
+>    * x5 = 250
+>    * x4 = 150
+>    * x3 = 50
+>    * x2 = 5
 >    * 作用：可替代除 Scatter 以外的所有符號，提高中獎機率
 
 這些內容就是「工人智慧」的結晶了。當圖中的符號變成文字之後，同一個題目我們再問一次，是否能得到正確答案呢？

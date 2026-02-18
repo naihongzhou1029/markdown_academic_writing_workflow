@@ -74,6 +74,33 @@ This project uses **Docker** to provide a consistent, reproducible build environ
 - **`Dockerfile`**: Defines the `pandocker-with-tools:latest` image used for builds.
 - **`devops.ps1`**: PowerShell implementation for Windows, mirrors `devops.sh`.
 
+### Cursor Development Environment
+
+For developers who use [Cursor](https://cursor.com) as their primary editor, this repository provides rules and skills that the AI assistant follows to support the academic writing workflow.
+
+**Rules and agent constraints**
+
+- **`AGENTS.md`**: Defines constraints and conventions for AI agents (e.g. preserve `paper.md` YAML structure, use `./devops.sh` for builds, keep commit messages bilingual). The assistant reads this file automatically.
+
+**Skills (Agent Skills)**
+
+Project skills in `.cursor/skills/` teach the assistant specialized workflows:
+
+| Skill | Invocation | Purpose |
+|-------|------------|---------|
+| **ccb** | `/ccb` or "commit with ccb" | Generate Conventional Commit messages with bilingual (Traditional Chinese + English) body; writes to `.git/COMMIT_EDITMSG` |
+| **paste-crossref-image** | `/paste-crossref-image` | Save clipboard image to `images/`, describe it, rename by convention, and insert Pandoc figure markdown with `pandoc-crossref` label into the editing buffer |
+| **convert-conversation-figure** | "replace conversation screenshot with blockquote" | Replace a conversation screenshot figure with a styled blockquote (User/AI), using OCR or vision to transcribe the content |
+
+**How to use**
+
+- Invoke a skill by name (e.g. `/ccb` in chat) when the assistant supports slash commands.
+- Or describe the task in natural language (e.g. "replace this screenshot with a blockquote"); the assistant applies the matching skill when the description matches.
+
+**Build tasks**
+
+The `.vscode/tasks.json` file defines VS Code/Cursor tasks. Use **Run Build Task** (e.g. `Cmd+Shift+B`) to build; the default task builds the paper PDF via `./devops.sh pdf`.
+
 ### Basic Usage: Build the Example PDF
 
 This project uses Docker to ensure a consistent build environment. All toolchains (Pandoc, LaTeX, etc.) run inside the `dalibo/pandocker` container.
