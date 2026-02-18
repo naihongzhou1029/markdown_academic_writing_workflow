@@ -55,13 +55,13 @@ def sort_boxes_top_to_down(boxes):
     return sorted(boxes, key=sort_key)
 
 
-def crop_from_image(img, coords):
-    """Return image crop for [x1, y1, x2, y2]; coords are float, clipped to image bounds."""
+def crop_from_image(img, coords, pad=10):
+    """Return image crop for [x1, y1, x2, y2] with optional padding; coords are float, clipped to image bounds."""
     h, w = img.shape[:2]
-    x1 = max(0, int(coords[0]))
-    y1 = max(0, int(coords[1]))
-    x2 = min(w, int(coords[2]))
-    y2 = min(h, int(coords[3]))
+    x1 = max(0, int(coords[0]) - pad)
+    y1 = max(0, int(coords[1]) - pad)
+    x2 = min(w, int(coords[2]) + pad)
+    y2 = min(h, int(coords[3]) + pad)
     if x2 <= x1 or y2 <= y1:
         return None
     return img[y1:y2, x1:x2].copy()
@@ -182,8 +182,8 @@ def main():
     )
     parser.add_argument(
         "--ocr-lang",
-        default="chinese_cht",
-        help="PaddleOCR language code: chinese_cht (Traditional Chinese), ch (Simplified), en (English). (default: chinese_cht).",
+        default="ch",
+        help="PaddleOCR language code: ch (Simplified+Traditional Chinese), chinese_cht (Traditional only), en (English). (default: ch).",
     )
     parser.add_argument(
         "--export-text-crops-dir",
