@@ -3,12 +3,17 @@
 # DevOps helper for PaddleOCR segment.py
 # - Creates an isolated Python 3.11+ virtual environment
 # - Installs required Python dependencies
-# - Provides a simple "run" target to execute segment.py
+# - "seg": run segment.py
+# - "tell": run describe.py with repo .api_key
+# - "croppings": run describe.py and export text-region crops
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 VENV_DIR="${SCRIPT_DIR}/.venv"
+API_KEY_FILE="${REPO_ROOT}/.api_key"
+GEMINI_MODEL="${GEMINI_MODEL:-gemini-2.5-flash}"
 
 PYTHON_BIN=""
 
@@ -55,20 +60,30 @@ deps() {
   pip install --upgrade pip
 
   print_info "Installing PaddleOCR layout detection dependencies..."
-  # Package set derived from imports in segment.py
+  # Package set for segment.py and describe.py:
+  # - paddlepaddle, paddleocr: OCR and layout detection
+  # - opencv-python: image processing (cv2)
+  # - numpy: array operations
   pip install \
     "paddlepaddle>=2.6.0" \
     "paddleocr>=2.7.0" \
     "opencv-python>=4.8.0" \
     "numpy>=1.24.0"
 
+  print_info "Pre-downloading Traditional Chinese OCR model (chinese_cht)..."
+  # Trigger download of chinese_cht language model so first run is faster.
+  # Models are cached in ~/.paddlex/official_models/ after first download.
+  if ! python -c 'from paddleocr import PaddleOCR; PaddleOCR(use_textline_orientation=False, lang="chinese_cht")'; then
+    print_error "Failed to pre-download chinese_cht model. It will download on first use."
+  fi
+
   print_info "Dependency installation complete."
 }
 
-run_layout() {
+seg_layout() {
   if [ $# -lt 1 ]; then
     print_error "Missing image path."
-    echo "Usage: $0 run <image_path> [--layout-threshold <float>]"
+    echo "Usage: $0 seg <image_path> [--layout-threshold <float>]"
     exit 1
   fi
 
@@ -93,8 +108,8 @@ run_layout() {
         shift 2
         ;;
       *)
-        print_error "Unknown option for run: $1"
-        echo "Usage: $0 run <image_path> [--layout-threshold <float>]"
+        print_error "Unknown option for seg: $1"
+        echo "Usage: $0 seg <image_path> [--layout-threshold <float>]"
         exit 1
         ;;
     esac
@@ -107,19 +122,83 @@ run_layout() {
   python "$SCRIPT_DIR/segment.py" "$image_path" "${seg_args[@]}"
 }
 
+tell_descriptions() {
+  if [ $# -lt 2 ]; then
+    print_error "Missing metadata JSON and/or image path."
+    echo "Usage: $0 tell <metadata.json> <image_path> [output_dir]"
+    exit 1
+  fi
+
+  local metadata_json="$1"
+  local image_path="$2"
+  local output_dir="${3:-.}"
+
+  if [ ! -f "$metadata_json" ]; then
+    print_error "Metadata file not found: $metadata_json"
+    exit 1
+  fi
+  if [ ! -f "$image_path" ]; then
+    print_error "Image file not found: $image_path"
+    exit 1
+  fi
+
+  ensure_venv
+  activate_venv
+
+  print_info "Running describe.py (API key: $API_KEY_FILE, model: $GEMINI_MODEL)"
+  python "$SCRIPT_DIR/describe.py" \
+    --api-key-file "$API_KEY_FILE" \
+    --model "$GEMINI_MODEL" \
+    "$metadata_json" "$image_path" "$output_dir"
+}
+
+croppings() {
+  if [ $# -lt 2 ]; then
+    print_error "Missing metadata JSON and/or image path."
+    echo "Usage: $0 croppings <metadata.json> <image_path> [output_dir]"
+    exit 1
+  fi
+
+  local metadata_json="$1"
+  local image_path="$2"
+  local output_dir="${3:-.}"
+
+  if [ ! -f "$metadata_json" ]; then
+    print_error "Metadata file not found: $metadata_json"
+    exit 1
+  fi
+  if [ ! -f "$image_path" ]; then
+    print_error "Image file not found: $image_path"
+    exit 1
+  fi
+
+  ensure_venv
+  activate_venv
+
+  print_info "Running describe.py with text crop export (API key: $API_KEY_FILE, model: $GEMINI_MODEL)"
+  python "$SCRIPT_DIR/describe.py" \
+    --api-key-file "$API_KEY_FILE" \
+    --model "$GEMINI_MODEL" \
+    --export-text-crops-dir "croppings" \
+    "$metadata_json" "$image_path" "$output_dir"
+}
+
 show_help() {
-  cat <<EOF
+  cat <<'HELPEOF'
 DevOps helper for PaddleOCR layout detection
 
 Usage:
-  ./devops.sh deps                                   # Create venv and install dependencies
-  ./devops.sh run <image_path> [--layout-threshold]  # Run segment.py on an image
-  ./devops.sh help                                   # Show this help
+  ./devops.sh deps                                          # Create venv and install dependencies
+  ./devops.sh seg <image_path> [--layout-threshold <float>]  # Run segment.py on an image
+  ./devops.sh tell <metadata.json> <image_path> [output_dir] # Run describe.py (uses repo .api_key)
+  ./devops.sh croppings <metadata.json> <image_path> [output_dir] # Run describe.py and export text crops
+  ./devops.sh help                                           # Show this help
 
 Notes:
 - This script manages a local virtual environment in ".venv" under this directory.
 - segment.py currently targets Python 3.11 (PaddlePaddle does not yet support 3.14).
-EOF
+- tell uses the repository root .api_key for Gemini (image description).
+HELPEOF
 }
 
 main() {
@@ -130,8 +209,14 @@ main() {
     deps)
       deps "$@"
       ;;
-    run)
-      run_layout "$@"
+    seg)
+      seg_layout "$@"
+      ;;
+    tell)
+      tell_descriptions "$@"
+      ;;
+    croppings)
+      croppings "$@"
       ;;
     help|--help|-h)
       show_help

@@ -62,13 +62,13 @@ parser.add_argument(
     '--box-width-scale',
     type=float,
     default=1.0,
-    help='Horizontal scale factor for layout boxes in the visualization image (1.0 = original width).',
+    help='Base horizontal scale factor for layout boxes; label-specific scaling (e.g. text vs image) is applied on top.',
 )
 parser.add_argument(
     '--box-height-scale',
     type=float,
     default=1.0,
-    help='Vertical scale factor for layout boxes in the visualization image (1.0 = original height).',
+    help='Base vertical scale factor for layout boxes; label-specific scaling (e.g. text vs image) is applied on top.',
 )
 parser.add_argument(
     '--layout-threshold',
@@ -168,13 +168,15 @@ def sort_boxes_top_to_down(boxes):
 
 def shrink_boxes_inplace(boxes, width_scale: float = 1.0, height_scale: float = 1.0):
     """
-    Shrink detected layout boxes around their centers before visualization.
-    This only affects the red rectangles drawn into the *_seg.png image and
-    keeps the underlying detection results otherwise intact.
+    Scale detected layout boxes around their centers before visualization.
+    Values < 1.0 shrink boxes, values > 1.0 enlarge them.
+    A label-specific factor is applied on top:
+      - text/paragraph/paragraph_title: width +5% (×1.05), height +80% (×1.8)
+      - image/figure/picture: no scaling (×1.0)
+    This affects both the rectangles in the *_seg.png image and
+    the coordinates saved into the *_seg.json file.
     """
     if not boxes:
-        return boxes
-    if width_scale == 1.0 and height_scale == 1.0:
         return boxes
 
     for box in boxes:
@@ -182,12 +184,24 @@ def shrink_boxes_inplace(boxes, width_scale: float = 1.0, height_scale: float = 
         if not coords:
             continue
 
+        # Derive label-based scaling
+        label = str(box.get('label', '')).lower()
+        text_labels = ['text', 'paragraph', 'paragraph_title']
+
+        w_scale = width_scale
+        h_scale = height_scale
+
+        if any(t in label for t in text_labels):
+            w_scale *= 1.05
+            h_scale *= 1.8
+        # image/figure/picture: no extra scaling (keep base width_scale/height_scale)
+
         x1, y1, x2, y2 = coords
         cx = (x1 + x2) / 2.0
         cy = (y1 + y2) / 2.0
 
-        half_w = (x2 - x1) * width_scale / 2.0
-        half_h = (y2 - y1) * height_scale / 2.0
+        half_w = (x2 - x1) * w_scale / 2.0
+        half_h = (y2 - y1) * h_scale / 2.0
 
         nx1 = int(round(cx - half_w))
         ny1 = int(round(cy - half_h))
