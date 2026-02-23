@@ -8,6 +8,7 @@ csl: chicago-author-date.csl
 link-citations: true
 colorlinks: true
 linkcolor: blue
+toccolor: black
 urlcolor: blue
 citecolor: blue
 pdf-engine: xelatex

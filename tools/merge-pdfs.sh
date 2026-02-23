@@ -16,12 +16,18 @@ fi
 # Last argument is output; all others are inputs.
 OUTPUT="${@: -1}"
 INPUTS=("${@:1:$(($#-1))}")
+TMP_OUTPUT="${OUTPUT}.tmp.$$"
+
+# Ensure stale temp output does not block this run.
+rm -f "$TMP_OUTPUT"
 
 if command -v pdfunite >/dev/null 2>&1; then
-    pdfunite "${INPUTS[@]}" "$OUTPUT"
+    pdfunite "${INPUTS[@]}" "$TMP_OUTPUT"
+    mv -f "$TMP_OUTPUT" "$OUTPUT"
     echo "Created $OUTPUT from ${#INPUTS[@]} input PDF(s) with pdfunite."
 elif command -v gs >/dev/null 2>&1; then
-    gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile="$OUTPUT" "${INPUTS[@]}"
+    gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile="$TMP_OUTPUT" "${INPUTS[@]}"
+    mv -f "$TMP_OUTPUT" "$OUTPUT"
     echo "Created $OUTPUT from ${#INPUTS[@]} input PDF(s) with Ghostscript (gs)."
 else
     echo "Neither pdfunite nor gs found. Install poppler-utils (pdfunite) with 'sudo apt-get install poppler-utils'" >&2
