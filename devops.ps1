@@ -75,16 +75,32 @@ if (-not (Test-Docker)) {
 Ensure-BaseImage
 Ensure-DerivedImage
 
-$cmd = "./devops.sh $Target"
+if ($Target -in @("help", "--help", "-h")) {
+    Write-Host "Development Operations Center - devops.ps1"
+    Write-Host ""
+    Write-Host "Usage: ./devops.ps1 [target]"
+    Write-Host ""
+    Write-Host "Available targets:"
+    Write-Host "  pdf       - Build the main paper PDF"
+    Write-Host "  cover     - Build the cover page PDF"
+    Write-Host "  printed   - Build the printed version (cover + paper) [default]"
+    Write-Host "  zh_tw     - Run the Traditional Chinese translation pipeline"
+    Write-Host "  clean     - Remove all generated files"
+    Write-Host "  deps      - Show information about dependencies"
+    Write-Host "  help      - Show this help message"
+    exit 0
+}
+
+$cmd = "make $Target"
 
 $dockerArgs = @(
     "run",
     "--rm",
-    "--entrypoint", "",
+    "--entrypoint", "/bin/bash",
     "-v", "${WorkDir}:/workspace",
     "-w", "/workspace",
     $DerivedImage,
-    "bash", "-c", $cmd
+    "-lc", $cmd
 )
 
 & docker $dockerArgs
