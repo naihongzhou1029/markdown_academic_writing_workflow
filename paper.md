@@ -1,5 +1,5 @@
 ---
-title: "利用生成式人工智慧從遊戲設計流程中的規格書進行知識萃取"
+title: "利用生成式人工智慧技術從遊戲設計規格書進行知識萃取"
 author: "周乃宏"
 abstract: ""
 bibliography:
@@ -473,7 +473,7 @@ AI 的回答如上，明確反映規格書中沒有相關的內容。它的理�
 | 5    | Info頁有幾頁內容？內容分別為何？                     | 0%     |
 | 總分 | 0%                                                   |        |
 
-### 表格理解
+### 表格理解 {#sec:table-understanding}
 
 如前述，在試算表中，文字不是連續存放的。同樣是一句話，可以放在同一個儲存格中，也可以拆到2個儲存格存放。僅管人類”看”起來都一樣，但若是做為知識庫(Knowledge Base)讓AI嘗試去理解，那可能就會得到不同的結果。這也就是和人類認知不對齊(misaligned)的地方，也是許多人聽說過的幻覺(Hallucination)的來源之一。我們要測試的，也就是人類可以很簡單”看得懂”的那些內容，看看AI的認知是否跟人類一致。
 
@@ -1019,33 +1019,156 @@ AI 的回答如上，明確反映規格書中沒有相關的內容。它的理�
 
 ### 「文件佈局分析」的解法
 
-這個問題隨著AI技術持續落地到法律，金融或醫療領域，另一個比較主流的解法是「文件佈局分析(Document Layout Analysis, DLA)」. 早期的實作是來自於Microsoft知名的LayoutLMv3[@huangLayoutLMv3PretrainingDocument2022]技術，這樣的技術就是要來滿足「Document AI」的目標。目前比較成熟的DLA技術，則是來自於PP-DocLayout[@sunPPDocLayoutUnifiedDocument2025]這個模型的實作，它支援的元素分析非常多種：
+這個問題其實在[法律](https://i0.wp.com/ubiai.tools/wp-content/uploads/2023/12/image_2023-12-19_180723630.png?fit=777%2C477&ssl=1)，[金融](https://arxiv.org/html/2503.17213v1/extracted/6295905/images/report1.png)或[行銷](https://huggingface.co/blog/assets/112_document-ai/layoutlm.png)領域，都有數不清的文件，有著千奇百怪的格式，等著被萃取出其中的知識或資料。另一個比較主流的解法是「文件佈局分析(Document Layout Analysis, DLA)」. 早期的實作是來自於Microsoft知名的[LayoutLMv3](https://github.com/microsoft/unilm/tree/master/layoutlmv3)[@huangLayoutLMv3PretrainingDocument2022]技術，這樣的技術就是要來滿足「Document AI」的目標。目前比較成熟的DLA技術，則是來自於PP-DocLayout[@sunPPDocLayoutUnifiedDocument2025]這個模型的實作，它支援的元素分析非常多種：
 
 ![PP-Layout的輸入和輸出](images/image29.png){#fig:image60}
 
 如「[@fig:image60]」，當模型能夠分離出字，圖或是表格這幾個區塊時，我們的分析流程就會變得非常清楚：
 
 - 字：都是電腦/印刷文字，現在的OCR已經很成熟，直接處理即可。
-- 表：由之前在「表格理解」區的驗證已確認，AI的正確率也已經高到可以接受。看是直接用表格輸出，或是轉成圖像輸入都可以。
+- 表：由之前在「[表格理解](#sec:table-understanding)」區的驗證已確認，AI的正確率也已經高到可以接受。看是直接用表格輸出，或是轉成圖像輸入都可以。
 - 圖：這就是最主要的技術障礙，但只要能切割出適當的圖塊大小，AI的正確率還是非常足夠的。
 
 因此從這個方向，本研究繼續進行幾個實際測試。
 
 #### PP-DocLayout
 
-透過「[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)」這個開源專案，我們部署了"PP-DocLayout-L"的模型。我們的目標是要在「無人(Autonomous)」的前提下，嘗試了能否直接以「工作表(worksheet)」為單位解析出「字，圖，表」的正確區塊位置。
+透過「[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)」這個開源專案，我們部署了"PP-DocLayout-L"的模型。我們的目標是要在「無人(Autonomous)」的前提下，嘗試了能否直接以「工作表(worksheet)」為單位解析出「字，圖，表」的正確區塊位置。以「遊戲規格」為例：
 
-首先是「遊戲規格」：
+![整張「遊戲規格」截圖](images/game_odds_symbols.png){#fig:game_odds_symbols_1138}
 
-![game_odds_symbols](images/game_odds_symbols.png){#fig:game_odds_symbols_1138}
+在「[@fig:game_odds_symbols_1138]」中我們可以看到，這裡面不只是有符號賠率表，還有遊戲相關規格的說明，還有做為底圖的試算表格子，直接OCR的結果一定是亂七八糟的。但經過PP-DocLayout模型的分析後，我們可以得到如下的圖塊(Boxes)資訊：
 
-在「[@fig:game_odds_symbols_1138]」中我們可以看到，這裡面不只是有符號賠率表，還有遊戲相關規格的說明，還有做為底圖的試算表格子，直接的OCR一定是會亂七八糟的。但經過PP-DocLayout模型的分析後，得到的圖像及圖塊資訊如下：
+![含有圖塊資訊的合成圖](images/pp_layout_output.png){#fig:pp_layout_output_1402}
 
-![pp_layout_output](images/pp_layout_output.png){#fig:pp_layout_output_1402}
+在「[@fig:pp_layout_output_1402]」中有許多標記著不同屬性(label)的圖塊，PP-DocLayout模型會輸出所有圖塊的屬性，位置及範圍，以下是部分截錄出來的內容(完整源碼可[在GitHub上取得](https://github.com/naihongzhou1029/Remarcademic-Writing-Framework/tree/ntust_paper))
+
+```json
+{
+    "input_path": null,
+    "page_index": null,
+    "boxes": [
+        {
+            "cls_id": 2,
+            "label": "text",
+            "score": 0.597254753112793,
+            "coordinate": [
+                26,
+                187,
+                625,
+                226
+            ]
+        },
+        {
+            "cls_id": 0,
+            "label": "paragraph_title",
+            "score": 0.6429072022438049,
+            "coordinate": [
+                -2,
+                248,
+                121,
+                286
+            ]
+        },
+        {
+            "cls_id": 2,
+            "label": "text",
+            "score": 0.5227655172348022,
+            "coordinate": [
+                16,
+                313,
+                164,
+                352
+            ]
+        },
+        {
+            "cls_id": 1,
+            "label": "image",
+            "score": 0.6621426939964294,
+            "coordinate": [
+                148,
+                372,
+                910,
+                1197
+            ]
+        }
+    ]
+}
+```
+如上，透過PP-DocLayout模型輸出的圖塊資訊，我們就可以對不同屬性的圖塊，使用不同的處理方法將規格書上的內容給萃取出來。透過實作驗證腳本，對標記為「Text」的圖塊就用傳統的OCR處理，對標記為「image」圖塊，我們就透過如下的提詞(Prompt)搭配AI模型，要求它搭配已經OCR出來的文字段，詳細描述圖片中有什麼內容：
+
+> You are describing a cropped region from a document or UI image. Below is the text content that has already been extracted from surrounding regions (in order). Describe completely what are inside in THIS image region in traditional Chinese without bold style. Do not repeat the surrounding text.
+> Surrounding text so far:
+
+腳本執行的結果，初步看來是完全可以接受的：
+
+> 3x5，5輪50線，單邊對獎
+>
+> 一般Symbolx11
+>
+> 特殊Symbolx2
+>
+> 整輪Wild：當出現3顆堆疊的一般圖騰，會將該輪變成整輪WILL
+>
+> Scatter：出現3/4/5顆，即可獲得8/12/20次免費旋轉。(FG不出
+>
+> Scatter：出現3/4/5顆，即可獲得8/12/20次免費旋轉。(FG不出
+>
+> Symbol介绍
+>
+> 一般Symbol
+>
+> 這是一個關於符號連線賠率的對照表，具體內容如下：
+>
+> 第一排包含四個符號：
+>
+> 1. 宙斯頭像（帶有金柱邊框）：x5為250，x4為150，x3為50，x2為5。
+> 2. 希臘神廟（紫色天空背景）：x5為200，x4為100，x3為25，x2為5。
+> 3. 白色天馬（藍色天空背景）：x5為200，x4為100，x3為25，x2為5。
+> 4. 綠色桂冠：x5為150，x4為75，x3為25。
+>
+> 第二排包含四個符號：
+>
+> 5. 古希臘銀幣：x5為150，x4為75，x3為25。
+> 6. 粉紅色字母 A：x5為100，x4為50，x3為10。
+> 7. 橘色字母 K：x5為100，x4為50，x3為10。
+> 8. 黃色字母 Q：x5為100，x4為50，x3為10。
+>
+> 第三排包含三個符號：
+>
+> 9. 藍色字母 J：x5為100，x4為50，x3為10。
+> 10. 紅色數字 10：x5為100，x4為50，x3為10。
+> 11. 直立式的 WILD 符號（圖案為宙斯全身像）：x5為250，x4為150，x3為50，x2為5。
+>
+> 特殊Symbol
+>
+> 這是一個 Scatter 符號，圖案中央有黃色的大字，分兩行顯示為 FREE GAME。背景為紅色的放射狀光芒效果，整體被一個帶有精細花紋的金色華麗邊框所包圍。
+>
+> SCATTER
+> 在1~5輪
+> （文字改Scatter
+>
+> 觸發條件：
+>
+> MG出現3/4/5顆，即可獲得8/12/20次免費旋轉
+
+除了像是 *"(FG不出"* 後的 "現)" ，或是 *"（文字改Scatter"* 的 ")" 在OCR中出不來以外，基本上圖片的內容已經和我們在Gemini App上解析出來的內容是高度一致的了。
 
 # 結論與建議
 
 ## 結論
 
+本研究透過實際測試發現，大型語言模型(LLM)在處理純文字及表格類型的資料時，已具備相當高的理解與萃取能力，但在面對內嵌圖像時則顯得力不從心，往往無法正確解讀其中蘊含的關鍵資訊。針對此一瓶頸，本研究提出的解決方案——結合文件佈局分析(Document Layout Analysis, DLA)技術與視覺語言模型(VLM)進行圖像描述生成的策略，已初步證實能有效將非結構化的圖像資訊轉化為可被LLM理解的文字知識。
+
+雖然受限於時間壓力，本研究未能進行詳盡的調查、廣泛的實驗以及不同解決方案間的深入比較，但透過關鍵環節的驗證，我們已證明此解決方案在理論上是可行的。若未來能有更充裕的時間完成完整工作流程的實作，並盡可能支援更多樣化的規格變體，相信本研究提出的方法論將能進一步證實其在實務應用上的有效性與穩健性。
+
 ## 未來發展建議
+
+1. 端對端自動化管線實作：在現有概念驗證的基礎上，將影像擷取、前處理、OCR 辨識、文件佈局分析與 LLM／VLM 解析串接為完整的自動化工作流程，並納入監控與記錄機制，以便長期追蹤品質表現。
+2. 擴大測試樣本與情境：針對不同規格變體與解析度進行系統化測試，建立涵蓋多款遊戲與多種版型的基準資料集，用以客觀評估各種設定與模型組合的表現。
+3. 多模型聊天機器人比較：在相同測試情境下，比較不同 LLM／聊天機器人（例如 ChatGPT、Claude、Grok 以及不同版本的 Gemini）在理解規格書、補足脈絡與生成描述上的準確度、穩定性與成本差異，作為選型與混合部署策略的依據。
+4. 文件佈局模型之比較研究：除 PP-DocLayout 外，納入其他前沿(State Of The Art,SOTA)文件佈局模型, 例如 LayoutLMv3、DocFormer、Donut、PP-Structure 等）進行比較，觀察在遊戲規格書這類多圖表混合文件上的偵測品質、效能與部署成本差異。
+5. PP-DocLayout 參數與組態探索：系統性地調整並評估 PP-DocLayout 的關鍵參數, 如輸入解析度、視覺切塊(Chunking)策略、後處理合併規則等，記錄在不同文件型態與版面上的最佳組合，形成可重用的設定範本。
+6. 規格文件前處理與後處理策略：針對原始規格書設計更適合 AI 理解的前處理流程（例如標準化欄位命名、欄位切分與區塊化規則、語意標記格式），以及針對萃取結果的後處理（例如結構化重寫、範本化描述、品質檢查與一致性驗證），以進一步提升整體知識萃取的可用性與可維護性。
+7. 通用性與產品化架構設計：在既有模組化設計的基礎上，進一步抽象出可設定化、可參數化的核心元件，使系統能在不同遊戲產品與不同機台規格間快速複用與擴充，並評估與既有研發流程或知識管理平台整合的可行性。
 

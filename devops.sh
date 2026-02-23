@@ -24,6 +24,7 @@ BIB="references.json"
 CSL="chicago-author-date.csl"
 COVER_TEX="cover_page.tex"
 COVER_PDF="cover.pdf"
+RECOGNITION_PDF="recognition_form.pdf"
 PRINTED_PDF="printed.pdf"
 LOGO_FILE="ntust_logo.jpg"
 LOGO_URL="https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg"
@@ -128,7 +129,7 @@ build_pdf() {
         CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
         echo \"Using CJK font: \$CJK_FONT_TC\"
         bash tools/replace-fonts.sh $MERMAID_TEMP_SRC $TEMP_SRC 'PingFang SC' \"\$CJK_FONT_TC\" 'PingFang TC' \"\$CJK_FONT_TC\"
-        pandoc $TEMP_SRC --standalone --filter pandoc-crossref --citeproc --bibliography=bibliography.bib --csl=chicago-author-date.csl -V date=\$(date +%Y-%m-%d) -o paper.tex
+        pandoc $TEMP_SRC --standalone --filter pandoc-crossref --citeproc --bibliography=bibliography.bib --csl=chicago-author-date.csl -M title=\"\" -M author=\"\" -M date=\"\" -o paper.tex
         bash tools/fix-latex-csl.sh paper.tex
         xelatex -interaction=nonstopmode paper.tex 2>&1 | tail -50
         xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
@@ -179,7 +180,7 @@ build_cover() {
     fi
 }
 
-# Build printed version (cover + paper)
+# Build printed version (cover + recognition form + paper)
 build_printed() {
     print_info "Building printed version: $PRINTED_PDF"
     
@@ -192,8 +193,14 @@ build_printed() {
         build_pdf
     fi
     
-    # Merge PDFs
-    run_in_docker "bash tools/merge-pdfs.sh $COVER_PDF $PDF $PRINTED_PDF"
+    # Ensure recognition form exists
+    if [ ! -f "$WORK_DIR/$RECOGNITION_PDF" ]; then
+        print_error "Recognition form PDF not found: $RECOGNITION_PDF"
+        exit 1
+    fi
+    
+    # Merge PDFs: cover + recognition form + paper
+    run_in_docker "bash tools/merge-pdfs.sh $COVER_PDF $RECOGNITION_PDF $PDF $PRINTED_PDF"
     
     if [ -f "$WORK_DIR/$PRINTED_PDF" ]; then
         print_info "Successfully generated: $PRINTED_PDF"
@@ -253,7 +260,7 @@ build_zh_tw_pdf() {
         CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
         echo \"Using CJK font: \$CJK_FONT_TC\"
         bash tools/replace-fonts.sh $ZH_TW_DIR/paper.mermaid.tmp.md $ZH_TW_DIR/paper.tmp.md 'PingFang SC' \"\$CJK_FONT_TC\"
-        ( cd $ZH_TW_DIR && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography='bibliography.bib' --csl=chicago-author-date.csl -V date=\$(date +%Y-%m-%d) -o paper.tex )
+        ( cd $ZH_TW_DIR && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --bibliography=references.json --bibliography='bibliography.bib' --csl=chicago-author-date.csl -M title=\"\" -M author=\"\" -M date=\"\" -o paper.tex )
         bash tools/fix-latex-csl.sh $ZH_TW_DIR/paper.tex
         ( cd $ZH_TW_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
         ( cd $ZH_TW_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
@@ -357,6 +364,19 @@ clean() {
     print_info "Clean complete"
 }
 
+# Generate .tags from all Markdown files (for editor navigation)
+build_tags() {
+    print_info "Generating .tags from all Markdown files..."
+    run_in_docker "find . -name '*.md' -type f ! -path './.git/*' | sort > .tags"
+    if [ -f "$WORK_DIR/.tags" ]; then
+        COUNT=$(wc -l < "$WORK_DIR/.tags")
+        print_info "Successfully generated .tags ($COUNT Markdown files)"
+    else
+        print_error "Failed to generate .tags"
+        exit 1
+    fi
+}
+
 # Install dependencies (informational only)
 deps() {
     print_info "Note: This target is for local development."
@@ -376,6 +396,7 @@ Available targets:
   cover     - Build the cover page PDF
   printed   - Build the printed version (cover + paper) [default]
   zh_tw     - Run the Traditional Chinese translation pipeline
+  tags      - Generate .tags from all Markdown files
   clean     - Remove all generated files
   deps      - Show information about dependencies
   help      - Show this help message
@@ -414,6 +435,9 @@ main() {
             ;;
         zh_tw)
             build_zh_tw
+            ;;
+        tags)
+            build_tags
             ;;
         clean)
             clean

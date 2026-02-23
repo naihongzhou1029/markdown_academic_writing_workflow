@@ -8,3 +8,10 @@ argadd .gitignore
 argadd Dockerfile
 argadd bibliography.bib
 argadd references.json
+
+if has('win32') || has('win64')
+  set makeprg=.\devops.ps1
+else
+  set makeprg=./devops.sh
+  botright vertical terminal agent
+endif

@@ -45,6 +45,7 @@ images/mermaid-*.png
 *.swo
 .idea/
 .cache/
+.tags
 
 # Cabal build artifacts (from local pandoc-crossref builds)
 dist-newstyle/
