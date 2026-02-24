@@ -149,7 +149,7 @@ docker run --rm \
     bash -lc "./devops.sh printed"
 ```
 
-The build pipeline (as orchestrated by `devops.sh`) handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `printed.pdf` (cover + paper merged).
+The build pipeline (as orchestrated by `devops.sh`) handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `Thesis-乃宏-FinalVersion.pdf` (cover + paper merged).
 
 ### Mermaid Diagram Support
 

@@ -18,14 +18,15 @@ DERIVED_IMAGE_TAG="latest"
 DERIVED_IMAGE="${DERIVED_IMAGE_NAME}:${DERIVED_IMAGE_TAG}"
 
 # File names (primary EN build)
-PDF="paper.pdf"
+DATE_SUFFIX="$(date +%Y%m%d)"
+PDF="thesis${DATE_SUFFIX}.pdf"
 SRC="paper.md"
 BIB="references.json"
 CSL="chicago-author-date.csl"
 COVER_TEX="cover_page.tex"
 COVER_PDF="cover.pdf"
 RECOGNITION_PDF="recognition_form.pdf"
-PRINTED_PDF="printed.pdf"
+PRINTED_PDF="Thesis-乃宏-FinalVersion.pdf"
 LOGO_FILE="ntust_logo.jpg"
 LOGO_URL="https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg"
 TEMP_SRC="paper.tmp.md"
@@ -37,9 +38,9 @@ LLM_MODEL="gemini-2.5-flash"
 ZH_TW_DIR="zh_tw"
 ZH_TW_SRC="$ZH_TW_DIR/paper.md"
 ZH_TW_COVER="$ZH_TW_DIR/cover_page.tex"
-ZH_TW_PDF="$ZH_TW_DIR/paper.pdf"
+ZH_TW_PDF="$ZH_TW_DIR/thesis.pdf"
 ZH_TW_COVER_PDF="$ZH_TW_DIR/cover.pdf"
-ZH_TW_PRINTED_PDF="$ZH_TW_DIR/printed.pdf"
+ZH_TW_PRINTED_PDF="$ZH_TW_DIR/Thesis-乃宏-FinalVersion.pdf"
 
 # Get absolute path of current directory
 WORK_DIR=$(pwd)
@@ -358,6 +359,7 @@ build_zh_tw() {
 clean() {
     print_info "Cleaning generated files..."
     run_in_docker "bash tools/clean.sh $PDF $COVER_PDF $PRINTED_PDF $TEMP_SRC $COVER_TEMP_TEX"
+    run_in_docker "rm -f thesis[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].pdf 2>/dev/null || true"
     run_in_docker "rm -f images/mermaid-*.png 2>/dev/null || true"
     run_in_docker "rm -f $MERMAID_TEMP_SRC 2>/dev/null || true"
     run_in_docker "rm -rf zh_tw 2>/dev/null || true"

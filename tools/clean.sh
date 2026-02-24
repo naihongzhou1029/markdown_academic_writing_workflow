@@ -3,13 +3,14 @@
 
 set -e
 
-PDF="${1:-paper.pdf}"
+PDF="${1:-thesis.pdf}"
 COVER_PDF="${2:-cover.pdf}"
-PRINTED_PDF="${3:-printed.pdf}"
+PRINTED_PDF="${3:-Thesis-乃宏-FinalVersion.pdf}"
 TEMP_SRC="${4:-paper.tmp.md}"
 COVER_TEMP_TEX="${5:-cover_page.tmp.tex}"
 
 rm -f "$PDF"
+rm -f thesis[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].pdf
 rm -f "$COVER_PDF" "$PRINTED_PDF"
 rm -f "$TEMP_SRC" "$COVER_TEMP_TEX"
 rm -f *.aux *.log *.out *.toc *.bbl *.blg *.bcf *.run.xml *.synctex.gz
