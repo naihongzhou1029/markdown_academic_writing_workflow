@@ -35,6 +35,6 @@
 				"icon": "terminal-linux"
 			}
 		},
-		"terminal.integrated.defaultProfile.windows": "Command Prompt"
+		"terminal.integrated.defaultProfile.windows": "PowerShell"
 	}
 }
