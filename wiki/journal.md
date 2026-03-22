@@ -46,4 +46,62 @@
 * 提詞/生成結果： 「分析[拉丁美洲市場偏好]語料與[公司成功遊戲]語料的相似性。生成一套結合『嘉年華視覺主題』和『連鎖反應疊加獎勵』的數學規格草案。特別說明該規格在『最大賠付倍數』上的設計策略。」  
 * 價值/佐證策略： 策略導向的創新。 AI的重組不是隨機生成，而是基於兩種不同來源的知識進行推論（例如，找到兩種市場對"慶典"和"高互動性"的底層需求），確保新規格在滿足創新性的同時，具備市場接受度和成功基礎。
 
-## 
+## 要找什麼資料？
+
+遊戲規格書（Game Design Document, GDD）與一般的軟體規格書在結構與目的上有很大的不同。GDD 包含了大量的美術風格描述、數值邏輯（如 RTP 計算）、玩家心理預期以及敘事流程，這類資訊的語意模糊性比純技術規格更高，因此語意搜尋的效益會更明顯。
+
+以下是我為你整理，針對 Consensus 服務在遊戲規格書領域的精準搜尋策略：
+
+### 為什麼遊戲規格書需要更精準的語意搜尋？（我已知的部分）
+
+1.  跨媒介的知識特質： GDD 經常混合了文字說明、數值公式與美術參考。傳統搜尋難以理解「類似 Odin 風格的特效」或「高波動性的數值設計」這種模糊概念，但語意搜尋可以透過向量空間找到概念相近的設計。
+2.  邏輯鏈條的複雜性： 遊戲中的一個機制（如 Free Game 觸發條件）會影響到多個檔案。語意搜尋能幫技術長在評估改動時，快速找出所有受影響的設計邏輯，這在軟體開發中稱為 Impact Analysis，但在遊戲業中更偏向「遊戲平衡與體驗的一致性」。
+
+### 針對 Consensus 的精準提詞 (Prompt) 建議
+
+在使用 Consensus 時，建議直接鎖定 Game Design 或 Game Development 領域，並嘗試以下提詞：
+
+1.  針對開發效率與知識重用： How does the automated extraction of knowledge from Game Design Documents (GDD) using Large Language Models improve game development efficiency and knowledge reuse?
+2.  針對語意搜尋的優勢比較： What are the measurable benefits of semantic search over keyword-based search for retrieving game mechanics and mathematical specifications from game design documentation?
+3.  針對決策支撐與市場競爭力： Does AI-driven analysis of competitive game design specifications lead to better strategic decision-making and lower market research costs in the gaming industry?
+
+### 設定搜尋脈絡與目標
+
+1.  設定脈絡 (Context)： 在 Consensus 的進階過濾器中，建議將 Domain 鎖定在 Computer Science 或 Art & Design。雖然遊戲規格書偏技術，但很多關於「設計方法論」的論文會落在藝術設計類別中。
+2.  設定目標 (Objective)： 你的目標是尋找「量化數據」。例如：搜尋時間（Search Time）、錯誤率（Error Rate）、或是對機制理解的準確度（Comprehension Accuracy）。這些數據能直接支持你題目中「最大化價值」的說法。
+
+### 搜尋結果
+
+Consensus[沒有直接結果](https://consensus.app/search/semantic-search-vs-keyword-search/0viSRw8lR_er-XUDem2qvQ/)，
+
+### 整理給老師的論文修改方向
+
+老師好，我這邊針對上次會議的內容，訂出以下的修訂方向：
+
+1. 題目與主軸
+
+- 原方向：利用生成式 AI「從遊戲設計規格書進行知識萃取」。
+- 調整後：**利用生成式人工智慧技術最大化遊戲規格書價值的策略**。
+- 意涵：知識管理與知識萃取仍是基礎；敘事重心改為下游的效益延伸與價值極大化，而不只停留在「把知識從文件裡取出來」。
+
+2. 可維持不變的部分
+
+- 知識管理與知識萃取／語料化的架構不必大改，它們支撐後續所有應用。
+
+3. 新增強調：四條效益軸線
+
+| 軸線 | 一句話摘要 |
+|--------|------------|
+| 多條件檢索 | 價值不在「能搜」，而在可推論、可組合條件的檢索（倍率分布、音效是否迴圈、跨遊戲比對等）。語料庫中遊戲數量愈多（例如兩款以上），優勢愈明顯。 |
+| 競品分析 | 截圖＋提詞產出結構化規格；隨多模態成熟，影片成為輸入；在競品語料庫上以自然語言做模式與趨勢查詢（例如付費設計、價格區間）。 |
+| 新規格重組孵化 | 累積足夠規格語料後，依市場與產品偏好生成較受歡迎的規格；可延伸討論跨市場相似性與更底層需求如何支撐重組，而不只是表層抄規格。 |
+| 有憑有據的素材／雛型生成 | 生成錨定在規格書、市場風格、公司框架（「有憑有據」），有別於一次性空泛提詞——更接近可落地的圖像、影片與程式片段。 |
+
+4. 給讀者的一條故事線
+
+- 流程：規格語料化 → 檢索與比較（含競品）→ 重組孵化新規格 → 依該知識繼承式地生成素材與雛型。
+- 論點：生成式 AI 是槓桿；價值極大化要透過上述四種用法來論證，而不只論證萃取是否準確。
+
+---
+
+看老師你覺得如何，有沒有需要修整的部分？同時間我會開始搜尋相關的論文，如果有不錯的內容，再同步給老師，謝謝～
