@@ -1,3 +1,77 @@
+# Mar 28, 2026
+
+## 資料搜尋
+
+# Mar 28, 2026
+
+## Deep Lit Review of Consensus get better results
+
+Using LLM to conduct better prompts(questions) about my concepts, then put them all together to the Deep Lit(erature) Review mode:
+
+![](images/Users/zhounaihong/Documents/project/rwf/wiki/20260328214131.png)
+
+We can get *much, much better* results than traditional search results. But, what are essential differences between traditonal search and literature review?
+
+A search is a *retrieval* process. It is the act of looking for specific documents or data points using keywords, filters, and databases. The goal is to find relevant items. It is often a technical step where you try to get a list of results that match your criteria. Think of it as *gathering the raw materials* for your work.
+
+A literature review is a **synthesis** process. It is the act of *reading, evaluating, and connecting the items* you found during your search. The goal is to provide a comprehensive overview of a topic. It involves critical thinking to explain how different studies compare, where they disagree, and what is currently missing from the field. *It turns those raw materials into a structured narrative*.
+
+### Lit Review
+
+[How does the automated extraction of knowledge from Game Design Documents (GDD) using Large Language Models improve game development efficiency and knowledge reuse? What are the measurable benefits of semantic search over keyword-based search for retrieving game mechanics and mathematical specifications from game design documentation?](https://consensus.app/search/game-design-document-knowledge-extraction/T2FunD2NSuqZgCcG0-IFKA/?utm_source=share&utm_medium=clipboard)
+
+#### LLM Extraction from GDDs: Efficiency & Knowledge Reuse
+
+##### Pipeline benefits
+
+- Tools that parse GDDs and generate structured specs (JSON/GDF), class diagrams, and starter code significantly reduce manual translation from design to implementation, improving *transition speed, modularity, and reusability* [1](https://consensus.app/papers/digital-game-development-using-large-language-models-llms-serra-serra/a85830304d3d51c0aa2d6c11bfbd5d6c/?search_id=r9ddrY7ZRMeQlr52mIUYsQ)[5](https://consensus.app/papers/automated-unity-game-template-generation-from-gdds-via-nlp-hassan/aada41802a2a55b6ad2bb72351534387/?search_id=r9ddrY7ZRMeQlr52mIUYsQ).
+- Automated Unity template generation from GDDs shows higher scores than baseline LLMs on *compilation success, adherence to GDD, and code modularity (≈4.8/5)*, directly cutting prototyping time and making specs more consistently reusable across genres [5](https://consensus.app/papers/automated-unity-game-template-generation-from-gdds-via-nlp-hassan/aada41802a2a55b6ad2bb72351534387/?search_id=r9ddrY7ZRMeQlr52mIUYsQ).
+- LLM‑generated GDDs can be *clearer and more detailed* than expert-written ones (overall 4.71/5 vs. 3.29/5 on expert ratings), which supports downstream automation and cross‑team understanding [4](https://consensus.app/papers/gdd-generation-for-hypercasual-games-using-large-language-aydinalp-do%C4%9Fan/bf30b8c2a9cc526ab2b0677d7edbe46e/?search_id=r9ddrY7ZRMeQlr52mIUYsQ).
+- Knowledge-graph–enhanced LLM frameworks accumulate structured game knowledge across versions and use it to target playtests more efficiently, reducing test steps for incremental updates [12](https://consensus.app/papers/knowledge-graphenhanced-large-language-model-for-mu-cai/7bfe7e73cd345e2c8677dd00038175b0/?search_id=r9ddrY7ZRMeQlr52mIUYsQ). This illustrates how extracted knowledge supports *incremental reuse* at scale.
+
+##### Example Impacts
+
+| Aspect | Reported Effect | Citations |
+| --- | --- | --- |
+| Design→code time | Faster pipeline, automated boilerplate/template generation | [1](https://consensus.app/papers/digital-game-development-using-large-language-models-llms-serra-serra/a85830304d3d51c0aa2d6c11bfbd5d6c/?search_id=r9ddrY7ZRMeQlr52mIUYsQ)[5](https://consensus.app/papers/automated-unity-game-template-generation-from-gdds-via-nlp-hassan/aada41802a2a55b6ad2bb72351534387/?search_id=r9ddrY7ZRMeQlr52mIUYsQ) |
+| Consistency/modularity | Higher modularity, better alignment with GDD | [1](https://consensus.app/papers/digital-game-development-using-large-language-models-llms-serra-serra/a85830304d3d51c0aa2d6c11bfbd5d6c/?search_id=r9ddrY7ZRMeQlr52mIUYsQ)[5](https://consensus.app/papers/automated-unity-game-template-generation-from-gdds-via-nlp-hassan/aada41802a2a55b6ad2bb72351534387/?search_id=r9ddrY7ZRMeQlr52mIUYsQ) |
+| Documentation quality | Higher clarity/detail ratings for LLM GDDs | [4](https://consensus.app/papers/gdd-generation-for-hypercasual-games-using-large-language-aydinalp-do%C4%9Fan/bf30b8c2a9cc526ab2b0677d7edbe46e/?search_id=r9ddrY7ZRMeQlr52mIUYsQ) |
+| Testing effort | Fewer steps to cover impacted features via KG+LLM | [12](https://consensus.app/papers/knowledge-graphenhanced-large-language-model-for-mu-cai/7bfe7e73cd345e2c8677dd00038175b0/?search_id=r9ddrY7ZRMeQlr52mIUYsQ) |
+
+Figure 1 Effects of LLM-based GDD extraction on pipeline quality and reuse.
+
+#### Semantic vs. Keyword Search for Mechanics & Math Specs
+
+Direct comparisons in games are scarce, but related work in *semantic models and math embeddings* shows measurable gains:
+
+-   Distributional/semantic similarity metrics predict *faster and more accurate semantic retrieval* in complex word-game search tasks than simpler baselines, suggesting better alignment with human conceptual search [2](https://consensus.app/papers/semantic-memory-search-and-retrieval-in-a-novel-kumar-steyvers/6e86131633ce5c888678d1b01a53b40a/?search_id=r9ddrY7ZRMeQlr52mIUYsQ).
+-   Math-word embeddings improve *math-term similarity and search via query expansion*, outperforming purely lexical matching in retrieving relevant mathematical concepts and expressions [16](https://consensus.app/papers/mathword-embedding-in-math-search-and-semantic-extraction-greiner-petter-youssef/ba09fbb1e2a754a4bc4fa973a7a283ed/?search_id=r9ddrY7ZRMeQlr52mIUYsQ).
+-   Semantic-web and crowdsourced game-based approaches show that semantic term networks enable *more precise exploratory and facet-like search* than keyword-only engines [6](https://consensus.app/papers/data-linking-for-the-semantic-web-systems-%C5%A1imko/96573f393dce5d1daeda9ac3775e714f/?search_id=r9ddrY7ZRMeQlr52mIUYsQ)[9](https://consensus.app/papers/semantics-discovery-via-human-computation-games-simko-tvarozek/ac0ca415c1c75297b9a9e7bab1c77ee6/?search_id=r9ddrY7ZRMeQlr52mIUYsQ)[19](https://consensus.app/papers/building-a-semantic-search-engine-with-games-and-wieser/10dcffbe9727504db2ea923f88d0b2c9/?search_id=r9ddrY7ZRMeQlr52mIUYsQ).
+
+Applied to GDDs, these results imply that embedding-based semantic search should:
+
+-   Retrieve mechanics described with different wording (e.g., “lock-on targeting” vs. “auto-aim”).
+-   Match math specs by conceptual role (e.g., “Elo‑like progression” even if formula differs).
+-   Reduce missed results and noisy hits compared to keyword search, especially in heterogeneous, informal GDDs.
+
+#### Conclusion
+
+Current evidence shows that LLM-based extraction and structuring of GDDs can measurably improve development efficiency, modularity, and cross-version knowledge reuse, while semantic/embedding-based search offers clear advantages over keyword search for retrieving conceptually defined mechanics and mathematical specifications. Empirical head‑to‑head evaluations on real GDD corpora remain an open research opportunity.
+
+[Digital Game Development Using Large Language Models (LLMs): An Exploratory Study](https://sol.sbc.org.br/index.php/sbgames/article/view/37365)
+
+[GameGoogle: A Search Engine for Mechanics in Video Games](https://ojs.aaai.org/index.php/AIIDE/article/view/36847)
+
+[GDD Generation for Hyper-Casual Games Using Large Language Models: A Comparative Evaluation](https://dergipark.org.tr/en/pub/bitlisfen/article/1664312)
+
+[Automated Unity Game Template Generation from GDDs via NLP and Multi-Modal LLMs](https://arxiv.org/abs/2509.08847)
+
+[Grammar-Based Game Description Generation Using Large Language Models](https://ieeexplore.ieee.org/document/10807354)
+
+[Large Language Models and Video Games: A Preliminary Scoping Review](https://dl.acm.org/doi/10.1145/3640794.3665582)
+
+[Game Generation via Large Language Models](https://ieeexplore.ieee.org/document/10645597)
+
 # 2026-03-22
 
 ## 論文新方向的思考
@@ -14,37 +88,37 @@
 
 再來是論文中提到僅依靠畫面截圖，配合適當提詞，生成遊戲規格的這個過程，可一定程度上輔助「競品分析」需求。因為競品分析很大程度就是規格上的比較，也就是前一個主題中「檢索優化」中帶來的直接效益。隨著LLM的多模態能力持續成熟，影片分析的能力越來越好，在取得競品規格的準確度及成本都會持續下降。本來編導需要針對影片(不論是原廠放出來的或是直接現場錄製回來的)做人工的理解，再用自己的話寫出來，再做簡報同步給所有人，透過AI的技術成熟，這個過程的成本會大幅降低，將競品的規格給語料化，就能更大程度的享受到透過自然語言做競品分析的效率。例如：
 
-1. 畫面截圖 + 提詞生成規格輔助競品分析：  
-   * 案例： 某遊戲策劃人員想分析競品A中的「技能樹系統」。他可以對遊戲中技能樹的介面進行多張截圖，並搭配「請根據這些截圖，詳細列出技能樹的層級結構、解鎖條件、技能效果和數值」等提詞。LLM隨後可生成結構化的規格文件，直接用於與自家產品的規格進行比較。  
-   * 效益： 省去人工逐一記錄技能樹細節的時間，提高了規格比較的效率和準確性。  
-2. 多模態影片分析優化競品規格檢索：  
-   * 案例： 某發行商需要快速掌握競品B的「新手教學流程」和「戰鬥系統操作」。他們可以將競品B的遊玩錄製影片（或官方釋出的教學影片）輸入給具備影片分析能力的LLM。  
-   * 提詞： 「請分析此影片，產出詳細的新手教學步驟、操作提示文字，以及戰鬥中每個按鈕的功能和連招組合。」  
-   * 效益： LLM自動將影片內容「語料化」，產出標準化的文字規格，取代了編導/策劃人員必須耗費數小時觀看、理解、手動撰寫筆記和簡報的過程，大幅降低了資訊獲取的成本。  
-3. 語料化規格輔助自然語言競品分析：  
-   * 案例： 透過上述兩種方式，團隊已經累積了數個競品的規格語料庫（例如，所有競品的付費設計、英雄養成系統、社交功能等都被結構化為文字）。  
-   * 進一步提問： 策劃人員可以直接向語料庫提問：「在所有競品中，有哪些遊戲的『付費禮包』設計包含了『限時』和『隨機寶箱』兩種機制？它們的價格區間如何？」  
-   * 效益： 相比於人工翻閱多份規格文件，透過自然語言直接查詢，競品分析的速度和深度都得到提升，能更快地從大量數據中找出特定規律或設計趨勢。
+1. 畫面截圖 + 提詞生成規格輔助競品分析：
+  - 案例： 某遊戲策劃人員想分析競品A中的「技能樹系統」。他可以對遊戲中技能樹的介面進行多張截圖，並搭配「請根據這些截圖，詳細列出技能樹的層級結構、解鎖條件、技能效果和數值」等提詞。LLM隨後可生成結構化的規格文件，直接用於與自家產品的規格進行比較。  
+  - 效益： 省去人工逐一記錄技能樹細節的時間，提高了規格比較的效率和準確性。
+2. 多模態影片分析優化競品規格檢索：
+  - 案例： 某發行商需要快速掌握競品B的「新手教學流程」和「戰鬥系統操作」。他們可以將競品B的遊玩錄製影片（或官方釋出的教學影片）輸入給具備影片分析能力的LLM。  
+  - 提詞： 「請分析此影片，產出詳細的新手教學步驟、操作提示文字，以及戰鬥中每個按鈕的功能和連招組合。」  
+  - 效益： LLM自動將影片內容「語料化」，產出標準化的文字規格，取代了編導/策劃人員必須耗費數小時觀看、理解、手動撰寫筆記和簡報的過程，大幅降低了資訊獲取的成本。
+3. 語料化規格輔助自然語言競品分析：
+  - 案例： 透過上述兩種方式，團隊已經累積了數個競品的規格語料庫（例如，所有競品的付費設計、英雄養成系統、社交功能等都被結構化為文字）。  
+  - 進一步提問： 策劃人員可以直接向語料庫提問：「在所有競品中，有哪些遊戲的『付費禮包』設計包含了『限時』和『隨機寶箱』兩種機制？它們的價格區間如何？」  
+  - 效益： 相比於人工翻閱多份規格文件，透過自然語言直接查詢，競品分析的速度和深度都得到提升，能更快地從大量數據中找出特定規律或設計趨勢。
 
 繼續延伸出來的是新規格的重組孵化。在擁有足夠多的規格語料之後，對於不同的市場及產品偏好，我們就可以讓AI來生成比較受歡迎的規格。如果我們要針對既有的市場推出新產品，AI雖然已有該市場的喜好資料，但在新規格中是否也可以加入和其他市場類似，甚至是重疊的部分？那為什麼他們會有類似的規格？是不是它們是基於更底層的需求才演變出相似的規格？僅管這可能不是規格書上直接會標註上去的內容，但實際上這可以是AI重組孵化的部分。最後是從*基於這份規格的素材或是雛型生成*。和單純僅依靠一次性的提詞生成截然不同，AI此時此刻的生成已經可說是「有憑有據」。圖像或影片都是這個市場的風格偏好，軟體是符合公司既有框架的源碼片段，完成度自然距離產品是更近的。例如：
 
 1. 素材或雛型生成 (Asset/Prototype Generation)
 
-* 案例情境： 遊戲美術團隊需要為一個以「北歐神話」為主題、具有「高波動性」規格的角子機遊戲快速生成視覺概念。  
-* 提詞/生成結果： 「基於[北歐神話主題]規格書中定義的『主神Odin』符號視覺風格，生成一套帶有閃電和符文特效的動畫序列（3秒循環）。同時，生成符合此規格定義的『免費遊戲大廳』的基礎程式碼片段（C# Unity）。」  
-* 價值/佐證策略： 有憑有據的生成。 AI生成的圖像和代碼片段直接繼承自知識庫中已驗證的規格、風格偏好和技術標準。美術人員無需重新設計風格，工程師得到符合公司架構的模組化代碼，大幅縮短概念驗證和初期開發時間。
+- 案例情境： 遊戲美術團隊需要為一個以「北歐神話」為主題、具有「高波動性」規格的角子機遊戲快速生成視覺概念。  
+- 提詞/生成結果： 「基於[北歐神話主題]規格書中定義的『主神Odin』符號視覺風格，生成一套帶有閃電和符文特效的動畫序列（3秒循環）。同時，生成符合此規格定義的『免費遊戲大廳』的基礎程式碼片段（C# Unity）。」  
+- 價值/佐證策略： 有憑有據的生成。 AI生成的圖像和代碼片段直接繼承自知識庫中已驗證的規格、風格偏好和技術標準。美術人員無需重新設計風格，工程師得到符合公司架構的模組化代碼，大幅縮短概念驗證和初期開發時間。
 
-2. 競品分析 (Competitive Analysis)
+1. 競品分析 (Competitive Analysis)
 
-* 案例情境： 產品經理希望將競品C中一個成功的「特殊圖案收集機制」應用到新遊戲。  
-* 提詞/生成結果： 「在所有已語料化的[亞洲市場角子機]規格中，找出所有包含『特殊圖案收集條』機制的遊戲。比較它們的收集門檻、獎勵類型，以及在規格書中標註的玩家回饋曲線（RTP Segment）。」  
-* 價值/佐證策略： 效率和深度提升。 相比於人工翻閱數十份PDF，自然語言檢索能在數秒內從海量數據中提取出高度結構化的比較結果。這證明了「將規格書知識化」能直接轉化為市場策略洞察的效率。
+- 案例情境： 產品經理希望將競品C中一個成功的「特殊圖案收集機制」應用到新遊戲。  
+- 提詞/生成結果： 「在所有已語料化的[亞洲市場角子機]規格中，找出所有包含『特殊圖案收集條』機制的遊戲。比較它們的收集門檻、獎勵類型，以及在規格書中標註的玩家回饋曲線（RTP Segment）。」  
+- 價值/佐證策略： 效率和深度提升。 相比於人工翻閱數十份PDF，自然語言檢索能在數秒內從海量數據中提取出高度結構化的比較結果。這證明了「將規格書知識化」能直接轉化為市場策略洞察的效率。
 
-3. 新規格重組孵化 (New Specification Incubation)
+1. 新規格重組孵化 (New Specification Incubation)
 
-* 案例情境： 策劃團隊正在為進入「拉丁美洲」市場設計一款新品，需要結合當地偏好（例如，喜愛嘉年華風格）與公司既有的成功機制（例如，多層堆疊符號）。  
-* 提詞/生成結果： 「分析[拉丁美洲市場偏好]語料與[公司成功遊戲]語料的相似性。生成一套結合『嘉年華視覺主題』和『連鎖反應疊加獎勵』的數學規格草案。特別說明該規格在『最大賠付倍數』上的設計策略。」  
-* 價值/佐證策略： 策略導向的創新。 AI的重組不是隨機生成，而是基於兩種不同來源的知識進行推論（例如，找到兩種市場對"慶典"和"高互動性"的底層需求），確保新規格在滿足創新性的同時，具備市場接受度和成功基礎。
+- 案例情境： 策劃團隊正在為進入「拉丁美洲」市場設計一款新品，需要結合當地偏好（例如，喜愛嘉年華風格）與公司既有的成功機制（例如，多層堆疊符號）。  
+- 提詞/生成結果： 「分析[拉丁美洲市場偏好]語料與[公司成功遊戲]語料的相似性。生成一套結合『嘉年華視覺主題』和『連鎖反應疊加獎勵』的數學規格草案。特別說明該規格在『最大賠付倍數』上的設計策略。」  
+- 價值/佐證策略： 策略導向的創新。 AI的重組不是隨機生成，而是基於兩種不同來源的知識進行推論（例如，找到兩種市場對"慶典"和"高互動性"的底層需求），確保新規格在滿足創新性的同時，具備市場接受度和成功基礎。
 
 ## 要找什麼資料？
 
@@ -54,21 +128,21 @@
 
 ### 為什麼遊戲規格書需要更精準的語意搜尋？（我已知的部分）
 
-1.  跨媒介的知識特質： GDD 經常混合了文字說明、數值公式與美術參考。傳統搜尋難以理解「類似 Odin 風格的特效」或「高波動性的數值設計」這種模糊概念，但語意搜尋可以透過向量空間找到概念相近的設計。
-2.  邏輯鏈條的複雜性： 遊戲中的一個機制（如 Free Game 觸發條件）會影響到多個檔案。語意搜尋能幫技術長在評估改動時，快速找出所有受影響的設計邏輯，這在軟體開發中稱為 Impact Analysis，但在遊戲業中更偏向「遊戲平衡與體驗的一致性」。
+1. 跨媒介的知識特質： GDD 經常混合了文字說明、數值公式與美術參考。傳統搜尋難以理解「類似 Odin 風格的特效」或「高波動性的數值設計」這種模糊概念，但語意搜尋可以透過向量空間找到概念相近的設計。
+2. 邏輯鏈條的複雜性： 遊戲中的一個機制（如 Free Game 觸發條件）會影響到多個檔案。語意搜尋能幫技術長在評估改動時，快速找出所有受影響的設計邏輯，這在軟體開發中稱為 Impact Analysis，但在遊戲業中更偏向「遊戲平衡與體驗的一致性」。
 
 ### 針對 Consensus 的精準提詞 (Prompt) 建議
 
 在使用 Consensus 時，建議直接鎖定 Game Design 或 Game Development 領域，並嘗試以下提詞：
 
-1.  針對開發效率與知識重用： How does the automated extraction of knowledge from Game Design Documents (GDD) using Large Language Models improve game development efficiency and knowledge reuse?
-2.  針對語意搜尋的優勢比較： What are the measurable benefits of semantic search over keyword-based search for retrieving game mechanics and mathematical specifications from game design documentation?
-3.  針對決策支撐與市場競爭力： Does AI-driven analysis of competitive game design specifications lead to better strategic decision-making and lower market research costs in the gaming industry?
+1. 針對開發效率與知識重用： How does the automated extraction of knowledge from Game Design Documents (GDD) using Large Language Models improve game development efficiency and knowledge reuse?
+2. 針對語意搜尋的優勢比較： What are the measurable benefits of semantic search over keyword-based search for retrieving game mechanics and mathematical specifications from game design documentation?
+3. 針對決策支撐與市場競爭力： Does AI-driven analysis of competitive game design specifications lead to better strategic decision-making and lower market research costs in the gaming industry?
 
 ### 設定搜尋脈絡與目標
 
-1.  設定脈絡 (Context)： 在 Consensus 的進階過濾器中，建議將 Domain 鎖定在 Computer Science 或 Art & Design。雖然遊戲規格書偏技術，但很多關於「設計方法論」的論文會落在藝術設計類別中。
-2.  設定目標 (Objective)： 你的目標是尋找「量化數據」。例如：搜尋時間（Search Time）、錯誤率（Error Rate）、或是對機制理解的準確度（Comprehension Accuracy）。這些數據能直接支持你題目中「最大化價值」的說法。
+1. 設定脈絡 (Context)： 在 Consensus 的進階過濾器中，建議將 Domain 鎖定在 Computer Science 或 Art & Design。雖然遊戲規格書偏技術，但很多關於「設計方法論」的論文會落在藝術設計類別中。
+2. 設定目標 (Objective)： 你的目標是尋找「量化數據」。例如：搜尋時間（Search Time）、錯誤率（Error Rate）、或是對機制理解的準確度（Comprehension Accuracy）。這些數據能直接支持你題目中「最大化價值」的說法。
 
 ### 搜尋結果
 
@@ -84,20 +158,22 @@ Consensus[沒有直接結果](https://consensus.app/search/semantic-search-vs-ke
 - 調整後：**利用生成式人工智慧技術最大化遊戲規格書價值的策略**。
 - 意涵：知識管理與知識萃取仍是基礎；敘事重心改為下游的效益延伸與價值極大化，而不只停留在「把知識從文件裡取出來」。
 
-2. 可維持不變的部分
+1. 可維持不變的部分
 
 - 知識管理與知識萃取／語料化的架構不必大改，它們支撐後續所有應用。
 
-3. 新增強調：四條效益軸線
+1. 新增強調：四條效益軸線
 
-| 軸線 | 一句話摘要 |
-|--------|------------|
-| 多條件檢索 | 價值不在「能搜」，而在可推論、可組合條件的檢索（倍率分布、音效是否迴圈、跨遊戲比對等）。語料庫中遊戲數量愈多（例如兩款以上），優勢愈明顯。 |
-| 競品分析 | 截圖＋提詞產出結構化規格；隨多模態成熟，影片成為輸入；在競品語料庫上以自然語言做模式與趨勢查詢（例如付費設計、價格區間）。 |
-| 新規格重組孵化 | 累積足夠規格語料後，依市場與產品偏好生成較受歡迎的規格；可延伸討論跨市場相似性與更底層需求如何支撐重組，而不只是表層抄規格。 |
-| 有憑有據的素材／雛型生成 | 生成錨定在規格書、市場風格、公司框架（「有憑有據」），有別於一次性空泛提詞——更接近可落地的圖像、影片與程式片段。 |
 
-4. 給讀者的一條故事線
+| 軸線           | 一句話摘要                                                                 |
+| ------------ | --------------------------------------------------------------------- |
+| 多條件檢索        | 價值不在「能搜」，而在可推論、可組合條件的檢索（倍率分布、音效是否迴圈、跨遊戲比對等）。語料庫中遊戲數量愈多（例如兩款以上），優勢愈明顯。 |
+| 競品分析         | 截圖＋提詞產出結構化規格；隨多模態成熟，影片成為輸入；在競品語料庫上以自然語言做模式與趨勢查詢（例如付費設計、價格區間）。         |
+| 新規格重組孵化      | 累積足夠規格語料後，依市場與產品偏好生成較受歡迎的規格；可延伸討論跨市場相似性與更底層需求如何支撐重組，而不只是表層抄規格。        |
+| 有憑有據的素材／雛型生成 | 生成錨定在規格書、市場風格、公司框架（「有憑有據」），有別於一次性空泛提詞——更接近可落地的圖像、影片與程式片段。             |
+
+
+1. 給讀者的一條故事線
 
 - 流程：規格語料化 → 檢索與比較（含競品）→ 重組孵化新規格 → 依該知識繼承式地生成素材與雛型。
 - 論點：生成式 AI 是槓桿；價值極大化要透過上述四種用法來論證，而不只論證萃取是否準確。
