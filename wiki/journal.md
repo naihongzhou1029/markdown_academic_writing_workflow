@@ -4,6 +4,107 @@
 
 # Mar 29, 2026
 
+## Game Generation via Large Language Models
+
+This PDF isn't available for now, I'd requested in [Research Gate](https://www.researchgate.net/publication/383501745_Game_Generation_via_Large_Language_Models).
+
+## Large Language Models and Video Games: A Preliminary Scoping Review
+
+Venue: arXiv:2403.02613, Mar 2024
+Author: Penny Sweetser — The Australian National University
+
+### Core Contribution
+
+A scoping review surveying 76 papers (from 2,260 Google Scholar results) published between 2022 and early 2024 on LLMs applied to video games. Provides a foundational snapshot of the field, categorizing research into four key themes plus one adjacent topic.
+
+### Key Findings
+
+- Most used LLM: GPT (85.5%), followed by LLaMA (9.2%), Codex and BERT (6.6% each)
+- 90.7% of papers were published in 2023, indicating rapid growth
+- Positives: human interpretability, social behaviours, empowerment of non-developers, LLM+RL combinations outperforming baselines
+- Negatives: lack of logical reasoning, unpredictability in live content generation, inconsistency/incoherence in AI-native games
+
+### Themes
+
+1. Game AI and Agents (35.5%, 27 papers) — agent design/behaviours, LLMs+RL, human-AI collaboration and multi-agent coordination (Voyager, MindAgent, LLM-Co Framework, Overcooked-AI)
+2. Game Development and Play (32.9%, 25 papers) — content/level generation, serious games, game design, RPG tools, bug detection
+3. Narrative, Story, and Dialogue (22.4%, 17 papers) — NPC dialogue, interactive story, quest generation
+4. Game Research and Reviews (9.2%, 7 papers) — game review analysis, synthetic research data generation
+5. Recommendation (bonus, 9 papers) — game datasets used in LLM4Rec research
+
+### Game Design Sub-theme (6 papers)
+
+Papers specifically on game design within the "Game Development and Play" theme:
+
+| Ref | Paper | DOI |
+|-----|-------|-----|
+| [4] | Amresh 2023 — Integrating Reinforcement AI Into the Design of Educational Games | `10.34190/ecgbl.17.1.1709` |
+| [27] | Huang & Sun 2023 — Create Ice Cream: Real-time Creative Element Synthesis Framework Based on GPT-3 | `10.1109/CoG57401.2023.10333153` |
+| [28] | Gatti Junior et al. 2023 — How ChatGPT can inspire and improve serious board game design | `10.17083/ijsg.v10i4.645` |
+| [34] | Lanzi & Loiacono 2023 — ChatGPT as evolutionary engines for online collaborative game design | `10.1145/3583131.3590351` |
+| [56] | Saito et al. 2023 — Double Impact: Children's Serious RPG Generation/Play with a LLM | `10.1007/978-3-031-44751-8_21` |
+| [70] | Tinterri et al. 2024 — AI in board Game-Based Learning | No DOI (CEUR Workshop Proceedings) |
+
+- Idea generation [34]: collaborative design framework simulating the human design process, using LLMs for recombination and variation of ideas
+- Game mechanic design [27]: element synthesis game where LLM evaluates combinations based on physical/chemical properties and logical reasoning; effective but LLM uncertainty can adversely affect game mechanics
+- Serious games [4, 28, 56, 70]: LLMs supporting educators in brainstorming, choosing game types, suggesting themes/mechanics aligned with curriculum, and offering feedback on prototypes
+
+## Automated Unity Game Template Generation from GDDs via NLP and Multi-Modal LLMs
+
+Venue: arXiv:2509.08847, Sep 2025
+Author: Amna Hassan — UET Taxila
+
+### Core Contribution
+
+End-to-end framework that parses GDDs and generates functional Unity C# game templates using a fine-tuned LLaMA-3-8B-Instruct model. The system combines: (1) a GDD parsing pipeline that extracts structured JSON from PDF/TXT/DOCX, (2) a LoRA-fine-tuned LLM for Unity-specific code synthesis, and (3) a custom Unity Editor package that integrates parsing, script analysis, code generation, and documentation into the editor workflow.
+
+### Data and Fine-tuning
+
+- 57 GDDs collected from GameScrye, GameDocs.org, Al Lowe's collection, PixelProspector — standardized into structured JSON (title, genre, mechanics, characters, levels)
+- Unity code dataset sourced from the "Mix and Jam" YouTube channel (high-quality recreations of famous game mechanics). GPT-4 generated corresponding GDDs for each implementation to create paired (GDD, Unity Code) training data
+- Fine-tuning: LLaMA-3-8B-Instruct + LoRA via PEFT, ~1.9M trainable parameters, ~120 training steps (single epoch), FP16 precision
+- Deployed via Google Colab + ngrok + FastAPI
+
+### Unity Package Architecture
+
+Custom Unity Editor package with 5 components:
+1. GDD Parser — uploads and extracts structured info from design documents
+2. Script Analyzer — determines required scripts and builds a dependency graph
+3. Script Generator — interfaces with the fine-tuned LLM via FastAPI to generate C# scripts
+4. Documentation Generator — creates usage instructions and setup guides
+5. Unity Editor Integration — in-editor UI for the full workflow
+
+### Evaluation
+
+3 experienced Unity developers scored each model (0–5) across 3 game genres (Platformer, Action RPG, Puzzle Game) on 4 metrics:
+
+- Compilation Success — does the code compile cleanly in Unity?
+- GDD Adherence — does the code faithfully implement mechanics specified in the GDD?
+- Unity Best Practices — proper use of `MonoBehaviour`, `GetComponent<>()`, Input system, component-based architecture
+- Modular Code — logical separation of concerns into distinct classes and methods
+
+| Model | Comp. | Adher. | BestPrac. | Modular. | Avg |
+| --- | --- | --- | --- | --- | --- |
+| LLaMA 3 8B Inst. | 4.5 | 4.2 | 4.0 | 4.2 | 4.2 |
+| Gemma 2 Inst. | 3.8 | 3.5 | 3.5 | 3.2 | 3.5 |
+| Qwen 1.5 Chat | 2.0 | 4.8 | 2.5 | 2.8 | 3.0 |
+| LLaMA 4 Maverick | 4.8 | 4.8 | 4.5 | 4.6 | 4.7 |
+| Theirs (fine-tuned) | 5.0 | 4.9 | 4.5 | 4.8 | 4.8 |
+
+### Key Findings
+
+- Domain-specific fine-tuning on paired GDD-code data beats even larger/newer general-purpose models
+- Qwen 1.5 Chat had high GDD adherence (4.8) but terrible compilation (2.0) — understanding requirements ≠ producing working code
+- Action RPGs exposed the biggest gap between models due to interdependent systems (inventory, combat, progression)
+- Platformers had the smallest gap since platformer patterns are well-represented in training data
+
+### Limitations
+
+- Small scale: 57 GDDs, 3 evaluators, 3 game genres
+- No multimodal understanding of diagrams/concept art within GDDs
+- No runtime performance evaluation of generated code
+- Model deployed via Colab + ngrok — not production-ready infrastructure
+
 ## GDD Generation for Hyper-Casual Games Using Large Language Models: A Comparative Evaluation
 
 Venue: BEU Fen Bilimleri Dergisi (Bitlis Eren University Journal of Science), Vol. 14, Issue 3, 2025
