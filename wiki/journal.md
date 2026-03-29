@@ -2,6 +2,193 @@
 
 ## 資料搜尋
 
+# Mar 29, 2026
+
+## GDD Generation for Hyper-Casual Games Using Large Language Models: A Comparative Evaluation
+
+Venue: BEU Fen Bilimleri Dergisi (Bitlis Eren University Journal of Science), Vol. 14, Issue 3, 2025
+Authors: Muhammet Emin Aydinalp, Buket Doğan, Abdullah Bal — Istanbul Sabahattin Zaim University / Marmara University, Türkiye
+DOI: 10.17798/bitlisfen.1664312
+
+### Core Contribution
+
+Compares a human-expert-written GDD with an LLM-generated GDD (ChatGPT-4) for the hyper-casual game "Pool Wars". Four domain experts blindly scored both documents on 8 criteria using a 5-point Likert scale. The LLM GDD scored 4.71/5 overall vs. 3.29/5 for the human GDD, with lower standard deviation (0.23 vs. 0.36).
+
+### Prompt Engineering Strategy
+
+Three complementary techniques were used to generate the LLM GDD:
+
+1. Step-by-step instructions — divided the GDD into sections (game summary, basic mechanics, level system, design elements, game economy) and prompted each separately, then combined
+2. Example-supported prompts — fed sample GDDs from similar games to guide structure and content
+3. Role-playing prompts — "You are a game designer" persona to produce more user-focused, target-audience-aware output
+
+Visual assets were generated with Google's ImageFX (text-to-image).
+
+### Evaluation Criteria and Results
+
+| Criteria | Human GDD | LLM GDD | Difference |
+| --- | --- | --- | --- |
+| Completeness | 3.67 | 4.67 | +1.00 |
+| Clarity | 3.33 | 5.00 | +1.67 |
+| Consistency | 3.00 | 4.67 | +1.67 |
+| Creativity & Innovation | 4.00 | 4.00 | 0.00 |
+| Practicality | 3.00 | 5.00 | +2.00 |
+| Level of Detail | 2.67 | 5.00 | +2.33 |
+| User-Centric Approach | 3.00 | 5.00 | +2.00 |
+| Visual Adequacy | 3.67 | 4.33 | +0.66 |
+
+Largest gaps: Level of Detail (+2.33), Practicality (+2.00), User-Centric (+2.00). No gap: Creativity & Innovation (tied at 4.00). Smallest gap: Visual Adequacy (+0.66).
+
+### What Is NOT Measured
+
+- No time/cost comparison between human and LLM GDD production
+- Only one game (Pool Wars), only one genre (hyper-casual), only one LLM (ChatGPT-4 free tier)
+- Only 4 evaluators — too few for statistical significance tests
+- Creativity tie at 4.00 may reflect a ceiling effect (both scored "good") rather than genuine parity
+- Evaluators scored the final documents, not the process — no insight into iteration effort or prompt refinement cycles
+- Used free-tier GPT-4 with session interruptions, requiring manual merging across sessions — a paid API would likely yield more consistent output
+- No downstream validation: the GDD was never used to actually build the game, so "practicality" is expert opinion, not empirical
+
+### Risks Identified by Authors
+
+- LLMs can introduce conflicting mechanics or technically impossible features across sections
+- Over-reliance on LLMs may reduce originality over time
+- Copyright/ownership of LLM-generated text is unresolved for commercial use
+- Human expert oversight at each step remains essential
+
+### Relevance to My Research
+
+This paper is directly citable as evidence for the "documentation quality" axis:
+
+| Dimension | This paper | My work |
+| --- | --- | --- |
+| Direction | LLM generates GDD from prompts | LLM extracts knowledge from existing GDDs |
+| Game scope | Single hyper-casual game | Multiple slot/casino games with mathematical specs |
+| Evaluation | Expert Likert scoring of document quality | Downstream utility (retrieval, competitive analysis, spec incubation) |
+
+The 4.71 vs. 3.29 result supports the claim that LLMs handle structured documentation well — but this paper evaluates GDD generation (writing), not GDD comprehension (reading/extracting). My work requires the inverse capability: can LLMs accurately extract and structure knowledge from existing GDDs? The quality gap this paper demonstrates is encouraging but not directly transferable.
+
+The 8-criterion evaluation framework (completeness, clarity, consistency, creativity, practicality, detail, user-centric, visual adequacy) could be adapted for evaluating extracted knowledge quality, with modifications: replacing "creativity" with "extraction accuracy" and "visual adequacy" with "structural fidelity to source."
+
+## GameGoogle: A Search Engine for Mechanics in Video Games
+
+Venue: AIIDE 2025 (Twenty-First AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment)
+Authors: Brooke Szajda, M Charity — University of Richmond
+
+[LittleBigPlanet 2 Story Mode - Basketball](https://youtu.be/AvyW0J94geE?t=11)
+[Thief Gold - Playing Basketball in the Tutorial (Easter Egg)](https://youtu.be/v8YbhZ9sWXw?t=170)
+
+### Core Contribution
+
+A prototype search engine (GG) that searches within a game's entire gameplay space for specific mechanics, not just by genre or title. Example: searching "basketball" returns not only NBA 2K but also LittleBigPlanet (basketball minigame) and Thief: The Dark Project (basketball easter egg).
+
+### System Architecture
+
+- Dataset: ~4,500 game entries, top 50 rated games per year from 1975–2025 (sourced from GlitchWave.com)
+- Text sources: game manuals, walkthroughs, guides from Vimm's Lair, IGN, GameFAQs, Steam Community
+- Tokenized using NLTK and SpaCy, extracting only nouns and verbs
+- MySQL database with two tables: `gameData` (game info) and `inverseGameWords` (inverted index)
+- Hosted on AWS, web frontend with multiple ranking/filter options
+
+### Ranking Formula
+
+`R_i = 0.5(K_i) + 0.2(T_i) + 0.15(G_i) + 0.15(A_i)`
+
+- `K_i`: keyword frequency ratio (query keywords / total words for that game)
+- `T_i`: title match percentage
+- `G_i`: genre match percentage
+- `A_i`: tag match percentage
+
+### Evaluation
+
+- Metric: nDCG@20 (Normalized Discounted Cumulative Gain, top 20 results)
+- nDCG meaning: 1.0 = perfect alignment with user expectations, 0.0 = no expected games in top 20
+- Ground truth: 60 participants named first game they associated with each of 16 words
+- 16 query words: bike, block, castle, city, dice, dog, dungeon, farm, fire, ghost, horse, pizza, puzzle, school, spy, sword
+- Random baseline scored 0 across all terms
+- Best: `dungeon` and `ghost` (~0.5), worst: `fire` (0, verb/noun ambiguity — "press to fire" dominated older game manuals)
+- Most terms landed in the 0.1–0.3 range
+
+### What Is NOT Measured
+
+- No comparison between ranking filters (default vs. exact match vs. date/rating)
+- No ablation on ranking formula weights
+- No precision/recall or MAP — only nDCG@20
+- No comparison against existing systems (IGDB, MobyGames, etc.)
+- No dataset coverage statistics
+- The nDCG metric only measures whether GG surfaces games users already know — it does NOT evaluate GG's stated core purpose of discovering obscure/hidden mechanics
+
+### Relevance to My Research
+
+Structural parallel: both approaches use natural language text artifacts that describe gameplay as the basis for retrieval/matching, rather than playing or observing the game directly.
+
+| Dimension | GameGoogle | My work |
+| --- | --- | --- |
+| Source text | Walkthroughs, manuals, community guides (post-release, user-generated) | Game Design Documents (pre-release, authorial intent) |
+| Who wrote it | Players and community | Designers |
+| Stage in game lifecycle | After ship | Before ship |
+| Vocabulary | Casual player language | Domain jargon, tacit knowledge |
+
+If GDD-extracted knowledge were merged into GG's database, the expected nDCG improvement would be minimal (~0.02–0.08) because: (1) the evaluation ground truth comes from player associations, not designer intent; (2) GDD jargon rarely overlaps with casual query vocabulary; (3) the bottleneck is ranking algorithm issues, not data coverage; (4) well-known games already have thorough walkthroughs, so GDD adds redundant keywords.
+
+However, the real value of GDD extraction lies in a dimension GG's current metric cannot capture — finding obscure mechanics that no walkthrough documents. This is qualitatively complementary, not quantitatively better on their metric.
+
+## Digital Game Development Using Large Language Models (LLMs): An Exploratory Study
+
+Venue: SBGames 2025 (XIV Simpósio Brasileiro de Jogos e Entretenimento Digital), Salvador/BA
+Authors: Cristiano Barroso Serra, Gabriel Mattos Barroso Serra, Tadeu Moreira de Classe — UNIRIO / UVA, Brazil
+
+### Core Contribution
+
+Proposes PromptingGameCraft (PGC), a pipeline that takes a human-written Game Design Document (GDD) as input and automatically generates:
+
+1. A Game Design File (GDF) — structured JSON formalizing all mechanics and interactions
+2. A class diagram — using a custom notation (not standard UML)
+3. A directory/file structure
+4. Game source code (JavaScript via the Phaser framework)
+
+Backend: DeepSeek-Reasoner model API on Google Cloud + Python web server.
+
+### Pipeline (4 Phases)
+
+| Phase | Output |
+| --- | --- |
+| Design Input | GDD artifact |
+| Semantic Interpretation | Game semantic model |
+| Architectural Inference | Architectural blueprint |
+| Scaffold Instantiation | System scaffold + executable code |
+
+Four prompt functions drive each phase: `Prompt_GDF`, `Prompt_Pattern`, `Prompt_Structure`, `Prompt_Code`.
+
+### GDF — The Key Intermediary Artifact
+
+The GDF sits between design intent and code. It organizes interactions into three categories: game descriptions, system interactions, and game interactions. Each interaction has structured fields: `id`, `name`, `type`, `description`, `parameters`, `next`. This pre-formalization acts as a semantic control layer that reduces context inconsistency in LLM generation.
+
+### Proof of Concept: Basket Catch Game
+
+A 2D ball-catching game was built entirely from PGC outputs. Only 1% code variation after manual fixes — the only intervention needed was adding `.js` extensions to import paths (ECMAScript module syntax issue). Structured prompt architecture scored 9.5/10 vs. 6.25/10 for single-shot baseline (evaluated independently by GPT-o3).
+
+### Critical Limitations Noted in Discussion
+
+- No before/after human effort comparison. The paper provides zero data on person-months, development hours, or cost savings comparing PGC vs. traditional development. It cannot be cited as evidence for productivity gains.
+- The "before/after" in Table 9 compares *raw LLM output* vs. *manually adjusted code* — both within PGC. It is not a comparison against traditional workflows.
+- Output quality is tightly coupled to GDD quality — garbage in, garbage out.
+- Manual intervention still needed for asset integration and engine-specific adjustments.
+- Currently supports only single-game, single-engine (Phaser) workflows.
+
+### What This Paper Is (and Is Not)
+
+Is: A proof-of-concept that GDD → structured intermediate (GDF) → code automation *works*, with structured prompting significantly outperforming single-shot generation.
+
+Is not: A controlled experiment measuring efficiency, effort reduction, or cost savings compared to traditional development.
+
+### Relevance to Research
+
+- Provides a concrete GDD → GDF → class diagram → code pipeline architecture to reference.
+- The GDF concept (structured intermediate representation) is a useful design pattern for knowledge extraction systems.
+- Empirical evidence that structured multi-stage prompting (9.5) is superior to single-shot (6.25) supports the argument for pipeline-based prompt architecture.
+- Cannot support claims about time/effort savings — such evidence must come from other sources (e.g., Hassan et al. on Unity template generation, cited in Consensus lit review).
+
 # Mar 28, 2026
 
 ## Deep Lit Review of Consensus get better results
