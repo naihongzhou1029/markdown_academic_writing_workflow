@@ -4,6 +4,57 @@
 
 # Mar 29, 2026
 
+## ChatGPT and Other Large Language Models as Evolutionary Engines for Online Interactive Collaborative Game Design
+
+Venue: arXiv:2303.02155, Apr 2023
+Authors: Pier Luca Lanzi, Daniele Loiacono — Politecnico di Milano
+
+### Core Idea
+
+Propose using LLMs (ChatGPT, GPT-3) as genetic operators inside an interactive evolutionary algorithm for collaborative game design. Game concepts are represented as free-form text; the LLM handles initialization, crossover, and mutation — tasks that require maintaining semantic coherence and would be extremely difficult with traditional evolutionary representations.
+
+### Framework Architecture
+
+Three components:
+1. Database: stores active designs, evaluations, and published concepts
+2. Evolutionary engine: steady-state genetic algorithm using tournament selection (size 2), LLM-driven crossover (probability 0.7) and mutation
+3. Interaction agent: Telegram bot publishes concepts and collects user feedback (positive / neutral / negative votes)
+
+### LLM as Genetic Operators
+
+- Initialization: prompt the LLM to "act as a game designer" and generate a concept matching a design brief
+- Crossover: feed two parent designs into a prompt asking the LLM to recombine them into a novel game
+- Mutation: ask the LLM to vary a single aspect (e.g., goal, mechanics, level design) of an existing concept
+
+### Evaluation (3 experiments, ~80 participants)
+
+1. Minimalist video game design (4 days, ChatGPT, 35 active users, 1025 evaluations)
+2. Board game design (4 days, ChatGPT, 35 active users, 799 evaluations)
+3. 2023 Global Game Jam brainstorming (theme: "roots", <24 hours, DaVinci GPT-3, ~35 users)
+
+Human role is purely as a curator/judge — they vote on concepts but never write or edit the text directly. The LLM is the sole author of every game concept. Humans steer evolution indirectly through their preferences.
+
+### Key Findings
+
+- Population drift observed: board game concepts shifted from generic terms (time/cards/room) toward ecosystem/conservation mechanics that were absent in the initial population
+- Participants valued novel mechanics and unexpected element combinations that emerged through evolution
+- Negative feedback cited similarity between concepts (small population of 10) and occasional LLM incoherence
+- Concept descriptions grew longer over generations (board games: ~1600 to ~2200 chars)
+
+### Limitations
+
+- No quantitative comparison with a pure human design process (no time-to-convergence, quality scores, diversity measurements, or cost benchmarks vs. human-only brainstorming)
+- No rigorous quantitative comparison between ChatGPT and DaVinci GPT-3 — only anecdotal "no difference noticed"
+- Evaluation is self-contained (measures what happened within the framework only)
+- Output is a short game concept (~hundreds of chars), not a full game design document (GDD)
+- The paper is framed as a "preliminary evaluation" / proof-of-concept
+
+### Relevance to Our Research
+
+- Demonstrates that LLM + evolutionary loop can produce increasingly interesting game concepts over iterative human feedback
+- Focuses on the divergent/exploration phase of design (brainstorming), not on producing complete, structured game specifications
+- Could complement a more structured GDD generation pipeline by adding a human-in-the-loop selection/refinement cycle
+
 ## Game Generation via Large Language Models
 
 This PDF isn't available for now, I'd requested in [Research Gate](https://www.researchgate.net/publication/383501745_Game_Generation_via_Large_Language_Models).
