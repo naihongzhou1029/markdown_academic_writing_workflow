@@ -1,3 +1,7 @@
+# 2026/04/04
+
+> 傳統關鍵字搜尋僅能做到「有或沒有」的字面比對，價值有限。當規格書知識化後，其真正的價值在於「可推論、可組合條件的檢索」。例如，策劃人員可直接詢問：「遊戲中的倍率分布為何？」或「中了75倍線獎時是否循環播放特定音效？」。當知識庫中包含多款遊戲規格時，還能進行跨遊戲的條件比對（例如：找出所有最大倍數超過500倍且具備特定進入條件的遊戲），大幅提升研發人員獲取內隱知識的效率。
+
 
 
 # Mar 29, 2026
@@ -105,7 +109,11 @@ Author: Amna Hassan — UET Taxila
 
 ### Core Contribution
 
-End-to-end framework that parses GDDs and generates functional Unity C# game templates using a fine-tuned LLaMA-3-8B-Instruct model. The system combines: (1) a GDD parsing pipeline that extracts structured JSON from PDF/TXT/DOCX, (2) a LoRA-fine-tuned LLM for Unity-specific code synthesis, and (3) a custom Unity Editor package that integrates parsing, script analysis, code generation, and documentation into the editor workflow.
+End-to-end framework that parses GDDs and generates functional Unity C# game templates using a fine-tuned LLaMA-3-8B-Instruct model. The system combines:
+
+1. A GDD parsing pipeline that extracts structured JSON from PDF/TXT/DOCX
+2. A LoRA-fine-tuned LLM for Unity-specific code synthesis
+3. A custom Unity Editor package that integrates parsing, script analysis, code generation, and documentation into the editor workflow.
 
 ### Data and Fine-tuning
 
@@ -488,7 +496,7 @@ Current evidence shows that LLM-based extraction and structuring of GDDs can mea
 
 ### 搜尋結果
 
-Consensus[沒有直接結果](https://consensus.app/search/semantic-search-vs-keyword-search/0viSRw8lR_er-XUDem2qvQ/)，
+Consensus[沒有直接結果](https://consensus.app/search/semantic-search-vs-keyword-search/0viSRw8lR_er-XUDem2qvQ/),
 
 ### 整理給老師的論文修改方向
 
