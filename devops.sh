@@ -394,17 +394,17 @@ Development Operations Center - devops.sh
 Usage: ./devops.sh [target]
 
 Available targets:
+  help      - Show this help message [default]
   pdf       - Build the main paper PDF
   cover     - Build the cover page PDF
-  printed   - Build the printed version (cover + paper) [default]
+  printed   - Build the printed version (cover + paper)
   zh_tw     - Run the Traditional Chinese translation pipeline
   tags      - Generate .tags from all Markdown files
   clean     - Remove all generated files
   deps      - Show information about dependencies
-  help      - Show this help message
 
 Examples:
-  ./devops.sh           # Build printed version (default)
+  ./devops.sh           # Show this help message
   ./devops.sh pdf       # Build only the paper PDF
   ./devops.sh cover     # Build only the cover page
   ./devops.sh clean     # Clean all generated files
@@ -415,15 +415,23 @@ EOF
 
 # Main script logic
 main() {
+    # Default target is 'help'
+    TARGET="${1:-help}"
+
+    # Handle help immediately without Docker checks
+    case "$TARGET" in
+        help|--help|-h)
+            show_help
+            return 0
+            ;;
+    esac
+
     # Check Docker availability
     check_docker
     
     # Ensure Docker images are ready
     ensure_base_image
     ensure_derived_image
-    
-    # Default target is 'pdf'
-    TARGET="${1:-pdf}"
     
     case "$TARGET" in
         pdf)
@@ -446,9 +454,6 @@ main() {
             ;;
         deps)
             deps
-            ;;
-        help|--help|-h)
-            show_help
             ;;
         *)
             print_error "Unknown target: $TARGET"

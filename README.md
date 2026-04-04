@@ -184,25 +184,25 @@ For a streamlined development experience, the repository includes `devops.sh` (L
 - **Smart builds**: Detects existing artifacts and builds dependencies as needed
 - **No dependency checking**: Simplified workflow without Make's dependency graph
 
-**Available targets:**
+Available targets:
 
 ```bash
 ./devops.sh [target]
 
 # Targets:
+#   help      - Show usage information [default]
 #   pdf       - Build the main paper PDF
 #   cover     - Build the cover page PDF
-#   printed   - Build the printed version (cover + paper) [default]
+#   printed   - Build the printed version (cover + paper)
 #   clean     - Remove all generated files
 #   deps      - Show information about dependencies
-#   help      - Show usage information
 ```
 
 **Examples:**
 
 ```bash
 # Linux/macOS/WSL
-./devops.sh           # Build everything (default)
+./devops.sh           # Show help message (default)
 ./devops.sh pdf       # Build only the paper PDF
 ./devops.sh cover     # Build only the cover page
 ./devops.sh clean     # Clean all generated files
