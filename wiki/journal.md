@@ -1,6 +1,4 @@
-# Mar 28, 2026
 
-## 資料搜尋
 
 # Mar 29, 2026
 
@@ -227,8 +225,8 @@ The 8-criterion evaluation framework (completeness, clarity, consistency, creati
 Venue: AIIDE 2025 (Twenty-First AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment)
 Authors: Brooke Szajda, M Charity — University of Richmond
 
-[LittleBigPlanet 2 Story Mode - Basketball](https://youtu.be/AvyW0J94geE?t=11)
-[Thief Gold - Playing Basketball in the Tutorial (Easter Egg)](https://youtu.be/v8YbhZ9sWXw?t=170)
+- [LittleBigPlanet 2 Story Mode - Basketball](https://youtu.be/AvyW0J94geE?t=11)
+- [Thief Gold - Playing Basketball in the Tutorial (Easter Egg)](https://youtu.be/v8YbhZ9sWXw?t=170)
 
 ### Core Contribution
 
@@ -281,7 +279,12 @@ Structural parallel: both approaches use natural language text artifacts that de
 | Stage in game lifecycle | After ship | Before ship |
 | Vocabulary | Casual player language | Domain jargon, tacit knowledge |
 
-If GDD-extracted knowledge were merged into GG's database, the expected nDCG improvement would be minimal (~0.02–0.08) because: (1) the evaluation ground truth comes from player associations, not designer intent; (2) GDD jargon rarely overlaps with casual query vocabulary; (3) the bottleneck is ranking algorithm issues, not data coverage; (4) well-known games already have thorough walkthroughs, so GDD adds redundant keywords.
+If GDD-extracted knowledge were merged into GG's database, the expected nDCG improvement would be minimal (~0.02–0.08) because:
+
+1) the evaluation ground truth comes from player associations, not designer intent; 
+2) GDD jargon rarely overlaps with casual query vocabulary; 
+3) the bottleneck is ranking algorithm issues, not data coverage; 
+4) well-known games already have thorough walkthroughs, so GDD adds redundant keywords.
 
 However, the real value of GDD extraction lies in a dimension GG's current metric cannot capture — finding obscure mechanics that no walkthrough documents. This is qualitatively complementary, not quantitatively better on their metric.
 
