@@ -1,3 +1,9 @@
+# Quick Links
+
+- [論文口試簡報](https://docs.google.com/presentation/d/11WrCCM0jMamrRyBIVKIV3D5mzhkU88RFZYOG5spg92w/edit?usp=sharing)
+- [論文資料維護](https://stuinfosys.ntust.edu.tw/ThesisAdvisor/Home/Index)
+- [研究生上傳畢業論文說明](https://drive.google.com/file/d/16TOQ70OxhTPWD12ceztgMJY06MmQCBYp/view?usp=drive_link)
+
 # 2026/04/04
 
 ## 「智能競品分析」的量化指標
@@ -609,3 +615,9 @@ Consensus[沒有直接結果](https://consensus.app/search/semantic-search-vs-ke
 ---
 
 看老師你覺得如何，有沒有需要修整的部分？同時間我會開始搜尋相關的論文，如果有不錯的內容，再同步給老師，謝謝～
+
+# References
+
+- [台科大電子資料庫查詢](https://gssapps.ebscohost.com/customerspecific/s3143671/db/)
+- [Graduate Paper](https://drive.google.com/drive/folders/1g5zpQM5e8o_W7Swqtj1XV2GkgMjK9iJg)
+- [Turnitin論文比對系統](https://library.ntust.edu.tw/p/404-1049-79245.php?Lang=zh-tw)

@@ -26,6 +26,7 @@ CSL="chicago-author-date.csl"
 COVER_TEX="cover_page.tex"
 COVER_PDF="cover.pdf"
 RECOGNITION_PDF="recognition_form.pdf"
+EXAMINATION_PDF="examination_committee.pdf"
 PRINTED_PDF="Thesis-乃宏-FinalVersion.pdf"
 LOGO_FILE="ntust_logo.jpg"
 LOGO_URL="https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg"
@@ -201,8 +202,14 @@ build_printed() {
         exit 1
     fi
     
-    # Merge PDFs: cover + recognition form + paper
-    run_in_docker "bash tools/merge-pdfs.sh $COVER_PDF $RECOGNITION_PDF $PDF $PRINTED_PDF"
+    # Ensure examination committee form exists
+    if [ ! -f "$WORK_DIR/$EXAMINATION_PDF" ]; then
+        print_error "Examination committee PDF not found: $EXAMINATION_PDF"
+        exit 1
+    fi
+    
+    # Merge PDFs: cover + recognition form + examination committee + paper
+    run_in_docker "bash tools/merge-pdfs.sh $COVER_PDF $RECOGNITION_PDF $EXAMINATION_PDF $PDF $PRINTED_PDF"
     
     if [ -f "$WORK_DIR/$PRINTED_PDF" ]; then
         print_info "Successfully generated: $PRINTED_PDF"
