@@ -1,8 +1,86 @@
 # 2026/04/04
 
+## 「智能競品分析」的量化指標
+
+> 透過截圖與提詞產出結構化規格，並隨著多模態AI技術的成熟，未來能直接輸入競品遊玩影片。系統可自動將競品的教學流程、戰鬥操作或付費設計語料化。在此競品語料庫的基礎上，分析人員能以自然語言直接查詢市場模式與趨勢（例如：「哪些競品的付費禮包同時包含『限時』與『隨機寶箱』？價格區間為何？」），省去大量人工觀看、記錄與比對的時間，顯著降低市場調研成本。
+
+### Multimodal recognition of frustration during game-play with deep neural networks
+
+[Multimodal recognition of frustration during game-play with deep neural networks](https://doi.org/10.1007/s11042-022-13762-7)
+
+Venue: Multimedia Tools and Applications, Vol. 82, 2023
+Authors: Carlos de la Fuente, Francisco J. Castellanos, Jose J. Valero-Mas, Jorge Calvo-Zaragoza — University of Alicante
+
+#### Core Contribution
+Proposes a non-invasive multimodal framework using Deep Neural Networks (DNNs) to detect player frustration by extracting and fusing features from audio and video recordings. The study demonstrates that synergistically combining these modalities significantly improves recognition accuracy compared to unimodal or traditional hand-crafted feature methods.
+
+#### Methodology
+- **Data Source**: Uses the Multimodal Game Frustration Database (over 5 hours of 960x540 video/audio recordings from 67 participants).
+- **Audio Processing**: Employs CNNs on Mel spectrograms to automatically extract relevant frequency features, outperforming standard hand-crafted MFCCs.
+- **Video Processing**: Uses a combination of CNN and LSTM on trimmed facial images (64x64 pixels) to capture both spatial expressions and temporal dependencies.
+- **Fusion Strategies**:
+    - **Decision-level Fusion**: Combines the Softmax outputs of individual audio and video models using a weighting factor ($\alpha$).
+    - **Feature-level Fusion**: Concatenates internal feature representations from both streams into a single vector before the final classification layer.
+
+#### Key Findings
+- **Multimodal Superiority**: Multimodal models consistently outperformed unimodal versions.
+- **Winning Model**: **Decision-level fusion** achieved the highest performance with a **Recall of 95.9%** on the test set.
+- **Performance Gain**: Shows error rate improvements of **40% to 90%** over existing state-of-the-art approaches (such as those by Song et al. or Meishu et al.).
+- **Nuance**: The study confirms that neural networks are better at finding "hidden" descriptors in raw signals than humans are at manual feature selection (e.g., Facial Action Coding System units).
+
+#### Relevance to Research
+- Provides quantitative evidence for the "Multi-modal Analysis" axis of the thesis.
+- Demonstrates how **automated feature extraction** from gameplay video/audio can replace manual logging, supporting the goal of extracting "in-game frustration" as a form of implicit knowledge.
+- Offers a benchmark for integrating player emotional states into competitive analysis or playtest reporting.
+
+## 「搜尋」的量化指標
+
 > 傳統關鍵字搜尋僅能做到「有或沒有」的字面比對，價值有限。當規格書知識化後，其真正的價值在於「可推論、可組合條件的檢索」。例如，策劃人員可直接詢問：「遊戲中的倍率分布為何？」或「中了75倍線獎時是否循環播放特定音效？」。當知識庫中包含多款遊戲規格時，還能進行跨遊戲的條件比對（例如：找出所有最大倍數超過500倍且具備特定進入條件的遊戲），大幅提升研發人員獲取內隱知識的效率。
 
+### Comparative Performance Evaluation of Keyword and Semantic Search Engines using Different Query Set Categories
 
+[Comparative Performance Evaluation of Keyword and Semantic Search Engines using Different Query Set Categories](http://dx.doi.org/10.2174/2213275912666190328202153)
+
+Have no full text, [requesting](https://www.researchgate.net/publication/332135064_Comparative_Performance_Evaluation_of_Keyword_and_Semantic_Search_Engines_using_Different_Query_Set_Categories).
+
+### Embedding-based retrieval: measures of threshold recall and precision to evaluate product search
+
+[Embedding-based retrieval: measures of threshold recall and precision to evaluate product search](https://doi.org/10.17323/2587-814X.2024.2.22.34)
+
+Venue: Business Informatics, Vol. 18, No. 2, 2024
+Author: Fedor V. Krasnov — Research Center of WB SK LLC
+
+#### Core Contribution
+Investigates the evaluation of product retrieval systems (the first stage of search) using threshold-based metrics: **Recall@k** and **Precision@k**. Develops an automatic procedure to calculate these metrics and compares different model architectures on the WANDS public dataset.
+
+#### Key Concepts
+- **Lexical vs. Embedding-based Retrieval**: Lexical methods use token matches (sparse results), while embedding-based methods use dense vector representations. Embedding methods require a **relevance threshold**; a high threshold improves ranking speed but risks lower recall, while a low threshold increases recall but demands more computing resources for the ranking phase.
+- **Threshold Metrics**:
+    - **R@k (Threshold Recall)**: Measures the completeness of the retrieved list within the top $k$ results.
+    - **P@k (Threshold Precision)**: Measures the ratio of relevant items within the top $k$ results.
+- **Dependency on Order**: Threshold values are dependent on the order in which results are presented (Lemma 1).
+
+#### Methodology & Results
+Tested three architectures on the WANDS dataset (42,994 products, 480 queries):
+1. **DE**: Two-tower model with one modality (text).
+2. **DE2**: Two-tower model with two modalities.
+3. **SE**: Single encoder model with one modality.
+
+| Model | R@1000 (mean) | P@10 (mean) |
+| :--- | :---: | :---: |
+| DE | 0.75 | 0.68 |
+| DE2 | 0.73 | 0.66 |
+| **SE (Winner)** | **0.84** | **0.67** |
+| Dataset $D_G$ (Baseline) | 0.99 | 0.37 |
+
+- The **SE model**, despite having the fewest parameters, achieved the highest recall ($0.84 \pm 0.09$).
+- **DE2** performed worse than expected, suggesting that adding modalities doesn't automatically improve performance if not handled optimally.
+- Without retrieval models (Baseline), Precision@10 is very low (0.37), highlighting the necessity of retrieval/ranking systems.
+
+#### Relevance to Research
+- Provides a **quantitative framework** to evaluate the "Strategy" part of the thesis (maximizing value through search efficiency).
+- Supports the claim that **semantic search (embedding-based)** requires careful threshold tuning to balance recall and system performance.
+- Offers a benchmark for what "good" performance looks like in an e-commerce/product search context (R@1000 $\approx$ 84%, P@10 $\approx$ 67%).
 
 # Mar 29, 2026
 
