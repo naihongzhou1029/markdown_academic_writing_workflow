@@ -191,7 +191,8 @@ Available targets:
 
 # Targets:
 #   help      - Show usage information [default]
-#   pdf       - Build the main paper PDF
+#   pdf       - Build the main paper PDF (paper.pdf)
+#   pdf_date  - Build the paper PDF with date suffix
 #   cover     - Build the cover page PDF
 #   printed   - Build the printed version (cover + paper)
 #   clean     - Remove all generated files
@@ -203,7 +204,8 @@ Available targets:
 ```bash
 # Linux/macOS/WSL
 ./devops.sh           # Show help message (default)
-./devops.sh pdf       # Build only the paper PDF
+./devops.sh pdf       # Build paper.pdf
+./devops.sh pdf_date  # Build thesisYYYYMMDD.pdf
 ./devops.sh cover     # Build only the cover page
 ./devops.sh clean     # Clean all generated files
 ./devops.sh help      # Show help

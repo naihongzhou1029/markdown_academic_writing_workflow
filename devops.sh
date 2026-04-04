@@ -117,7 +117,8 @@ run_in_docker() {
 
 # Build PDF target
 build_pdf() {
-    print_info "Building PDF: $PDF"
+    local out_file="${1:-$PDF}"
+    print_info "Building PDF: $out_file"
     
     # Process Mermaid diagrams
     print_info "Processing Mermaid diagrams..."
@@ -135,17 +136,17 @@ build_pdf() {
         xelatex -interaction=nonstopmode paper.tex 2>&1 | tail -50
         xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1
         if [ -f paper.pdf ]; then
-            if [ 'paper.pdf' != '$PDF' ]; then mv paper.pdf '$PDF'; fi
+            if [ 'paper.pdf' != '$out_file' ]; then mv paper.pdf '$out_file'; fi
         else
             exit 1
         fi
         bash tools/cleanup-temp.sh $MERMAID_TEMP_SRC $TEMP_SRC
     "
     
-    if [ -f "$WORK_DIR/$PDF" ]; then
-        print_info "Successfully generated: $PDF"
+    if [ -f "$WORK_DIR/$out_file" ]; then
+        print_info "Successfully generated: $out_file"
     else
-        print_error "Failed to generate $PDF"
+        print_error "Failed to generate $out_file"
         exit 1
     fi
 }
@@ -358,7 +359,7 @@ build_zh_tw() {
 # Clean generated files
 clean() {
     print_info "Cleaning generated files..."
-    run_in_docker "bash tools/clean.sh $PDF $COVER_PDF $PRINTED_PDF $TEMP_SRC $COVER_TEMP_TEX"
+    run_in_docker "bash tools/clean.sh paper.pdf $PDF $COVER_PDF $PRINTED_PDF $TEMP_SRC $COVER_TEMP_TEX"
     run_in_docker "rm -f thesis[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].pdf 2>/dev/null || true"
     run_in_docker "rm -f images/mermaid-*.png 2>/dev/null || true"
     run_in_docker "rm -f $MERMAID_TEMP_SRC 2>/dev/null || true"
@@ -395,7 +396,8 @@ Usage: ./devops.sh [target]
 
 Available targets:
   help      - Show this help message [default]
-  pdf       - Build the main paper PDF
+  pdf       - Build the main paper PDF (paper.pdf)
+  pdf_date  - Build the paper PDF with date suffix
   cover     - Build the cover page PDF
   printed   - Build the printed version (cover + paper)
   zh_tw     - Run the Traditional Chinese translation pipeline
@@ -405,7 +407,8 @@ Available targets:
 
 Examples:
   ./devops.sh           # Show this help message
-  ./devops.sh pdf       # Build only the paper PDF
+  ./devops.sh pdf       # Build paper.pdf
+  ./devops.sh pdf_date  # Build thesisYYYYMMDD.pdf
   ./devops.sh cover     # Build only the cover page
   ./devops.sh clean     # Clean all generated files
 
@@ -435,7 +438,10 @@ main() {
     
     case "$TARGET" in
         pdf)
-            build_pdf
+            build_pdf "paper.pdf"
+            ;;
+        pdf_date)
+            build_pdf "$PDF"
             ;;
         cover)
             build_cover

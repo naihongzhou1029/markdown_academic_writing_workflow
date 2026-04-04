@@ -22,7 +22,30 @@
         "clear": false
       },
       "problemMatcher": [],
-      "detail": "Build the main paper PDF"
+      "detail": "Build the main paper PDF (paper.pdf)"
+    },
+    {
+      "label": "devops: pdf_date",
+      "type": "shell",
+      "command": "./devops.sh",
+      "args": ["pdf_date"],
+      "osx": { "command": "./devops.sh" },
+      "linux": { "command": "./devops.sh" },
+      "windows": {
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "pdf_date"]
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Build paper PDF with date suffix"
     },
     {
       "label": "devops: cover",
