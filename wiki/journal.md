@@ -5,6 +5,19 @@
 - [研究生上傳畢業論文說明](https://drive.google.com/file/d/16TOQ70OxhTPWD12ceztgMJY06MmQCBYp/view?usp=drive_link)
 - [《宙斯》規格](https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp=sharing)
 
+# 2026/05/30
+
+- 論文題目更名與文件更新：
+  - 中文名稱更名為：利用生成式人工智慧技術最大化遊戲規格書價值的策略
+  - 英文名稱更名為：Strategies to maximize the value of game specifications using generative artificial intelligence techniques
+  - 更新了 [cover_page.tex](file:///Users/zhounaihong/project/mp/cover_page.tex) 的題目定義，並使用 Docker 建置工具順利重新編譯生成了 [cover.pdf](file:///Users/zhounaihong/project/mp/cover.pdf) 與 [paper.pdf](file:///Users/zhounaihong/project/mp/paper.pdf)。
+  - 將變更提交並推送至遠端 `ntust_paper` 分支。
+  - 將本地工作區忽略目錄 `.antigravitycli/` 加入了 [.gitignore](file:///Users/zhounaihong/project/mp/.gitignore)。
+- 建立重新簽核邀請郵件草稿：
+  - 收件者：戴文凱老師 (`wktai@gapps.ntust.edu.tw`)、徐心怡 Carrie (`carrie@mail.ntust.edu.tw`)
+  - 副本 (Cc)：鄭正元老師 (`jeng@mail.ntust.edu.tw`)
+  - 透過 `gws` 工具順利在 Gmail 中建立了重新簽核的郵件草稿，並夾帶已填寫新題目的 [recognition_form.pdf](file:///Users/zhounaihong/project/mp/recognition_form.pdf) 與 [recommendation_form.pdf](file:///Users/zhounaihong/project/mp/recommendation_form.pdf)。
+
 # 2026/04/19
 
 ## 簡報提詞
@@ -798,6 +811,36 @@ Consensus[沒有直接結果](https://consensus.app/search/semantic-search-vs-ke
 ---
 
 看老師你覺得如何，有沒有需要修整的部分？同時間我會開始搜尋相關的論文，如果有不錯的內容，再同步給老師，謝謝～
+
+## 論文題目更新簽核郵件草稿
+
+- 收件者 (To)：戴文凱 老師 (wktai@gapps.ntust.edu.tw)、徐心怡 Carrie (carrie@mail.ntust.edu.tw)
+- 副本 (Cc)：鄭正元 老師 (jeng@mail.ntust.edu.tw)
+- 主旨：[論文簽核] 碩士論文題目更新與重新簽核邀請（周乃宏 M11326915）
+- 附件：
+  - [recognition_form.pdf](file:///Users/zhounaihong/project/mp/recognition_form.pdf)
+  - [recommendation_form.pdf](file:///Users/zhounaihong/project/mp/recommendation_form.pdf)
+- 內容：
+  ```text
+  戴老師、Carrie 妳好，鄭老師好：
+
+  我是 EMRD 113 畢業生周乃宏（學號 M11326915）。
+
+  我的碩士論文題目已正式更新為：「利用生成式人工智慧技術最大化遊戲規格書價值的策略」。
+  （英文題目：Strategies to maximize the value of game specifications using generative artificial intelligence techniques）
+
+  由於論文題目變更，需要麻煩老師們協助重新簽核以下兩份表單：
+  1. 專業領域審查表（recognition_form.pdf）
+  2. 論文口試推薦書（recommendation_form.pdf）
+
+  附件為已填寫好新題目的表單檔案，煩請戴老師協助簽核，也麻煩 Carrie 協助鄭老師的簽核事宜。
+  若有任何需要修改或配合的地方，請隨時回信告知，謝謝老師與 Carrie 的協助！
+
+  祝好，
+  周乃宏 敬上
+  學號：M11326915
+  EMRD 113 畢業生
+  ```
 
 # References
 
