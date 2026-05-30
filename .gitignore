@@ -68,3 +68,6 @@ cover.log
 
 # PaddleOCR output files
 imported_paper/paddlepaddle/output/
+
+# Antigravity CLI workspace configurations
+.antigravitycli/
