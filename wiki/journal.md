@@ -7,14 +7,18 @@
 
 # 2026/05/30
 
-- 論文題目更新簽核邀請郵件：
-  - 收件者 (To)：戴文凱 老師 (wktai@gapps.ntust.edu.tw)、徐心怡 Carrie (carrie@mail.ntust.edu.tw)
-  - 副本 (Cc)：鄭正元 老師 (jeng@mail.ntust.edu.tw)
-  - 主旨：[論文簽核] 碩士論文題目更新與重新簽核邀請（周乃宏 M11326915）
-  - 附件：
-    - [recognition_form.pdf](file:///Users/zhounaihong/project/mp/recognition_form.pdf)
-    - [recommendation_form.pdf](file:///Users/zhounaihong/project/mp/recommendation_form.pdf)
-  - 內容：
+論文題目更新簽核邀請郵件
+- 處理時間：2026年5月30日
+- 聯絡窗口：戴文凱 老師 (wktai@gapps.ntust.edu.tw)、徐心怡 Carrie (carrie@mail.ntust.edu.tw)，副本抄送 鄭正元 老師 (jeng@mail.ntust.edu.tw)
+- 執行流程與細節：
+  - 更新題目：將中英文題目更新為最新版本，完成封面編譯與推送。
+  - 準備附件：重新填寫新題目的 [recognition_form.pdf](file:///Users/zhounaihong/project/mp/recognition_form.pdf) 與 [recommendation_form.pdf](file:///Users/zhounaihong/project/mp/recommendation_form.pdf)。
+  - 建立草稿：透過 `gws` 技能成功在 Gmail 建立重新簽核邀請郵件草稿。
+- 相關資訊：
+  - 論文題目：利用生成式人工智慧技術最大化遊戲規格書價值的策略
+  - 英文題目：Strategies to maximize the value of game specifications using generative artificial intelligence techniques
+  - 執行目的：因為變更碩士論文題目，需要重新寄信邀請指導教授們簽署審查表與口試推薦書，以完備口試資格。
+  - 郵件內容：
     ```text
     戴老師、Carrie 妳好，鄭老師好：
 
