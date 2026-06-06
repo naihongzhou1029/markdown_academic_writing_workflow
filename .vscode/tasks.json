@@ -1,41 +1,166 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "make-paper",
-            "type": "shell",
-            "command": "make",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": true,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
-            },
-            "problemMatcher": [],
-            "detail": "Build the paper PDF using the Makefile default target"
-        },
-        {
-            "label": "make-clean",
-            "type": "shell",
-            "command": "make",
-            "args": ["clean"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
-            },
-            "problemMatcher": [],
-            "detail": "Clean generated PDF files"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "devops: pdf",
+      "type": "shell",
+      "command": "./devops.sh",
+      "args": ["pdf"],
+      "osx": { "command": "./devops.sh" },
+      "linux": { "command": "./devops.sh" },
+      "windows": {
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "pdf"]
+      },
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Build the main paper PDF (paper.pdf)"
+    },
+    {
+      "label": "devops: pdf_date",
+      "type": "shell",
+      "command": "./devops.sh",
+      "args": ["pdf_date"],
+      "osx": { "command": "./devops.sh" },
+      "linux": { "command": "./devops.sh" },
+      "windows": {
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "pdf_date"]
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Build paper PDF with date suffix"
+    },
+    {
+      "label": "devops: cover",
+      "type": "shell",
+      "command": "./devops.sh",
+      "args": ["cover"],
+      "osx": { "command": "./devops.sh" },
+      "linux": { "command": "./devops.sh" },
+      "windows": {
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "cover"]
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Build the cover page PDF"
+    },
+    {
+      "label": "devops: printed",
+      "type": "shell",
+      "command": "./devops.sh",
+      "args": ["printed"],
+      "osx": { "command": "./devops.sh" },
+      "linux": { "command": "./devops.sh" },
+      "windows": {
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "printed"]
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Build printed PDF (cover + paper merged)"
+    },
+    {
+      "label": "devops: zh_tw",
+      "type": "shell",
+      "command": "./devops.sh",
+      "args": ["zh_tw"],
+      "osx": { "command": "./devops.sh" },
+      "linux": { "command": "./devops.sh" },
+      "windows": {
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "zh_tw"]
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Translate to Traditional Chinese and build PDFs"
+    },
+    {
+      "label": "devops: clean",
+      "type": "shell",
+      "command": "./devops.sh",
+      "args": ["clean"],
+      "osx": { "command": "./devops.sh" },
+      "linux": { "command": "./devops.sh" },
+      "windows": {
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "clean"]
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Remove all generated files"
+    },
+    {
+      "label": "devops: deps",
+      "type": "shell",
+      "command": "./devops.sh",
+      "args": ["deps"],
+      "osx": { "command": "./devops.sh" },
+      "linux": { "command": "./devops.sh" },
+      "windows": {
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "deps"]
+      },
+      "group": "none",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Show dependency information (local dev only)"
+    }
+  ]
 }

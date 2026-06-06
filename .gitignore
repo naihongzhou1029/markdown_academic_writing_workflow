@@ -3,8 +3,13 @@ diffs
 
 # Build outputs
 paper.pdf
+thesis.pdf
+thesis????????.pdf
 cover.pdf
 printed.pdf
+Thesis-乃宏-FinalVersion.pdf
+ref_list.md
+toc_list.md
 
 # Translation outputs
 zh_tw/
@@ -29,7 +34,6 @@ zh_tw/
 *.lot
 *.loa
 *.lol
-paper.tex
 
 # minted cache (if used)
 _minted*
@@ -45,11 +49,27 @@ images/mermaid-*.png
 *.swp
 *.swo
 .idea/
-.vscode/
 .cache/
+.tags
 
 # Cabal build artifacts (from local pandoc-crossref builds)
 dist-newstyle/
 
 # API keys
 .api_key
+
+# Post Process intermediate files
+paper.mermaid.tmp.md
+paper.tmp.md
+paper.tex
+paper.aux
+paper.log
+cover_page.tmp.tex
+cover.aux
+cover.log
+
+# PaddleOCR output files
+imported_paper/paddlepaddle/output/
+
+# Antigravity CLI workspace configurations
+.antigravitycli/

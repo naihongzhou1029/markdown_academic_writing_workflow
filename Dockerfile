@@ -42,6 +42,12 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Install placeins LaTeX package for FloatBarrier support.
+# Pin a known-good CTAN mirror to avoid transient mirror signature issues.
+RUN tlmgr option repository https://mirror.math.princeton.edu/pub/CTAN/systems/texlive/tlnet && \
+    tlmgr update --self && \
+    tlmgr install placeins
+
 # Keep the same entrypoint as base image
 ENTRYPOINT [""]
 

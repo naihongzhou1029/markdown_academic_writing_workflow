@@ -4,23 +4,60 @@ author: An Old-Fashioned Researcher
 abstract: This document serves as a complete, self-referential example of the Pandoc academic workflow. It demonstrates the use of a YAML metadata block for configuration, automated citations with pandoc-citeproc, cross-references for figures, tables, and equations with pandoc-crossref, and advanced customization for multilingual typesetting and page numbering through LaTeX. Furthermore, it details recent extensions to the system, including a Docker-based reproducible build environment, programmatic diagramming with Mermaid, and an automated LLM-powered translation pipeline for multilingual publishing.
 bibliography:
   - references.json
-  - "bibliography.json" 
 csl: chicago-author-date.csl 
 link-citations: true
+colorlinks: true
+linkcolor: blue
+toccolor: black
+urlcolor: blue
+citecolor: blue
 pdf-engine: xelatex
+fontsize: 12pt
 CJKmainfont: "PingFang SC"
 toc: true
-toc-depth: 2
+toc-depth: 4
 lof: true
 lot: true
+figPrefix:
+-   "Figure"
+-   "Figures" 
+tblPrefix: "Tab."
+rangeDelim: "–"
 header-includes:
 - \pagenumbering{arabic}
 - \setcounter{page}{1}
+- \hbadness=10000
 - \usepackage{xeCJK}
 - \setCJKmainfont{PingFang SC}
 - \usepackage[a4paper,margin=1in]{geometry}
+- \usepackage{placeins}
+- \usepackage{float}
+- \makeatletter
+- \def\fps@figure{H}
+- \makeatother
+- \usepackage{titlesec}
+- \titleformat{\section}{\normalfont\fontsize{17}{21}}{\thesection}{1em}{}
+- \titleformat{\subsection}{\normalfont\fontsize{16}{20}}{\thesubsection}{1em}{}
+- \titleformat{\subsubsection}{\normalfont\fontsize{15}{19}}{\thesubsubsection}{1em}{}
+- \titleformat{\paragraph}[hang]{\normalfont\fontsize{14}{18}}{\theparagraph}{1em}{}
+- \titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1em}
+- \titleformat{\subparagraph}[hang]{\normalfont\fontsize{13}{17}}{\thesubparagraph}{1em}{}
+- \titlespacing*{\subparagraph}{0pt}{3.25ex plus 1ex minus .2ex}{1em}
 - |
     \usepackage{etoolbox}
+    \usepackage{mdframed}
+    \usepackage{xcolor}
+    \surroundwithmdframed[
+      linewidth=2pt,
+      linecolor=gray,
+      topline=false,
+      rightline=false,
+      bottomline=false,
+      leftmargin=0pt,
+      innerleftmargin=-0.8em,
+      skipabove=12pt,
+      skipbelow=12pt
+    ]{quote}
     \AtBeginEnvironment{CSLReferences}{%
       \newpage\section*{References}%
       \setlength{\parindent}{0pt}%
@@ -29,11 +66,13 @@ header-includes:
     \pretocmd{\listoffigures}{\clearpage}{}{}
     \pretocmd{\listoftables}{\clearpage}{}{}
     \apptocmd{\listoftables}{\clearpage}{}{}
-figPrefix:
--   "Figure"
--   "Figures" 
-tblPrefix: "Tab."
-rangeDelim: "–"
+    \pretocmd{\section}{\clearpage\FloatBarrier}{}{}
+    \let\originc\includegraphics
+    \newcommand{\borderedinc}[2][]{\setlength{\fboxrule}{0.4pt}\setlength{\fboxsep}{2pt}\fbox{\originc[#1]{#2}}}
+    \AtBeginEnvironment{figure}{\let\includegraphics\borderedinc}
+    \AtEndEnvironment{figure}{\let\includegraphics\originc}
+    \usepackage[normalem]{ulem}
+    \AtBeginDocument{\let\oldhref\href\renewcommand{\href}[2]{\uline{\oldhref{#1}{#2}}}}
 numbersections: true
 ---
 
