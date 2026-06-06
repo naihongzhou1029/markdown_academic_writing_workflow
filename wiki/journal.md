@@ -4,6 +4,14 @@
 - [論文資料維護](https://stuinfosys.ntust.edu.tw/ThesisAdvisor/Home/Index)
 - [研究生上傳畢業論文說明](https://drive.google.com/file/d/16TOQ70OxhTPWD12ceztgMJY06MmQCBYp/view?usp=drive_link)
 - [《宙斯》規格](https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp=sharing)
+- [論文上傳系統](https://etheses.lib.ntust.edu.tw/thesis/1/?from=1)
+
+# 2026/06/06
+
+論文上傳流程
+- 處理時間：2026年6月6日
+- 執行流程與細節：
+  - 已完成論文上傳系統（https://etheses.lib.ntust.edu.tw/thesis/4/ ）中的數個步驟。
 
 # 2026/05/30
 
