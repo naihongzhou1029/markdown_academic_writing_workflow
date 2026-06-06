@@ -2,7 +2,7 @@
 # Development Operations Center
 # Merges operations from Makefile and make-docker.sh for streamlined usage
 #
-# This script handles Docker container management and executes build targets
+# This script handles Docker container management and executes build operations
 # directly inside the pandocker container.
 
 set -e
@@ -25,8 +25,8 @@ BIB="references.json"
 CSL="chicago-author-date.csl"
 COVER_TEX="cover_page.tex"
 COVER_PDF="cover.pdf"
+RECOMMENDATION_PDF="recommendation_form.pdf"
 RECOGNITION_PDF="recognition_form.pdf"
-EXAMINATION_PDF="examination_committee.pdf"
 PRINTED_PDF="Thesis-乃宏-FinalVersion.pdf"
 LOGO_FILE="ntust_logo.jpg"
 LOGO_URL="https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg"
@@ -116,7 +116,7 @@ run_in_docker() {
         bash -c "$1"
 }
 
-# Build PDF target
+# Build PDF operation
 build_pdf() {
     local out_file="${1:-$PDF}"
     print_info "Building PDF: $out_file"
@@ -183,7 +183,7 @@ build_cover() {
     fi
 }
 
-# Build printed version (cover + recognition form + paper)
+# Build printed version (cover + recommendation form + recognition form + paper)
 build_printed() {
     print_info "Building printed version: $PRINTED_PDF"
     
@@ -196,20 +196,20 @@ build_printed() {
         build_pdf
     fi
     
+    # Ensure recommendation form exists
+    if [ ! -f "$WORK_DIR/$RECOMMENDATION_PDF" ]; then
+        print_error "Recommendation form PDF not found: $RECOMMENDATION_PDF"
+        exit 1
+    fi
+    
     # Ensure recognition form exists
     if [ ! -f "$WORK_DIR/$RECOGNITION_PDF" ]; then
         print_error "Recognition form PDF not found: $RECOGNITION_PDF"
         exit 1
     fi
     
-    # Ensure examination committee form exists
-    if [ ! -f "$WORK_DIR/$EXAMINATION_PDF" ]; then
-        print_error "Examination committee PDF not found: $EXAMINATION_PDF"
-        exit 1
-    fi
-    
-    # Merge PDFs: cover + recognition form + examination committee + paper
-    run_in_docker "bash tools/merge-pdfs.sh $COVER_PDF $RECOGNITION_PDF $EXAMINATION_PDF $PDF $PRINTED_PDF"
+    # Merge PDFs: cover + recommendation form + recognition form + paper
+    run_in_docker "bash tools/merge-pdfs.sh $COVER_PDF $RECOMMENDATION_PDF $RECOGNITION_PDF $PDF $PRINTED_PDF"
     
     if [ -f "$WORK_DIR/$PRINTED_PDF" ]; then
         print_info "Successfully generated: $PRINTED_PDF"
@@ -345,7 +345,7 @@ build_zh_tw_printed() {
 build_zh_tw() {
     print_info "Building Traditional Chinese version: zh_tw"
 
-    # Require API key file before running translation targets
+    # Require API key file before running translation operations
     if [ ! -f "$API_KEY_FILE" ]; then
         print_error "API key file not found: $API_KEY_FILE"
         print_error "Create it with your Gemini API key before running zh_tw."
@@ -389,7 +389,7 @@ build_tags() {
 
 # Install dependencies (informational only)
 deps() {
-    print_info "Note: This target is for local development."
+    print_info "Note: This operation is for local development."
     print_info "In Docker, all tools are pre-installed."
     print_info "If you want to install dependencies locally, run: bash tools/deps.sh"
 }
@@ -399,9 +399,9 @@ show_help() {
     cat <<EOF
 Development Operations Center - devops.sh
 
-Usage: ./devops.sh [target]
+Usage: ./devops.sh [operation]
 
-Available targets:
+Available operations:
   help      - Show this help message [default]
   pdf       - Build the main paper PDF (paper.pdf)
   pdf_date  - Build the paper PDF with date suffix
@@ -425,11 +425,11 @@ EOF
 
 # Main script logic
 main() {
-    # Default target is 'help'
-    TARGET="${1:-help}"
+    # Default operation is 'help'
+    OPERATION="${1:-help}"
 
     # Handle help immediately without Docker checks
-    case "$TARGET" in
+    case "$OPERATION" in
         help|--help|-h)
             show_help
             return 0
@@ -443,7 +443,7 @@ main() {
     ensure_base_image
     ensure_derived_image
     
-    case "$TARGET" in
+    case "$OPERATION" in
         pdf)
             build_pdf "paper.pdf"
             ;;
@@ -469,7 +469,7 @@ main() {
             deps
             ;;
         *)
-            print_error "Unknown target: $TARGET"
+            print_error "Unknown operation: $OPERATION"
             echo ""
             show_help
             exit 1

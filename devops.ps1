@@ -3,12 +3,12 @@
 
 param(
     [Parameter(ValueFromRemainingArguments = $true)]
-    [string[]]$TargetArgs
+    [string[]]$OperationArgs
 )
 
 $ErrorActionPreference = "Stop"
 
-$Target = if ($TargetArgs.Count -gt 0) { $TargetArgs[0] } else { "help" }
+$Operation = if ($OperationArgs.Count -gt 0) { $OperationArgs[0] } else { "help" }
 
 function Write-Info { param([string]$Msg) Write-Host "[INFO] $Msg" -ForegroundColor Green }
 function Write-Err { param([string]$Msg) Write-Host "[ERROR] $Msg" -ForegroundColor Red }
@@ -23,12 +23,12 @@ function Test-Command {
     }
 }
 
-if ($Target -in @("help", "--help", "-h")) {
+if ($Operation -in @("help", "--help", "-h")) {
     Write-Host "Development Operations Center - devops.ps1"
     Write-Host ""
-    Write-Host "Usage: ./devops.ps1 [target]"
+    Write-Host "Usage: ./devops.ps1 [operation]"
     Write-Host ""
-    Write-Host "Available targets:"
+    Write-Host "Available operations:"
     Write-Host "  help      - Show this help message [default]"
     Write-Host "  pdf       - Build the main paper PDF (paper.pdf)"
     Write-Host "  pdf_date  - Build the paper PDF with date suffix"
@@ -52,7 +52,7 @@ if (-not (Test-Command "bash")) {
     exit 1
 }
 
-$argsForBash = @("./devops.sh", $Target)
-Write-Info "Delegating to: bash ./devops.sh $Target"
+$argsForBash = @("./devops.sh", $Operation)
+Write-Info "Delegating to: bash ./devops.sh $Operation"
 & bash $argsForBash
 exit $LASTEXITCODE

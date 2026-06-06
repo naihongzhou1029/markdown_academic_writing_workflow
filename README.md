@@ -149,7 +149,7 @@ docker run --rm \
     bash -lc "./devops.sh printed"
 ```
 
-The build pipeline (as orchestrated by `devops.sh`) handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `Thesis-乃宏-FinalVersion.pdf` (cover + paper merged).
+The build pipeline (as orchestrated by `devops.sh`) handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default operation builds `Thesis-乃宏-FinalVersion.pdf` (cover + paper merged).
 
 ### Mermaid Diagram Support
 
@@ -175,7 +175,7 @@ All standard build targets (`pdf`, `printed`, `zh_tw`, etc.) invoke the Mermaid 
 
 ### Alternative: Development Operations Center (`devops.sh` / `devops.ps1`)
 
-For a streamlined development experience, the repository includes `devops.sh` (Linux/macOS/WSL) and `devops.ps1` (Windows PowerShell), unified scripts that consolidate the core Dockerized build operations into a single command-line interface. Both scripts accept the same targets.
+For a streamlined development experience, the repository includes `devops.sh` (Linux/macOS/WSL) and `devops.ps1` (Windows PowerShell), unified scripts that consolidate the core Dockerized build operations into a single command-line interface. Both scripts accept the same operations.
 
 **Features:**
 - **Unified interface**: Single script for all build operations
@@ -184,12 +184,12 @@ For a streamlined development experience, the repository includes `devops.sh` (L
 - **Smart builds**: Detects existing artifacts and builds dependencies as needed
 - **No dependency checking**: Simplified workflow without Make's dependency graph
 
-Available targets:
+Available operations:
 
 ```bash
-./devops.sh [target]
+./devops.sh [operation]
 
-# Targets:
+# Operations:
 #   help      - Show usage information [default]
 #   pdf       - Build the main paper PDF (paper.pdf)
 #   pdf_date  - Build the paper PDF with date suffix
@@ -210,7 +210,7 @@ Available targets:
 ./devops.sh clean     # Clean all generated files
 ./devops.sh help      # Show help
 
-# Windows PowerShell (same targets)
+# Windows PowerShell (same operations)
 ./devops.ps1
 ./devops.ps1 pdf
 ./devops.ps1 cover
@@ -222,9 +222,9 @@ Available targets:
 - Use `devops.sh` for quick, iterative development and manual builds
 - Use `devops.ps1` when invoking Dockerized builds from Windows PowerShell
 
-**Note**: Both `devops.sh` and `devops.ps1` include the `zh_tw` (translation) target, so both English and Traditional Chinese pipelines are available via a single entrypoint.
+**Note**: Both `devops.sh` and `devops.ps1` include the `zh_tw` (translation) operation, so both English and Traditional Chinese pipelines are available via a single entrypoint.
 
-### Optional: Translate to Traditional Chinese (`zh_tw` target)
+### Optional: Translate to Traditional Chinese (`zh_tw` operation)
 
 This project also demonstrates how to leverage an LLM-backed translation pipeline, driven entirely from the translation scripts, to produce a Traditional Chinese version of the paper:
 
