@@ -33,6 +33,8 @@
 | `./devops.sh cover` | 僅建置封面 PDF。 |
 | `./devops.sh printed` | 建置合併封面、審查確認單與論文的最終版本。 |
 | `./devops.sh zh_tw` | 執行完整的繁體中文翻譯與建置流程（需 `.api_key`）。 |
+| `./devops.sh ref-list` | 提取 PDF 最後的參考文獻清單並複製到剪貼簿。 |
+| `./devops.sh toc-list` | 提取 PDF 最後的目錄清單並複製到剪貼簿。 |
 | `./devops.sh clean` | 清除所有產生的臨時檔案與 PDF。 |
 
 ## 開發與 AI 代理規範

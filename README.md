@@ -195,6 +195,8 @@ Available operations:
 #   pdf_date  - Build the paper PDF with date suffix
 #   cover     - Build the cover page PDF
 #   printed   - Build the printed version (cover + paper)
+#   ref-list  - Extract references from PDF and copy to clipboard
+#   toc-list  - Extract table of contents from PDF and copy to clipboard
 #   clean     - Remove all generated files
 #   deps      - Show information about dependencies
 ```

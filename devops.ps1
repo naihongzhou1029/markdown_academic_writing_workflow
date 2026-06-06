@@ -1,4 +1,4 @@
-# Development Operations Center (PowerShell)
+﻿# Development Operations Center (PowerShell)
 # Windows wrapper that delegates to devops.sh on host bash.
 
 param(
@@ -36,6 +36,8 @@ if ($Operation -in @("help", "--help", "-h")) {
     Write-Host "  printed   - Build the printed version (cover + paper)"
     Write-Host "  zh_tw     - Run the Traditional Chinese translation pipeline"
     Write-Host "  tags      - Generate .tags from all Markdown files"
+    Write-Host "  ref-list  - Extract references from PDF and copy to clipboard"
+    Write-Host "  toc-list  - Extract table of contents from PDF and copy to clipboard"
     Write-Host "  clean     - Remove all generated files"
     Write-Host "  deps      - Show information about dependencies"
     exit 0
@@ -52,7 +54,7 @@ if (-not (Test-Command "bash")) {
     exit 1
 }
 
-$argsForBash = @("./devops.sh", $Operation)
-Write-Info "Delegating to: bash ./devops.sh $Operation"
+$argsForBash = @("./devops.sh") + $OperationArgs
+Write-Info "Delegating to: bash ./devops.sh $($OperationArgs -join ' ')"
 & bash $argsForBash
 exit $LASTEXITCODE

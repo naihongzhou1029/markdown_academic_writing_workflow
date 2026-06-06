@@ -368,6 +368,8 @@ clean() {
     print_info "Cleaning generated files..."
     run_in_docker "bash tools/clean.sh paper.pdf $PDF $COVER_PDF $PRINTED_PDF $TEMP_SRC $COVER_TEMP_TEX"
     run_in_docker "rm -f thesis[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].pdf 2>/dev/null || true"
+    run_in_docker "rm -f ref_list.md 2>/dev/null || true"
+    run_in_docker "rm -f toc_list.md 2>/dev/null || true"
     run_in_docker "rm -f images/mermaid-*.png 2>/dev/null || true"
     run_in_docker "rm -f $MERMAID_TEMP_SRC 2>/dev/null || true"
     run_in_docker "rm -rf zh_tw 2>/dev/null || true"
@@ -385,6 +387,98 @@ build_tags() {
         print_error "Failed to generate .tags"
         exit 1
     fi
+}
+
+# Extract references list from Markdown and copy to clipboard
+ref_list() {
+    local pdf_file="${1:-$PRINTED_PDF}"
+    local ref_md="ref_list.md"
+    
+    if [[ "$pdf_file" == *"zh_tw"* ]]; then
+        ref_md="zh_tw/ref_list.md"
+    fi
+    
+    print_info "Generating reference list: $ref_md..."
+    if [[ "$pdf_file" == *"zh_tw"* ]]; then
+        run_in_docker "
+            mkdir -p $ZH_TW_DIR
+            bash tools/create-symlinks.sh $ZH_TW_DIR $BIB $CSL 'bibliography.bib'
+            python3 tools/extract-references-pandoc.py $ZH_TW_SRC $ZH_TW_DIR/ref_list.md
+        "
+    else
+        run_in_docker "python3 tools/extract-references-pandoc.py $SRC ref_list.md"
+    fi
+    
+    if [ -f "$WORK_DIR/$ref_md" ]; then
+        print_info "Copying references from $ref_md to clipboard..."
+        python3 -c "
+import sys, subprocess, os
+with open(\"$WORK_DIR/$ref_md\", 'r', encoding='utf-8') as f:
+    content = f.read()
+lines = content.split('\n')
+if lines and lines[0].startswith('# '):
+    content = '\n'.join(lines[2:])
+copied = False
+if sys.platform == 'darwin':
+    p = subprocess.Popen(['pbcopy'], stdin=subprocess.PIPE, text=True)
+    p.communicate(input=content)
+    copied = True
+elif sys.platform == 'win32':
+    p = subprocess.Popen(['clip'], stdin=subprocess.PIPE, text=True)
+    p.communicate(input=content)
+    copied = True
+else:
+    try:
+        if os.path.exists('/proc/version'):
+            with open('/proc/version', 'r') as f:
+                if 'microsoft' in f.read().lower():
+                    p = subprocess.Popen(['clip.exe'], stdin=subprocess.PIPE, text=True)
+                    p.communicate(input=content)
+                    copied = True
+    except:
+        pass
+    if not copied:
+        for tool in [['xclip', '-selection', 'clipboard'], ['xsel', '--clipboard', '--input']]:
+            try:
+                p = subprocess.Popen(tool, stdin=subprocess.PIPE, text=True)
+                p.communicate(input=content)
+                copied = True
+                break
+            except:
+                continue
+if copied:
+    print('Successfully copied references to clipboard!')
+    print('\n--- Preview of Copied References (First 10 lines) ---')
+    ref_lines = content.split('\n')
+    for line in ref_lines[:10]:
+        print(line)
+    print('...')
+else:
+    print('Failed to copy to clipboard automatically.')
+"
+    else
+        print_error "Failed to generate $ref_md"
+        exit 1
+    fi
+}
+
+# Extract table of contents from PDF and copy to clipboard
+toc_list() {
+    local pdf_file="${1:-$PRINTED_PDF}"
+    local toc_md="toc_list.md"
+    
+    if [[ "$pdf_file" == *"zh_tw"* ]]; then
+        toc_md="zh_tw/toc_list.md"
+    fi
+    
+    if [ ! -f "$WORK_DIR/$pdf_file" ]; then
+        print_error "PDF file not found: $pdf_file"
+        print_error "Please build it first using './devops.sh printed' or specify another PDF."
+        exit 1
+    fi
+    
+    print_info "Generating table of contents: $toc_md..."
+    python3 tools/extract-toc.py "$WORK_DIR/$pdf_file" "$WORK_DIR/$toc_md"
 }
 
 # Install dependencies (informational only)
@@ -409,6 +503,8 @@ Available operations:
   printed   - Build the printed version (cover + paper)
   zh_tw     - Run the Traditional Chinese translation pipeline
   tags      - Generate .tags from all Markdown files
+  ref-list  - Extract references from PDF and copy to clipboard
+  toc-list  - Extract table of contents from PDF and copy to clipboard
   clean     - Remove all generated files
   deps      - Show information about dependencies
 
@@ -417,6 +513,8 @@ Examples:
   ./devops.sh pdf       # Build paper.pdf
   ./devops.sh pdf_date  # Build thesisYYYYMMDD.pdf
   ./devops.sh cover     # Build only the cover page
+  ./devops.sh ref-list  # Extract and copy references
+  ./devops.sh toc-list  # Extract and copy table of contents
   ./devops.sh clean     # Clean all generated files
 
 Note: All builds run inside Docker container (pandocker-with-tools)
@@ -461,6 +559,12 @@ main() {
             ;;
         tags)
             build_tags
+            ;;
+        ref-list|ref_list)
+            ref_list "$2"
+            ;;
+        toc-list|toc_list)
+            toc_list "$2"
             ;;
         clean)
             clean
