@@ -43,10 +43,16 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # Install placeins LaTeX package for FloatBarrier support.
-# Pin a known-good CTAN mirror to avoid transient mirror signature issues.
-RUN tlmgr option repository https://mirror.math.princeton.edu/pub/CTAN/systems/texlive/tlnet && \
-    tlmgr update --self && \
-    tlmgr install placeins
+# `tlmgr install` is avoided on purpose: once TeX Live 2026 shipped, every live tlnet
+# mirror became newer than the base image's local TL2025 database, and tlmgr refuses
+# cross-release operations ("Local TeX Live is older than remote repository"). Since
+# placeins is a single self-contained .sty file, drop it straight into TEXMFLOCAL and
+# refresh the filename database — release-independent and mirror-independent.
+RUN TEXMFLOCAL="$(kpsewhich -var-value TEXMFLOCAL)" && \
+    mkdir -p "${TEXMFLOCAL}/tex/latex/placeins" && \
+    curl -fsSL https://mirrors.ctan.org/macros/latex/contrib/placeins/placeins.sty \
+        -o "${TEXMFLOCAL}/tex/latex/placeins/placeins.sty" && \
+    mktexlsr
 
 # Keep the same entrypoint as base image
 ENTRYPOINT [""]
