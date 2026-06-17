@@ -31,10 +31,10 @@
 - 目前 repo 內只有一份，且為空白表格版本，尚未找到已簽名版。
 - 口試當天三位口試委員其實已經簽署，已簽名版正在向 Lily（黃麗媛）索取中。
 
-## 論文比對結果
+## Turnitin 論文比對結果
 
 - 論文比對結果已出爐，相似度僅 5%，數值健康。
-- 連結：https://etheses.lib.ntust.edu.tw/thesis/4/
+- 連結：https://api.turnitin.com/api/lti/1p3/redirect/assignment/comp/172307418?lang=zh_tw#
 
 ## 圖書館論文審核進度回覆
 
