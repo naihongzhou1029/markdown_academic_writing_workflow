@@ -26,7 +26,7 @@ CSL="chicago-author-date.csl"
 COVER_TEX="cover_page.tex"
 COVER_PDF="cover.pdf"
 RECOMMENDATION_PDF="recommendation_form.pdf"
-RECOGNITION_PDF="recognition_form.pdf"
+EXAMINATION_PDF="examination_committee.pdf"
 PRINTED_PDF="Thesis-乃宏-FinalVersion.pdf"
 LOGO_FILE="ntust_logo.jpg"
 LOGO_URL="https://emrd.ntust.edu.tw/var/file/39/1039/img/2483/LOGO.jpg"
@@ -183,7 +183,7 @@ build_cover() {
     fi
 }
 
-# Build printed version (cover + recommendation form + recognition form + paper)
+# Build printed version (cover + recommendation form + examination committee + paper)
 build_printed() {
     print_info "Building printed version: $PRINTED_PDF"
     
@@ -201,15 +201,15 @@ build_printed() {
         print_error "Recommendation form PDF not found: $RECOMMENDATION_PDF"
         exit 1
     fi
-    
-    # Ensure recognition form exists
-    if [ ! -f "$WORK_DIR/$RECOGNITION_PDF" ]; then
-        print_error "Recognition form PDF not found: $RECOGNITION_PDF"
+
+    # Ensure examination committee form exists
+    if [ ! -f "$WORK_DIR/$EXAMINATION_PDF" ]; then
+        print_error "Examination committee PDF not found: $EXAMINATION_PDF"
         exit 1
     fi
-    
-    # Merge PDFs: cover + recommendation form + recognition form + paper
-    run_in_docker "bash tools/merge-pdfs.sh $COVER_PDF $RECOMMENDATION_PDF $RECOGNITION_PDF $PDF $PRINTED_PDF"
+
+    # Merge PDFs: cover + recommendation form + examination committee + paper
+    run_in_docker "bash tools/merge-pdfs.sh $COVER_PDF $RECOMMENDATION_PDF $EXAMINATION_PDF $PDF $PRINTED_PDF"
     
     if [ -f "$WORK_DIR/$PRINTED_PDF" ]; then
         print_info "Successfully generated: $PRINTED_PDF"

@@ -6,6 +6,41 @@
 - [《宙斯》規格](https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp=sharing)
 - [論文上傳系統](https://etheses.lib.ntust.edu.tw/thesis/1/?from=1)
 
+# 2026/06/17
+
+## 圖書館審核四項待辦的執行摘要
+
+針對圖書館審核回覆的四項待辦，今日處理進度如下：
+
+- 移除「學位論文專業領域審查申請表」：該表對應 `recognition_form.pdf`，已從 `devops.sh` 的 `build_printed` 合併流程移除（含變數、存在性檢查與合併指令），實體檔保留未刪。狀態：完成。
+- 《論文審定書》置於《指導教授推薦書》之後：審定書對應 `examination_committee.pdf`，先前於 commit `234c0e5` 被誤刪，已從 `234c0e5^` 還原；其尺寸本來就是 A4（595.276 × 841.89 pts），無需轉換。合併順序改為「封面 → 推薦書 → 審定書 → 論文」並驗證無誤。狀態：完成（簽名版另議，見下）。
+- 補上中英文摘要：`paper.md` 原本 `abstract` 為空、且全文無摘要區塊。已在 `# 緒論` 之前新增「摘要」與「Abstract」兩個不編號、不列入目次的區塊，內容依緒論、研究目的、實驗發現與結論萃取撰寫；並將 `toc/lof/lot` 改為手動放置，確保排序為「摘要 → Abstract → 目次」。狀態：完成。
+- 更新論文系統目次（步驟一 目次）：因新增兩頁摘要，正文頁碼整體後移（緒論由系統頁碼第 7 頁起），已用 `./devops.sh toc-list` 產出最新目次至 `toc_list.md`。狀態：待人工貼回線上系統。
+
+附帶：順手將 `paper.md` 內文 `（P@10 ≈ 0.67）` 的 `≈` 改為「約」，解決 XeLaTeX 缺字警告。已重建 `Thesis-乃宏-FinalVersion.pdf`（封面 + 推薦書 + 審定書 + 論文）。
+
+## 關於《論文審定書》
+
+- 《論文審定書》其實就是《碩士學位考試委員會審定書》（Qualification Form by Master's Degree Examination Committee），檔名為 `examination_committee.pdf`。
+- 目前 repo 內只有一份，且為空白表格版本，尚未找到已簽名版。
+- 口試當天三位口試委員其實已經簽署，已簽名版正在向 Lily（黃麗媛）索取中。
+
+## 論文比對結果
+
+- 論文比對結果已出爐，相似度僅 5%，數值健康。
+- 連結：https://etheses.lib.ntust.edu.tw/thesis/4/
+
+## 圖書館論文審核進度回覆
+
+- 審核結果連結：https://etheses.lib.ntust.edu.tw/thesis/4/
+
+待辦事項：
+
+- 請將《論文審定書》掃描成 A4 大小圖檔，放入《指導教授推薦書》頁面之後。
+- 請移除「學位論文專業領域審查申請表」，此表無須置於論文內。
+- PDF 中沒有中英文摘要，請補上。
+- 若有更改目錄內容，論文系統目錄（步驟一 目次）需一起更新。
+
 # 2026/06/06
 
 論文上傳流程

@@ -14,10 +14,10 @@ citecolor: blue
 pdf-engine: xelatex
 fontsize: 12pt
 CJKmainfont: "PingFang TC"
-toc: true
+toc: false
 toc-depth: 4
-lof: true
-lot: true
+lof: false
+lot: false
 lang: zh-Hant
 figureTitle: "圖"
 tableTitle: "表"
@@ -26,6 +26,7 @@ tblPrefix: "表"
 header-includes:
 - \pagenumbering{arabic}
 - \setcounter{page}{1}
+- \setcounter{tocdepth}{4}
 - \hbadness=10000
 - \usepackage{xeCJK}
 - \setCJKmainfont{Noto Sans CJK TC}
@@ -75,6 +76,24 @@ header-includes:
     \AtBeginDocument{\let\oldhref\href\renewcommand{\href}[2]{\uline{\oldhref{#1}{#2}}}}
 numbersections: true
 ---
+# 摘要 {.unnumbered .unlisted}
+
+遊戲規格書（Game Design Document, GDD）是遊戲開發過程中凝聚整個研發團隊智慧與經驗的核心「創意資產」，但其中大量的「內隱知識」（Tacit Knowledge）——例如設計取捨的理由、功能決策的背景與測試限制——往往未被完整記錄。隨著時間推移與核心成員異動，這些脈絡逐漸流失，使原本文件齊備的規格書淪為「乾涸」而難以傳承的庫存文件，迫使新進人員付出高昂的重複試錯成本，導致既有創意資產的價值減損。本研究探討如何運用生成式人工智慧（Generative Artificial Intelligence, GenAI）「活化」既有規格書，以最大化其創意資產的價值。研究採個案研究法（Case Study），以截至 2025 年 12 月 17 日發表的 Gemini 3.0（輔以 Flash 與 Pro 兩個模型）作為 GenAI 能力代表，針對具代表性的遊戲規格書，驗證其對純文字、表格與內嵌圖像等不同資料類型的理解與萃取能力，並針對遇到的瓶頸提出優化策略並加以驗證。研究發現，大型語言模型（LLM）對純文字與表格已具備相當高的理解與萃取能力，但對內嵌圖像所蘊含的關鍵資訊仍力不從心；對此，本研究提出結合文件佈局分析（Document Layout Analysis, DLA）與視覺語言模型（Vision-Language Model, VLM）的圖像描述生成策略，初步證實能有效將非結構化的圖像資訊轉化為可被 LLM 理解的文字知識。在規格書知識化之後，本研究進一步說明多條件複合檢索、智能競品分析、新規格重組孵化，以及有憑有據的素材與雛型生成等應用場景，如何將萃取後的知識轉化為可量化的商業與研發價值。
+
+關鍵字：生成式人工智慧、遊戲規格書、創意資產、知識萃取、文件佈局分析、視覺語言模型
+
+# Abstract {.unnumbered .unlisted}
+
+A Game Design Document (GDD) is a core creative asset that consolidates the collective wisdom and experience of an entire game development team. However, much of its tacit knowledge—the rationale behind design trade-offs, the background of feature decisions, and the constraints discovered during testing—is rarely recorded in full. As time passes and core members move on, this context is gradually lost, turning an otherwise complete specification into a "dried-up" inventory document whose knowledge can no longer be inherited. Newcomers are then forced to bear the high cost of repetitive trial and error, eroding the value of the company's existing creative assets. This study investigates how Generative Artificial Intelligence (GenAI) can be used to "revitalize" existing specifications and thereby maximize the value of these creative assets. Adopting a case-study approach and using Gemini 3.0 (with the Flash and Pro models), released as of December 17, 2025, as a representative capability baseline, the study evaluates GenAI's ability to comprehend and extract knowledge from different data types—plain text, tables, and embedded images—within representative game specifications, and proposes and validates strategies to overcome the observed bottlenecks. The findings show that large language models (LLMs) already achieve a high level of comprehension and extraction for plain text and tables, yet still struggle to interpret the critical information embedded in images. To address this, the study proposes an image-description generation strategy that combines Document Layout Analysis (DLA) with a Vision-Language Model (VLM), and preliminarily demonstrates that it can effectively convert unstructured image information into textual knowledge that an LLM can understand. Building on this knowledge transformation, the study further illustrates how downstream applications—multi-condition compound retrieval, intelligent competitive analysis, incubation of recombined specifications, and well-grounded asset and prototype generation—can turn the extracted knowledge into quantifiable business and R&D value.
+
+Keywords: Generative Artificial Intelligence, Game Design Document, Creative Assets, Knowledge Extraction, Document Layout Analysis, Vision-Language Model
+
+```{=latex}
+\tableofcontents
+\listoffigures
+\listoftables
+```
+
 # 緒論
 
 遊戲產品在開發的過程中，遊戲規格書(Game Design Specs, GDD)幾乎就是整個產品所有研發人員智慧及經驗的結晶。然而，開發的過程所有人員脈絡清楚，許多內隱知識往往不會特別寫進去。開發期可能不會是問題，但若是經過一段時間再回頭檢視，隨著記憶和脈絡資訊的遺失，規格書內含的知識，卻再也無法讓讀者繼續傳承重要的內隱知識。明明文件滿地都是，但卻都像是”乾涸”無用的庫存文件，往往導致新人只好從頭學習摸索，花費無謂的試錯成本，無法有更多的空間進行新規格的思考及試錯。
@@ -1170,7 +1189,7 @@ AI 的回答如上，明確反映規格書中沒有相關的內容。它的理�
 | **SE (Single encoder)** | **0.84** | **0.67** |
 | Dataset $D_G$ (Baseline) | 0.99 | 0.37 |
 
-以此為基準進行量化推估：假設企劃人員花費 3 小時，針對過往規格進行關鍵字搜尋並人工篩選前 10 筆結果，有效結果數為 $10 \times 0.37 = 3.7$ 筆，每小時有效產出約 1.23 筆；若改用語意搜尋（P@10 ≈ 0.67），有效結果數提升至 6.7 筆，每小時有效產出約 2.23 筆。就「降本」而言，取得相同數量有效結果所需時間從 3 小時降至約 1.7 小時，搜尋成本約下降 43%。
+以此為基準進行量化推估：假設企劃人員花費 3 小時，針對過往規格進行關鍵字搜尋並人工篩選前 10 筆結果，有效結果數為 $10 \times 0.37 = 3.7$ 筆，每小時有效產出約 1.23 筆；若改用語意搜尋（P@10 約 0.67），有效結果數提升至 6.7 筆，每小時有效產出約 2.23 筆。就「降本」而言，取得相同數量有效結果所需時間從 3 小時降至約 1.7 小時，搜尋成本約下降 43%。
 
 然而，更深層的效益體現於「增效」三個面向：其一，在相同時間內可獲得近 2 倍的相關規格，決策依據更為充分；其二，過去因篩選成本過高而被放棄的跨遊戲查詢（如音效重用盤點、倍率結構比對）現在變得經濟可行；其三，企劃人員可在相同週期內完成更多輪的檢索與驗證循環，縮短從規格確認到開工的等待時間。
 
