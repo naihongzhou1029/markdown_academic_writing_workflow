@@ -6,13 +6,56 @@
 - [《宙斯》規格](https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp=sharing)
 - [論文上傳系統](https://etheses.lib.ntust.edu.tw/thesis/1/?from=1)
 
+# 2026/06/19
+
+## 畢業離校與論文提交準備
+
+- 成功更新已簽名的《碩士學位考試委員會審定書》(examination_committee.pdf)。
+- 重新執行編譯，產出最終合併版論文(Thesis-乃宏-FinalVersion.pdf)，包含封面、推薦書、審定書與正文。
+- 整理出交給 Lily（黃莉媛）的所有外部文件清單與準備寄送的郵件草稿。
+
+### 提交文件清單
+- 碩士學位考試委員會審定書 (examination_committee.pdf，已簽名版)
+- 指導教授推薦書 (recommendation_form.pdf，已簽名版)
+- 學位論文專業領域審查申請表 (recognition_form.pdf，已簽名版)
+- 學位論文學術倫理暨原創性比對聲明書 (integrity_originality_statement.pdf，已簽名版)
+- Turnitin 論文原創性比對報告 (turnitin.pdf)
+- 畢業離校手續單 (graduation_checkout_form.pdf)
+- 最終合併版論文電子檔 (Thesis-乃宏-FinalVersion.pdf)
+
+### 給 Lily 的郵件草稿
+收件人：Lily (emrd@mail.ntust.edu.tw)
+主旨：【畢業文件提交】EMRD 113 碩士班畢業生周乃宏畢業離校文件與論文
+
+Lily 您好：
+
+我是 EMRD 113 畢業生周乃宏（學號：M11326915），指導教授為戴文凱教授與鄭正元教授。
+
+在此提交我的畢業離校相關表單與論文文件，附件包含以下檔案：
+
+1. 碩士學位考試委員會審定書 (examination_committee.pdf，已簽名版)
+2. 指導教授推薦書 (recommendation_form.pdf，已簽名版)
+3. 學位論文專業領域審查申請表 (recognition_form.pdf，已簽名版)
+4. 學位論文學術倫理暨原創性比對聲明書 (integrity_originality_statement.pdf，已簽名版)
+5. Turnitin 論文原創性比對報告 (turnitin.pdf，相似度 5%)
+6. 畢業離校手續單 (graduation_checkout_form.pdf)
+7. 最終合併版論文電子檔 (Thesis-乃宏-FinalVersion.pdf)
+
+煩請協助確認上述文件是否齊備，若有任何缺漏或需要調整之處，請隨時告知，非常感謝您的協助！
+
+祝 順心
+
+周乃宏 敬上
+學號：M11326915
+
 # 2026/06/17
 
 ## 後續待辦事項
 
 - [ ] 重新產生 `toc_list.md`，並更新論文上傳系統（etheses.lib.ntust.edu.tw）「步驟一 目次」的頁碼；因新增中英文摘要兩頁，正文頁碼整體後移。
-- [ ] 補完「學位論文學術倫理暨原創性比對聲明書」：基本資料、相似度與日期已填妥，尚待列印簽名（聲明人、指導教授、共同指導教授、系所主任），並確認「使用項目」是否需勾選。
-- [ ] 向 Lily（黃麗媛）索取已簽名版《碩士學位考試委員會審定書》；取得後以同檔名 `examination_committee.pdf` 覆蓋，並重跑 `./devops.sh printed`。
+- [x] 補完「學位論文學術倫理暨原創性比對聲明書」：基本資料、相似度與日期已填妥，尚待列印簽名（聲明人、指導教授、共同指導教授、系所主任），並確認「使用項目」是否需勾選。
+- [x] 向 Lily（黃莉媛）索取已簽名版《碩士學位考試委員會審定書》；取得後以同檔名 `examination_committee.pdf` 覆蓋，並重跑 `./devops.sh printed`。
+- [ ] 給Lily我手上有的所有文件，看還有缺什麼
 
 ## 圖書館審核四項待辦的執行摘要
 
@@ -29,7 +72,7 @@
 
 - 《論文審定書》其實就是《碩士學位考試委員會審定書》（Qualification Form by Master's Degree Examination Committee），檔名為 `examination_committee.pdf`。
 - 目前 repo 內只有一份，且為空白表格版本，尚未找到已簽名版。
-- 口試當天三位口試委員其實已經簽署，已簽名版正在向 Lily（黃麗媛）索取中。
+- 口試當天三位口試委員其實已經簽署，已簽名版正在向 Lily（黃莉媛）索取中。
 
 ## Turnitin 論文比對結果
 
