@@ -6,6 +6,24 @@
 - [《宙斯》規格](https://docs.google.com/spreadsheets/d/1XdilZVbW5-I5X8Mg_FVIxUekvLGPw4TG4eeABJsl2y4/edit?usp=sharing)
 - [論文上傳系統](https://etheses.lib.ntust.edu.tw/thesis/1/?from=1)
 
+# 2026/06/22
+
+## 通過圖書館審核並取得上網授權書
+
+- 論文已正式通過圖書館論文上傳系統(etheses.lib.ntust.edu.tw)審核,取得下載《博碩士論文電子檔案上網授權書》(`authorization_form.pdf`)的權限。
+- 已下載 `authorization_form.pdf` 並加入 git 暫存區,等待提交。
+
+### 授權書內容重點
+- 授權人:周乃宏(學號 M11326915),114 學年度第 2 學期取得碩士學位。
+- 論文題目:利用生成式人工智慧技術最大化遊戲規格書價值的策略。
+- 指導教授:鄭正元、戴文凱。
+- 論文著作權:作者與指導教授共同擁有(with advisor)。
+- 校內區域網路全文檔公開日期:115/06/22(延後 0 年)。
+- 校外網際網路(含國家圖書館臺灣博碩士論文知識加值系統)全文檔公開日期:115/06/22(延後 0 年)。
+
+### 後續流程
+- 待授權人(周乃宏)與兩位指導教授(鄭正元、戴文凱)完成簽章後,即可進入最後的行政程序——辦理畢業離校手續(Graduate Clearance Form,`graduation_checkout_form.pdf`)。
+
 # 2026/06/19
 
 ## 畢業離校與論文提交準備
