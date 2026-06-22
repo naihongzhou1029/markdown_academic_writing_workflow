@@ -25,15 +25,15 @@
       "detail": "Build the main paper PDF (paper.pdf)"
     },
     {
-      "label": "devops: pdf_date",
+      "label": "devops: pdf-date",
       "type": "shell",
       "command": "./devops.sh",
-      "args": ["pdf_date"],
+      "args": ["pdf-date"],
       "osx": { "command": "./devops.sh" },
       "linux": { "command": "./devops.sh" },
       "windows": {
         "command": "powershell",
-        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "pdf_date"]
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "./devops.ps1", "pdf-date"]
       },
       "group": "build",
       "presentation": {

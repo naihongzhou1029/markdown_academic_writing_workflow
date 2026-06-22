@@ -1,5 +1,5 @@
 args! project.vim
-argadd **/*.md
+argadd wiki/journal.md
 
 if has('win32') || has('win64')
   set makeprg=.\devops.ps1

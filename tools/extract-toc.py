@@ -15,8 +15,9 @@ def get_pdf_text(pdf_path):
             "docker", "run", "--rm",
             "-v", f"{cwd}:/workspace",
             "-w", "/workspace",
+            "--entrypoint", "pdftotext",
             "dalibo/pandocker:latest-full",
-            "pdftotext", "-layout", rel_path, "-"
+            "-layout", rel_path, "-"
         ]
         try:
             result = subprocess.run(docker_cmd, capture_output=True, text=True, check=True)

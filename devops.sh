@@ -66,10 +66,32 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1" >&2
 }
 
-# Check if Docker is available
+show_dialog() {
+    local title="$1"
+    local msg="$2"
+    local border="========================================\n"
+    local formatted_msg="${border}${msg}\n${border}"
+    if [ "$(uname)" = "Darwin" ]; then
+        # Use display dialog with red stop icon for a more obvious frame and alert style
+        osascript -e 'display dialog "'"$formatted_msg"'" with title "'"$title"'" buttons {"OK"} default button "OK" with icon stop' 2>/dev/null &
+    elif command -v zenity &> /dev/null; then
+        zenity --error --title="$title" --text="$formatted_msg" --width=450 2>/dev/null &
+    elif command -v notify-send &> /dev/null; then
+        notify-send -u critical "$title" "$formatted_msg" 2>/dev/null
+    fi
+}
+
+# Check if Docker is available and running
 check_docker() {
     if ! command -v docker &> /dev/null; then
         print_error "Docker is not installed or not in PATH"
+        show_dialog "Docker Not Installed" "Docker is not installed or not in PATH. Please install Docker to build this project."
+        exit 1
+    fi
+
+    if ! docker info &> /dev/null; then
+        print_error "Docker engine is not running"
+        show_dialog "Docker Engine Not Running" "Docker engine is not running. Please start Docker Desktop or your Docker daemon, and then try again."
         exit 1
     fi
 }
@@ -498,7 +520,7 @@ Usage: ./devops.sh [operation]
 Available operations:
   help      - Show this help message [default]
   pdf       - Build the main paper PDF (paper.pdf)
-  pdf_date  - Build the paper PDF with date suffix
+  pdf-date  - Build the paper PDF with date suffix
   cover     - Build the cover page PDF
   printed   - Build the printed version (cover + paper)
   zh_tw     - Run the Traditional Chinese translation pipeline
@@ -511,7 +533,7 @@ Available operations:
 Examples:
   ./devops.sh           # Show this help message
   ./devops.sh pdf       # Build paper.pdf
-  ./devops.sh pdf_date  # Build thesisYYYYMMDD.pdf
+  ./devops.sh pdf-date  # Build thesisYYYYMMDD.pdf
   ./devops.sh cover     # Build only the cover page
   ./devops.sh ref-list  # Extract and copy references
   ./devops.sh toc-list  # Extract and copy table of contents
@@ -532,6 +554,10 @@ main() {
             show_help
             return 0
             ;;
+        deps)
+            deps
+            return 0
+            ;;
     esac
 
     # Check Docker availability
@@ -545,7 +571,7 @@ main() {
         pdf)
             build_pdf "paper.pdf"
             ;;
-        pdf_date)
+        pdf-date)
             build_pdf "$PDF"
             ;;
         cover)
