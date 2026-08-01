@@ -34,7 +34,7 @@ if ($Operation -in @("help", "--help", "-h")) {
     Write-Host "  pdf_date  - Build the paper PDF with date suffix"
     Write-Host "  cover     - Build the cover page PDF"
     Write-Host "  printed   - Build the printed version (cover + paper)"
-    Write-Host "  zh_tw     - Run the Traditional Chinese translation pipeline"
+    Write-Host "  translate - Run the translation pipeline: translate [step]"
     Write-Host "  tags      - Generate .tags from all Markdown files"
     Write-Host "  ref-list  - Extract references from PDF and copy to clipboard"
     Write-Host "  toc-list  - Extract table of contents from PDF and copy to clipboard"

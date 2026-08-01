@@ -3,13 +3,18 @@
 
 set -e
 
-if [ $# -ne 2 ]; then
-    echo "Usage: $0 <translated_md_file> <cjk_font>" >&2
+if [ $# -lt 2 ] || [ $# -gt 4 ]; then
+    echo "Usage: $0 <translated_md_file> <cjk_font> [figure_label] [table_label]" >&2
     exit 1
 fi
 
 TRANSLATED_MD="$1"
 CJK_FONT="$2"
+# Optional per-language crossref labels (e.g. "圖"/"表" for zh_tw). Leave unset
+# to skip label substitution for languages where pandoc-crossref's default
+# English labels are already correct (or need a different mapping).
+FIGURE_LABEL="${3:-}"
+TABLE_LABEL="${4:-}"
 
 if [ ! -f "$TRANSLATED_MD" ]; then
     echo "Error: Translated markdown file not found: $TRANSLATED_MD" >&2
@@ -17,13 +22,17 @@ if [ ! -f "$TRANSLATED_MD" ]; then
 fi
 
 # Apply sed replacements
-sed -i.bak \
-    -e "s/CJKmainfont: \"PingFang SC\"/CJKmainfont: \"${CJK_FONT}\"/" \
-    -e "s/setCJKmainfont{PingFang SC}/setCJKmainfont{${CJK_FONT}}/" \
-    -e 's/"Figure"/"圖"/' \
-    -e 's/"Figures"/"圖"/' \
-    -e 's/"Tab\."/"表"/' \
-    "$TRANSLATED_MD"
+SED_ARGS=(
+    -e "s/CJKmainfont: \"PingFang SC\"/CJKmainfont: \"${CJK_FONT}\"/"
+    -e "s/setCJKmainfont{PingFang SC}/setCJKmainfont{${CJK_FONT}}/"
+)
+if [ -n "$FIGURE_LABEL" ]; then
+    SED_ARGS+=(-e "s/\"Figure\"/\"${FIGURE_LABEL}\"/" -e "s/\"Figures\"/\"${FIGURE_LABEL}\"/")
+fi
+if [ -n "$TABLE_LABEL" ]; then
+    SED_ARGS+=(-e "s/\"Tab\\.\"/\"${TABLE_LABEL}\"/")
+fi
+sed -i.bak "${SED_ARGS[@]}" "$TRANSLATED_MD"
 rm -f "${TRANSLATED_MD}.bak"
 
 # Apply Python-based fixes for YAML structure and indentation

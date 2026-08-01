@@ -1,8 +1,10 @@
-# Remarcademic(Researcher's Markdown Academic) Writing Framework
+# Remarcademic (Researcher's Markdown Academic) Writing Framework
 
 This repository is a self-contained, reproducible example of a modern plain‑text academic workflow built around **Markdown**, **Pandoc**, and **LaTeX**. The core idea is to separate content from presentation: you write the manuscript as plain text in `paper.md`, while formatting, typesetting, and output details are handled automatically by Pandoc, LaTeX, and a small set of configuration files.
 
-The project demonstrates how to produce a fully typeset scholarly PDF—complete with citations, bibliography, tables, cross‑references, multilingual typesetting, and custom page layout—using version‑controlled text files and command‑line tools.
+The `main` branch itself is that example: `paper.md` is a tutorial/methodology paper that explains **why** and **how** to author a thesis this way — plain text, Pandoc, LaTeX, and Git — instead of a word processor like Microsoft Word or Google Docs. It demonstrates the full pipeline end to end (citations, bibliography, tables, cross‑references, multilingual typesetting, custom page layout) using itself as the worked example.
+
+**Note**: This author's actual completed thesis, built with an earlier iteration of this same tooling, is archived on the `M11326915` branch for reference rather than kept on `main`.
 
 ### Key Ideas
 
@@ -46,57 +48,64 @@ This project uses **Docker** to provide a consistent, reproducible build environ
 
 - **Pandoc** (with built‑in `--citeproc`) and **pandoc-crossref** filter
 - **LaTeX distribution** (TeX Live) with XeLaTeX and standard packages
-- **Make** and other build utilities
 - All necessary fonts and dependencies
 
 **Prerequisites:**
+
 - **Docker** installed and running on your system
+- **bash** available on `PATH` (Git for Windows / WSL on Windows) — `devops.ps1` shells out to `devops.sh`
 - **Zotero + Better BibTeX extension** for managing and exporting bibliographic data (runs on your host machine)
 - **CSL style file** matching your preferred citation format (e.g., Chicago author‑date)
 - A **plain‑text editor** and **Git** for version control
 
 ### Basic Usage: Build the Example PDF
 
-This project uses Docker to ensure a consistent build environment. All toolchains (Pandoc, LaTeX, Make, etc.) run inside the `dalibo/pandocker` container.
+All build, translation, and utility operations are driven by a single **Development Operations Center** script:
 
-**Using the Docker wrapper (recommended):**
-
-- **Linux/macOS/WSL**: Use `./make-docker.sh`
-- **Windows CMD**: Use `make-docker.bat`
-- **Windows PowerShell**: Use `./make-docker.ps1`
+- **Linux/macOS/WSL**: `./devops.sh <operation>`
+- **Windows PowerShell**: `./devops.ps1 <operation>` (delegates to `bash ./devops.sh` — requires Git Bash or WSL)
 
 ```bash
 # Linux/macOS/WSL
-./make-docker.sh
-
-# Windows CMD
-make-docker.bat
+./devops.sh printed
 
 # Windows PowerShell
-./make-docker.ps1
+./devops.ps1 printed
 ```
 
-This will:
-1. Check for the base image `dalibo/pandocker:latest-full` and pull it if needed
-2. Build a derived image `pandocker-with-tools:latest` (with `jq` and `curl` pre-installed) if it doesn't exist
-3. Create an ephemeral Docker container from the derived image
-4. Mount the current directory into the container
-5. Run `make` inside the container
-6. Automatically remove the container after the build completes
+Running an operation will:
 
-**Note**: The first run will build the derived image, which may take a few minutes. Subsequent runs will use the cached image, making builds faster.
+1. Check for the base image `dalibo/pandocker:latest-full` and pull it if needed.
+2. Build a derived image `pandocker-with-tools:latest` (with `jq` and `curl` pre-installed) from `Dockerfile`, if it doesn't exist yet.
+3. Run the requested operation inside an ephemeral container, with the current directory mounted at `/workspace`.
+4. Remove the container automatically after the operation completes.
 
-**Note for WSL users**: If you encounter Docker credential errors (e.g., `docker-credential-desktop: executable file not found`), ensure Docker Desktop is running and properly configured for WSL integration. You may need to configure Docker credentials or use `docker login` if required.
+**Note**: The first run will build the derived image, which may take a few minutes. Subsequent runs reuse the cached image.
+
+Run `./devops.sh help` (or `./devops.ps1 help`) to see all available operations:
+
+| Operation                     | Description                                            |
+| ------------------------------ | -------------------------------------------------------- |
+| `pdf`                         | Build the main paper PDF (`paper.pdf`)                  |
+| `pdf_date`                    | Build the paper PDF with a `YYYYMMDD` date suffix        |
+| `cover`                       | Build the cover page PDF                                 |
+| `printed`                     | Build the printed version (cover + paper merged)          |
+| `translate [step]`           | Run the translation pipeline (see below)                  |
+| `tags`                        | Generate `.tags` from all Markdown files                  |
+| `ref-list`                    | Extract references from a PDF and copy them to the clipboard |
+| `toc-list`                    | Extract the table of contents from a PDF and copy it to the clipboard |
+| `clean`                       | Remove all generated files                                |
+| `deps`                        | Show information about local (non-Docker) dependencies    |
 
 **Direct Docker invocation:**
 
-Alternatively, you can run make directly inside the container. First, build the derived image:
+Alternatively, you can run `devops.sh` directly inside the container yourself. First, build the derived image:
 
 ```bash
 docker build -t pandocker-with-tools:latest -f Dockerfile .
 ```
 
-Then run make:
+Then run an operation:
 
 ```bash
 docker run --rm \
@@ -104,27 +113,27 @@ docker run --rm \
     -v "$(pwd)":/workspace \
     -w /workspace \
     pandocker-with-tools:latest \
-    make
+    bash devops.sh printed
 ```
 
-The `Makefile` handles all the Pandoc and LaTeX commands, with configuration embedded in the YAML metadata of `paper.md`. The default target builds `printed.pdf` (cover + paper merged).
+### Optional: Translate to Other Languages (`translate` target)
 
-### Optional: Translate to Traditional Chinese (`zh_tw` target)
-
-This project also demonstrates how to leverage an LLM-backed translation pipeline, driven entirely from the `Makefile`, to produce a Traditional Chinese version of the paper:
+This project also demonstrates how to leverage an LLM-backed translation pipeline, driven entirely from `devops.sh`, to produce translated versions of the paper and cover page for any target language.
 
 - **Source**: The original English manuscript in `paper.md` and the NTUST cover page in `cover_page.tex`.
-- **LLM translation**: Make targets call translation scripts (`tools/translate.sh`) that invoke a large language model defined by `LLM_MODEL` (default `gemini-2.5-flash`) using an API key stored in `.api_key`. These scripts generate translated Markdown and LaTeX into the `zh_tw/` directory.
-- **AI-powered validation**: After initial translation, the `tools/validate-and-fix-translated-md.sh` script automatically reviews the translated Markdown for formatting errors (malformed tables, broken syntax, corrupted YAML) and fixes them while preserving the translated content.
-- **Post-processing and typesetting**: Additional scripts fix fonts and layout, then Pandoc and XeLaTeX compile the translated sources into fully typeset PDFs with cover pages.
-
-To run the full translation and build the Traditional Chinese PDFs (including merged cover+paper):
+- **Config**: The translation target is defined in a single INI config file, `zh-tw.ini` at the repo root (source/target language names, output directory, LLM model, and optional pandoc-crossref label overrides). See the comments in that file for the full key list and available steps.
+- **LLM translation**: `./devops.sh translate` calls `tools/translate.sh`, which invokes a large language model (default `gemini-2.5-flash`, configurable in `zh-tw.ini`) using an API key stored in `.api_key`. The translated Markdown and LaTeX are written into the configured output directory.
+- **AI-powered validation**: After initial translation, `tools/validate-and-fix-translated-md.sh` automatically reviews the translated Markdown for formatting errors (malformed tables, broken syntax, corrupted YAML) and fixes them while preserving the translated content.
+- **Post-processing and typesetting**: Additional scripts fix fonts and crossref labels, then Pandoc and XeLaTeX compile the translated sources into fully typeset PDFs with cover pages.
 
 ```bash
-./make-docker.sh zh_tw
+./devops.sh translate                # run the full translation pipeline
+./devops.sh translate pdf            # rebuild only the translated paper PDF (re-run one step)
 ```
 
-The resulting files are written under the `zh_tw/` directory, mirroring the structure of the original English workflow.
+`step` may be `all` (default), `markdown`, `cover`, `pdf`, `cover_pdf`, or `printed` — useful for iterating on one stage (e.g. font/layout fixes) without re-invoking the LLM every time.
+
+The resulting files are written under the configured `DIR` (e.g. `zh_tw/`), mirroring the structure of the original English workflow.
 
 **Note**: The translation scripts require `curl` and `jq` to be available in the container. These tools are pre-installed in the derived image (`pandocker-with-tools:latest`) that is automatically built from the `Dockerfile` on first use.
 
@@ -139,5 +148,3 @@ The resulting files are written under the `zh_tw/` directory, mirroring the stru
 - **Output layer**: A fully typeset PDF suitable for academic use.
 
 The goal of this repository is to serve as a concrete, inspectable example of that workflow, showing how to build a sustainable, version‑controlled, and highly customizable academic writing environment entirely around plain‑text files.
-
-

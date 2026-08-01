@@ -34,14 +34,9 @@ TEMP_SRC="paper.tmp.md"
 MERMAID_TEMP_SRC="paper.mermaid.tmp.md"
 COVER_TEMP_TEX="cover_page.tmp.tex"
 
-# Translation / zh_tw paths
+# Translation defaults (overridable in TRANSLATE_CONFIG_FILE, see zh-tw.ini)
 LLM_MODEL="gemini-2.5-flash"
-ZH_TW_DIR="zh_tw"
-ZH_TW_SRC="$ZH_TW_DIR/paper.md"
-ZH_TW_COVER="$ZH_TW_DIR/cover_page.tex"
-ZH_TW_PDF="$ZH_TW_DIR/thesis.pdf"
-ZH_TW_COVER_PDF="$ZH_TW_DIR/cover.pdf"
-ZH_TW_PRINTED_PDF="$ZH_TW_DIR/printed.pdf"
+TRANSLATE_CONFIG_FILE="zh-tw.ini"
 
 # Get absolute path of current directory
 WORK_DIR=$(pwd)
@@ -226,76 +221,133 @@ build_printed() {
     fi
 }
 
-# Translate main manuscript to Traditional Chinese (Markdown)
-translate_zh_tw_markdown() {
-    print_info "Translating $SRC to Traditional Chinese markdown in $ZH_TW_DIR/"
+# Minimal INI-file reader: sets each "key = value" line as a same-named shell
+# variable. Comments start with ';' or '#'; blank lines and '[section]'
+# headers are ignored; surrounding quotes on a value are stripped if present.
+load_ini_file() {
+    local file="$1"
+    local line trimmed key value
+    while IFS= read -r line || [ -n "$line" ]; do
+        trimmed="${line#"${line%%[![:space:]]*}"}"
+        case "$trimmed" in
+            ''|'#'*|';'*|'['*) continue ;;
+        esac
+        [ "${trimmed#*=}" = "$trimmed" ] && continue
+
+        key="${trimmed%%=*}"
+        key="${key%"${key##*[![:space:]]}"}"
+
+        value="${trimmed#*=}"
+        value="${value#"${value%%[![:space:]]*}"}"
+        value="${value%"${value##*[![:space:]]}"}"
+        case "$value" in
+            \"*\") value="${value#\"}"; value="${value%\"}" ;;
+            \'*\') value="${value#\'}"; value="${value%\'}" ;;
+        esac
+
+        printf -v "$key" '%s' "$value"
+    done < "$file"
+}
+
+# Load the translation config into the TR_* variables
+load_translate_config() {
+    if [ ! -f "$TRANSLATE_CONFIG_FILE" ]; then
+        print_error "Translation config not found: $TRANSLATE_CONFIG_FILE"
+        exit 1
+    fi
+
+    DIR=""; FROM=""; TO=""; MODEL=""; FIGURE_LABEL=""; TABLE_LABEL=""
+    load_ini_file "$TRANSLATE_CONFIG_FILE"
+
+    if [ -z "$DIR" ] || [ -z "$FROM" ] || [ -z "$TO" ]; then
+        print_error "$TRANSLATE_CONFIG_FILE must set DIR, FROM, and TO"
+        exit 1
+    fi
+
+    TR_DIR="$DIR"
+    TR_FROM="$FROM"
+    TR_TO="$TO"
+    TR_MODEL="${MODEL:-$LLM_MODEL}"
+    TR_FIGURE_LABEL="$FIGURE_LABEL"
+    TR_TABLE_LABEL="$TABLE_LABEL"
+
+    TR_SRC="$TR_DIR/paper.md"
+    TR_COVER="$TR_DIR/cover_page.tex"
+    TR_PDF="$TR_DIR/thesis.pdf"
+    TR_COVER_PDF="$TR_DIR/cover.pdf"
+    TR_PRINTED_PDF="$TR_DIR/printed.pdf"
+}
+
+# Translate main manuscript (Markdown) using the loaded config
+translate_markdown() {
+    print_info "Translating $SRC to $TR_TO markdown in $TR_DIR/"
 
     run_in_docker "
-        mkdir -p $ZH_TW_DIR
+        mkdir -p $TR_DIR
         CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
         CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
-        echo 'Translating $SRC to Traditional Chinese...'
-        bash tools/translate.sh $SRC $ZH_TW_SRC 'English' 'Traditional Chinese' '$LLM_MODEL' '.api_key'
+        echo 'Translating $SRC to $TR_TO...'
+        bash tools/translate.sh $SRC $TR_SRC '$TR_FROM' '$TR_TO' '$TR_MODEL' '.api_key'
         echo 'Validating and fixing formatting errors in translation...'
-        bash tools/validate-and-fix-translated-md.sh $SRC $ZH_TW_SRC '$LLM_MODEL' '.api_key'
+        bash tools/validate-and-fix-translated-md.sh $SRC $TR_SRC '$TR_MODEL' '.api_key'
         echo 'Post-processing translated markdown...'
-        bash tools/postprocess-translated-md.sh $ZH_TW_SRC \"\$CJK_FONT_TC\"
+        bash tools/postprocess-translated-md.sh $TR_SRC \"\$CJK_FONT_TC\" '$TR_FIGURE_LABEL' '$TR_TABLE_LABEL'
     "
 }
 
-# Translate cover LaTeX to Traditional Chinese
-translate_zh_tw_cover() {
-    print_info "Translating $COVER_TEX to Traditional Chinese LaTeX in $ZH_TW_DIR/"
+# Translate cover LaTeX using the loaded config
+translate_cover() {
+    print_info "Translating $COVER_TEX to $TR_TO LaTeX in $TR_DIR/"
 
     run_in_docker "
-        mkdir -p $ZH_TW_DIR
+        mkdir -p $TR_DIR
         CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
         CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
-        echo 'Translating $COVER_TEX to Traditional Chinese...'
-        bash tools/translate.sh $COVER_TEX $ZH_TW_COVER 'English' 'Traditional Chinese' '$LLM_MODEL' '.api_key'
+        echo 'Translating $COVER_TEX to $TR_TO...'
+        bash tools/translate.sh $COVER_TEX $TR_COVER '$TR_FROM' '$TR_TO' '$TR_MODEL' '.api_key'
         echo 'Post-processing translated LaTeX...'
-        bash tools/postprocess-translated-tex.sh $ZH_TW_COVER 'PingFang TC' \"\$CJK_FONT_TC\"
+        bash tools/postprocess-translated-tex.sh $TR_COVER 'PingFang TC' \"\$CJK_FONT_TC\"
     "
 }
 
-# Build zh_tw paper PDF from translated markdown
-build_zh_tw_pdf() {
-    print_info "Building zh_tw paper PDF: $ZH_TW_PDF"
+# Build translated paper PDF from translated markdown
+build_translated_pdf() {
+    print_info "Building translated paper PDF: $TR_PDF"
 
     run_in_docker "
         echo 'Building PDF from translated markdown...'
         echo 'Processing Mermaid diagrams...'
         mkdir -p images
-        bash tools/create-symlinks.sh $ZH_TW_DIR $BIB $CSL 'bibliography.bib'
+        bash tools/create-symlinks.sh $TR_DIR $BIB $CSL 'bibliography.bib'
         if [ -d images ]; then
-            if [ -e $ZH_TW_DIR/images ]; then rm -rf $ZH_TW_DIR/images; fi
-            ( cd $ZH_TW_DIR && ln -sf ../images images )
+            if [ -e $TR_DIR/images ]; then rm -rf $TR_DIR/images; fi
+            ( cd $TR_DIR && ln -sf ../images images )
         fi
-        bash tools/process-mermaid.sh $ZH_TW_SRC $ZH_TW_DIR/paper.mermaid.tmp.md images
+        bash tools/process-mermaid.sh $TR_SRC $TR_DIR/paper.mermaid.tmp.md images
         CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
         CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
         echo \"Using CJK font: \$CJK_FONT_TC\"
-        bash tools/replace-fonts.sh $ZH_TW_DIR/paper.mermaid.tmp.md $ZH_TW_DIR/paper.tmp.md 'PingFang SC' \"\$CJK_FONT_TC\"
-        ( cd $ZH_TW_DIR && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --csl=chicago-author-date.csl -M title=\"\" -M author=\"\" -M date=\"\" -o paper.tex )
-        bash tools/fix-latex-csl.sh $ZH_TW_DIR/paper.tex
-        ( cd $ZH_TW_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
-        ( cd $ZH_TW_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
-        if [ ! -f '$ZH_TW_PDF' ]; then exit 1; fi
-        bash tools/cleanup-temp.sh $ZH_TW_DIR/paper.mermaid.tmp.md $ZH_TW_DIR/paper.tmp.md $ZH_TW_DIR/paper.tex $ZH_TW_DIR/paper.aux $ZH_TW_DIR/paper.log
+        bash tools/replace-fonts.sh $TR_DIR/paper.mermaid.tmp.md $TR_DIR/paper.tmp.md 'PingFang SC' \"\$CJK_FONT_TC\"
+        ( cd $TR_DIR && pandoc paper.tmp.md --standalone --filter pandoc-crossref --citeproc --csl=chicago-author-date.csl -M title=\"\" -M author=\"\" -M date=\"\" -o paper.tex )
+        bash tools/fix-latex-csl.sh $TR_DIR/paper.tex
+        ( cd $TR_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
+        ( cd $TR_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
+        if [ ! -f '$TR_PDF' ]; then exit 1; fi
+        bash tools/cleanup-temp.sh $TR_DIR/paper.mermaid.tmp.md $TR_DIR/paper.tmp.md $TR_DIR/paper.tex $TR_DIR/paper.aux $TR_DIR/paper.log
         echo 'Cleaned up intermediate translation files'
     "
 
-    if [ -f "$WORK_DIR/$ZH_TW_PDF" ]; then
-        print_info "Successfully generated zh_tw paper PDF: $ZH_TW_PDF"
+    if [ -f "$WORK_DIR/$TR_PDF" ]; then
+        print_info "Successfully generated translated paper PDF: $TR_PDF"
     else
-        print_error "Failed to generate $ZH_TW_PDF"
+        print_error "Failed to generate $TR_PDF"
         exit 1
     fi
 }
 
-# Build zh_tw cover PDF from translated LaTeX
-build_zh_tw_cover_pdf() {
-    print_info "Building zh_tw cover PDF: $ZH_TW_COVER_PDF"
+# Build translated cover PDF from translated LaTeX
+build_translated_cover_pdf() {
+    print_info "Building translated cover PDF: $TR_COVER_PDF"
 
     # Ensure logo exists (reuse main-cover logic)
     if [ ! -f "$WORK_DIR/$LOGO_FILE" ]; then
@@ -310,64 +362,80 @@ build_zh_tw_cover_pdf() {
         CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
         CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
         echo \"Using main font: \$MAIN_FONT, CJK font: \$CJK_FONT_TC\"
-        bash tools/copy-logo.sh $LOGO_FILE $ZH_TW_DIR
-        bash tools/replace-fonts.sh $ZH_TW_COVER $ZH_TW_DIR/cover_page.tmp.tex 'Times New Roman' \"\$MAIN_FONT\" 'PingFang TC' \"\$CJK_FONT_TC\"
-        bash tools/inject-date.sh $ZH_TW_DIR/cover_page.tmp.tex
-        ( cd $ZH_TW_DIR && xelatex -interaction=nonstopmode -jobname=cover cover_page.tmp.tex )
-        bash tools/cleanup-temp.sh $ZH_TW_DIR/cover_page.tmp.tex $ZH_TW_DIR/cover.aux $ZH_TW_DIR/cover.log
+        bash tools/copy-logo.sh $LOGO_FILE $TR_DIR
+        bash tools/replace-fonts.sh $TR_COVER $TR_DIR/cover_page.tmp.tex 'Times New Roman' \"\$MAIN_FONT\" 'PingFang TC' \"\$CJK_FONT_TC\"
+        bash tools/inject-date.sh $TR_DIR/cover_page.tmp.tex
+        ( cd $TR_DIR && xelatex -interaction=nonstopmode -jobname=cover cover_page.tmp.tex )
+        bash tools/cleanup-temp.sh $TR_DIR/cover_page.tmp.tex $TR_DIR/cover.aux $TR_DIR/cover.log
         echo 'Cleaned up intermediate translation files'
     "
 
-    if [ -f "$WORK_DIR/$ZH_TW_COVER_PDF" ]; then
-        print_info "Successfully generated zh_tw cover PDF: $ZH_TW_COVER_PDF"
+    if [ -f "$WORK_DIR/$TR_COVER_PDF" ]; then
+        print_info "Successfully generated translated cover PDF: $TR_COVER_PDF"
     else
-        print_error "Failed to generate $ZH_TW_COVER_PDF"
+        print_error "Failed to generate $TR_COVER_PDF"
         exit 1
     fi
 }
 
-# Merge zh_tw cover + paper into printed PDF
-build_zh_tw_printed() {
-    print_info "Merging zh_tw cover + paper into: $ZH_TW_PRINTED_PDF"
+# Merge translated cover + paper into printed PDF
+build_translated_printed() {
+    print_info "Merging translated cover + paper into: $TR_PRINTED_PDF"
 
-    if [ ! -f "$WORK_DIR/$ZH_TW_COVER_PDF" ]; then
-        build_zh_tw_cover_pdf
+    if [ ! -f "$WORK_DIR/$TR_COVER_PDF" ]; then
+        build_translated_cover_pdf
     fi
 
-    if [ ! -f "$WORK_DIR/$ZH_TW_PDF" ]; then
-        build_zh_tw_pdf
+    if [ ! -f "$WORK_DIR/$TR_PDF" ]; then
+        build_translated_pdf
     fi
 
-    run_in_docker "bash tools/merge-pdfs.sh $ZH_TW_COVER_PDF $ZH_TW_PDF $ZH_TW_PRINTED_PDF"
+    run_in_docker "bash tools/merge-pdfs.sh $TR_COVER_PDF $TR_PDF $TR_PRINTED_PDF"
 
-    if [ -f "$WORK_DIR/$ZH_TW_PRINTED_PDF" ]; then
-        print_info "Successfully generated: $ZH_TW_PRINTED_PDF"
+    if [ -f "$WORK_DIR/$TR_PRINTED_PDF" ]; then
+        print_info "Successfully generated: $TR_PRINTED_PDF"
     else
-        print_error "Failed to generate $ZH_TW_PRINTED_PDF"
+        print_error "Failed to generate $TR_PRINTED_PDF"
         exit 1
     fi
 }
 
-# Build Traditional Chinese version (zh_tw)
-build_zh_tw() {
-    print_info "Building Traditional Chinese version: zh_tw"
+# Run the translation pipeline, optionally limited to a single step
+run_translate() {
+    local step="${1:-all}"
+
+    load_translate_config
+    print_info "Translation config: $TRANSLATE_CONFIG_FILE ($TR_FROM -> $TR_TO, dir: $TR_DIR)"
 
     # Require API key file before running translation operations
     if [ ! -f "$API_KEY_FILE" ]; then
         print_error "API key file not found: $API_KEY_FILE"
-        print_error "Create it with your Gemini API key before running zh_tw."
+        print_error "Create it with your Gemini API key before running translate."
         echo "Example: echo \"<your-key>\" > .api_key && chmod 600 .api_key" >&2
         exit 1
     fi
 
-    # Run full translation + build pipeline
-    translate_zh_tw_markdown
-    translate_zh_tw_cover
-    build_zh_tw_pdf
-    build_zh_tw_cover_pdf
-    build_zh_tw_printed
+    case "$step" in
+        all)
+            translate_markdown
+            translate_cover
+            build_translated_pdf
+            build_translated_cover_pdf
+            build_translated_printed
+            ;;
+        markdown) translate_markdown ;;
+        cover) translate_cover ;;
+        pdf) build_translated_pdf ;;
+        cover_pdf) build_translated_cover_pdf ;;
+        printed) build_translated_printed ;;
+        *)
+            print_error "Unknown step: $step"
+            print_error "Valid steps: all, markdown, cover, pdf, cover_pdf, printed"
+            exit 1
+            ;;
+    esac
 
-    print_info "Translation to Traditional Chinese completed. PDFs generated in $ZH_TW_DIR/"
+    print_info "Translation step '$step' completed. Output in $TR_DIR/"
 }
 
 # Clean generated files
@@ -379,7 +447,9 @@ clean() {
     run_in_docker "rm -f toc_list.md 2>/dev/null || true"
     run_in_docker "rm -f images/mermaid-*.png 2>/dev/null || true"
     run_in_docker "rm -f $MERMAID_TEMP_SRC 2>/dev/null || true"
-    run_in_docker "rm -rf zh_tw 2>/dev/null || true"
+    if [ -f "$TRANSLATE_CONFIG_FILE" ]; then
+        ( DIR=""; load_ini_file "$TRANSLATE_CONFIG_FILE"; if [ -n "$DIR" ]; then run_in_docker "rm -rf $DIR 2>/dev/null || true"; fi )
+    fi
     print_info "Clean complete"
 }
 
@@ -397,20 +467,24 @@ build_tags() {
 }
 
 # Extract references list from Markdown and copy to clipboard
+# pdf_file may point into a translation output dir (e.g. zh_tw/printed.pdf);
+# the reference list is then generated alongside it in that same directory.
 ref_list() {
     local pdf_file="${1:-$PRINTED_PDF}"
+    local out_dir
+    out_dir=$(dirname "$pdf_file")
     local ref_md="ref_list.md"
-    
-    if [[ "$pdf_file" == *"zh_tw"* ]]; then
-        ref_md="zh_tw/ref_list.md"
+
+    if [ "$out_dir" != "." ]; then
+        ref_md="$out_dir/ref_list.md"
     fi
-    
+
     print_info "Generating reference list: $ref_md..."
-    if [[ "$pdf_file" == *"zh_tw"* ]]; then
+    if [ "$out_dir" != "." ]; then
         run_in_docker "
-            mkdir -p $ZH_TW_DIR
-            bash tools/create-symlinks.sh $ZH_TW_DIR $BIB $CSL 'bibliography.bib'
-            python3 tools/extract-references-pandoc.py $ZH_TW_SRC $ZH_TW_DIR/ref_list.md
+            mkdir -p $out_dir
+            bash tools/create-symlinks.sh $out_dir $BIB $CSL 'bibliography.bib'
+            python3 tools/extract-references-pandoc.py $out_dir/paper.md $out_dir/ref_list.md
         "
     else
         run_in_docker "python3 tools/extract-references-pandoc.py $SRC ref_list.md"
@@ -472,12 +546,14 @@ else:
 # Extract table of contents from PDF and copy to clipboard
 toc_list() {
     local pdf_file="${1:-$PRINTED_PDF}"
+    local out_dir
+    out_dir=$(dirname "$pdf_file")
     local toc_md="toc_list.md"
-    
-    if [[ "$pdf_file" == *"zh_tw"* ]]; then
-        toc_md="zh_tw/toc_list.md"
+
+    if [ "$out_dir" != "." ]; then
+        toc_md="$out_dir/toc_list.md"
     fi
-    
+
     if [ ! -f "$WORK_DIR/$pdf_file" ]; then
         print_error "PDF file not found: $pdf_file"
         print_error "Please build it first using './devops.sh printed' or specify another PDF."
@@ -503,26 +579,31 @@ Development Operations Center - devops.sh
 Usage: ./devops.sh [operation]
 
 Available operations:
-  help      - Show this help message [default]
-  pdf       - Build the main paper PDF (paper.pdf)
-  pdf_date  - Build the paper PDF with date suffix
-  cover     - Build the cover page PDF
-  printed   - Build the printed version (cover + paper)
-  zh_tw     - Run the Traditional Chinese translation pipeline
-  tags      - Generate .tags from all Markdown files
-  ref-list  - Extract references from PDF and copy to clipboard
-  toc-list  - Extract table of contents from PDF and copy to clipboard
-  clean     - Remove all generated files
-  deps      - Show information about dependencies
+  help                     - Show this help message [default]
+  pdf                      - Build the main paper PDF (paper.pdf)
+  pdf_date                 - Build the paper PDF with date suffix
+  cover                    - Build the cover page PDF
+  printed                  - Build the printed version (cover + paper)
+  translate [step]         - Run the translation pipeline (see zh-tw.ini)
+  tags                     - Generate .tags from all Markdown files
+  ref-list                - Extract references from PDF and copy to clipboard
+  toc-list                - Extract table of contents from PDF and copy to clipboard
+  clean                    - Remove all generated files
+  deps                     - Show information about dependencies
 
 Examples:
-  ./devops.sh           # Show this help message
-  ./devops.sh pdf       # Build paper.pdf
-  ./devops.sh pdf_date  # Build thesisYYYYMMDD.pdf
-  ./devops.sh cover     # Build only the cover page
-  ./devops.sh ref-list  # Extract and copy references
-  ./devops.sh toc-list  # Extract and copy table of contents
-  ./devops.sh clean     # Clean all generated files
+  ./devops.sh                        # Show this help message
+  ./devops.sh pdf                    # Build paper.pdf
+  ./devops.sh pdf_date               # Build thesisYYYYMMDD.pdf
+  ./devops.sh cover                  # Build only the cover page
+  ./devops.sh translate               # Run the full translation pipeline
+  ./devops.sh translate pdf           # Rebuild only the translated paper PDF
+  ./devops.sh ref-list                # Extract and copy references
+  ./devops.sh toc-list                # Extract and copy table of contents
+  ./devops.sh clean                   # Clean all generated files
+
+Translation config lives in zh-tw.ini at the repo root (see comments in that
+file for the full key list and available steps).
 
 Note: All builds run inside Docker container (pandocker-with-tools)
 EOF
@@ -561,8 +642,8 @@ main() {
         printed)
             build_printed
             ;;
-        zh_tw)
-            build_zh_tw
+        translate)
+            run_translate "$2"
             ;;
         tags)
             build_tags
