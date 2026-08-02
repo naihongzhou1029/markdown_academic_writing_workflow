@@ -71,9 +71,11 @@ Separate tool for OCR-based document analysis. Config in `profile.yaml`, scripts
 - Update `README.md` and `AGENTS.md` if changing build commands, translation behavior, or Docker requirements.
 - When adding new language targets, follow the `zh_tw` pattern.
 
-## Cursor Skills
+## Skills
 
-| Skill | Purpose |
-|-------|---------|
-| `paste-crossref-image` | Save clipboard image to `images/`, insert Pandoc figure with `pandoc-crossref` label |
-| `convert-conversation-figure` | Replace conversation screenshot with styled blockquote (OCR/vision transcription) |
+Reusable step-by-step procedures live as plain Markdown files under `skills/` — the single source of truth, tool-agnostic. Tool-specific discovery paths (`.claude/skills/<name>/SKILL.md`, `.cursor/skills/<name>/SKILL.md`, `.agent/workflows/<name>.md`) are symlinks into `skills/`, the same pattern `CLAUDE.md`/`GEMINI.md` use for `AGENTS.md`. Edit the canonical file in `skills/`; the symlinks pick up the change automatically.
+
+| Skill | Purpose | Canonical source |
+|-------|---------|------------------|
+| `paste-crossref-image` | Save clipboard image to `images/`, insert Pandoc figure with `pandoc-crossref` label | `.cursor/skills/paste-crossref-image/SKILL.md` (Cursor-only, not yet migrated) |
+| `convert-conversation-figure` | Replace conversation screenshot with styled blockquote (OCR/vision transcription) | `skills/convert-conversation-figure.md` |
