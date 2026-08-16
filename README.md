@@ -1,5 +1,9 @@
 # Mark Paper
 
+English | [繁體中文](README.zh-TW.md)
+
+---
+
 This repository is a self-contained, reproducible example of a modern plain‑text academic workflow built around **Markdown**, **Pandoc**, and **LaTeX**. The core idea is to separate content from presentation: you write the manuscript as plain text in `paper.md`, while formatting, typesetting, and output details are handled automatically by Pandoc, LaTeX, and a small set of configuration files.
 
 The `main` branch itself is that example: `paper.md` is a tutorial/methodology paper that explains **why** and **how** to author an academic paper or thesis this way — plain text, Pandoc, LaTeX, and Git — instead of a word processor like Microsoft Word or Google Docs. It demonstrates the full pipeline end to end (citations, bibliography, tables, cross‑references, Mermaid diagrams, multilingual typesetting, custom page layout, standalone cover pages, and AI-assisted workflows) using itself as the worked example.
