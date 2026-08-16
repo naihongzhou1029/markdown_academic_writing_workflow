@@ -1,4 +1,4 @@
-# Remarcademic (Researcher's Markdown Academic) Writing Framework
+# Mark Paper
 
 This repository is a self-contained, reproducible example of a modern plain‑text academic workflow built around **Markdown**, **Pandoc**, and **LaTeX**. The core idea is to separate content from presentation: you write the manuscript as plain text in `paper.md`, while formatting, typesetting, and output details are handled automatically by Pandoc, LaTeX, and a small set of configuration files.
 
