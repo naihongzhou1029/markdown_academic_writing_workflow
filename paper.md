@@ -174,14 +174,21 @@ With the toolchain installed, the conversion process is driven by the Pandoc com
 > title: "Sample Academic Note"
 > author: "Alex Rivers"
 > date: "August 16, 2026"
+> numbersections: true
 > ---
 > 
 > # Introduction
 > 
-> Plain-text writing separates **content** from *presentation*.
+> Plain-text writing separates **content**
+> from *presentation*.
 > 
 > - Clean, human-readable syntax
 > - Seamless version control with Git
+> 
+> # Methodology
+> 
+> Automated build pipelines ensure
+> reproducibility without manual intervention.
 > ```
 
 **Conversion Command**
@@ -210,6 +217,14 @@ pandoc document.md -s -o document.pdf
 >   \item Clean, human-readable syntax
 >   \item Seamless version control with Git
 > \end{itemize}
+>
+> \vspace{1em}
+>
+> \noindent {\large \textbf{2 Methodology}}
+>
+> \vspace{0.5em}
+>
+> \noindent Automated build pipelines ensure reproducibility without manual intervention.
 
 # Part II: Managing Scholarly Apparatus
 
@@ -230,6 +245,64 @@ A cornerstone of academic writing is the correct management of citations and bib
 -   **Suppressing the Author:** When an author is already mentioned, their name can be suppressed in the citation by adding a minus sign: `Healy's research [-@healy2018plain] confirms...` renders as "Healy's research (2018) confirms...".
     
 -   **Prefixes, Locators, and Suffixes:** `[see @knuth1984tex, chap. 3]`.
+
+**An Illustrative Citation Pipeline Example** To demonstrate how these components work together in practice:
+
+**1. The Bibliography File (`references.bib`)**
+
+> ```bibtex
+> @article{knuth1984literate,
+>   author  = {Knuth, Donald E.},
+>   title   = {Literate Programming},
+>   journal = {The Computer Journal},
+>   volume  = {27},
+>   number  = {2},
+>   pages   = {97--111},
+>   year    = {1984},
+>   doi     = {10.1093/comjnl/27.2.97}
+> }
+> ```
+
+**2. The Citation Style Specification (`chicago-author-date.csl`)**
+
+> ```xml
+> <citation collapse="year"
+>           et-al-min="4">
+>   <layout prefix="(" suffix=")"
+>           delimiter="; ">
+>     <group delimiter=", ">
+>       <text macro="citation-item"/>
+>       <text macro="source-locator"/>
+>     </group>
+>   </layout>
+> </citation>
+> ```
+
+**3. In-Text Markdown Usage (`paper.md`)**
+
+> ```markdown
+> ---
+> bibliography: references.bib
+> csl: chicago-author-date.csl
+> ---
+> 
+> As Knuth demonstrated, programs should be
+> written for humans [@knuth1984literate, 99].
+> 
+> # References
+> ```
+
+**4. Output: Rendered PDF Document**
+
+> \noindent As Knuth demonstrated, programs should be written for humans (Knuth 1984, 99).
+>
+> \vspace{1em}
+>
+> \noindent {\large \textbf{References}}
+>
+> \vspace{0.5em}
+>
+> \noindent Knuth, Donald E. 1984. ``Literate Programming.'' \textit{The Computer Journal} 27 (2): 97--111. \url{https://doi.org/10.1093/comjnl/27.2.97}.
     
 
 ## Section 5: Managing Figures, Tables, and Cross-References
