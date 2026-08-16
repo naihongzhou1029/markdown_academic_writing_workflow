@@ -78,63 +78,75 @@ numbersections: true
 
 # Introduction: The Philosophy of Plain-Text Academia
 
-The choice of writing tools in academic work is not merely a matter of technical preference; it is a philosophical commitment to a particular mode of scholarship. The modern plain-text workflow, centered on Markdown, Pandoc, and LaTeX, represents a deliberate move towards a more robust, transparent, and durable scholarly practice [@healy2018plain]. This approach is founded on a set of core principles that stand in stark contrast to the opaque, proprietary nature of traditional word processors.
-
-At its heart is the principle of **sustainability**. Plain-text files, such as those written in Markdown, are the most resilient digital format. Unlike the complex binary structures of `.docx` files, which can become corrupted or obsolete as software changes, plain text will remain readable and accessible for decades, ensuring the long-term viability of one's intellectual output [@healy2018plain; @macfarlane2022pandoc]. This is coupled with the powerful concept of **separation of concerns**, where the semantic content of a document—the text, its structure, and its meaning—is written in Markdown, completely divorced from its final visual presentation, which is handled independently by LaTeX templates or other styling mechanisms. This modularity allows for radical changes in output format with zero alteration to the source manuscript.
+The choice of writing tools in academic work is not merely a matter of technical preference; it is a philosophical commitment to a particular mode of scholarship. The modern plain-text academic workflow, built upon the foundation of Markdown, Pandoc, and LaTeX, is designed around a core principle: the complete **separation of content from presentation**. By authoring in plain-text Markdown, a researcher focuses exclusively on the substantive arguments, narrative structure, and data of their work, free from the distractions of visual layout [@healy2018plain].
 
 Furthermore, this workflow is uniquely suited for the rigorous demands of modern research. Plain-text files integrate seamlessly with **version control systems** like Git, enabling meticulous tracking of every change, non-destructive experimentation with drafts, and transparent collaboration among authors—a process notoriously fraught with difficulty when using binary files [@healy2018plain]. The entire process, from the initial draft to the final PDF, can be automated with simple scripts, ensuring perfect **reproducibility** at any point in the future, a cornerstone of scientific and scholarly integrity.
 
-This system is best understood not as a collection of disparate tools, but as a linear, modular data processing pipeline. The raw manuscript (`.md`) and bibliographic data (`.json` or `.bib`) serve as the initial inputs. These inputs are then passed through a chain of specialized filters and transformers: Zotero and its Better BibTeX extension manage and export bibliographic data; Pandoc parses the source text [@macfarlane2022pandoc]; `pandoc-citeproc` resolves citation markers; `pandoc-crossref` numbers figures and equations [@lierdakil2021crossref]; and finally, a LaTeX engine like XeLaTeX performs the final typesetting to produce a PDF.
+This system is best understood not as a collection of disparate tools, but as a linear, modular data processing pipeline. The raw manuscript (`.md`) and bibliographic data (`.json` or `.bib`) serve as the initial inputs. While bibliographic entries can be manually curated or copied directly from scholarly repositories (e.g., Google Scholar, arXiv) into a plain-text `.bib` file, larger research projects often leverage reference managers like Zotero with Better BibTeX (BBT) for automated library synchronization. These inputs are then passed through Pandoc and its filter chain: `pandoc-citeproc` resolves citation markers; `pandoc-crossref` numbers figures and equations [@lierdakil2021crossref]; and finally, a LaTeX engine like XeLaTeX performs the final typesetting to produce a PDF.
 
 ```mermaid
+%%{init: {"theme": "neutral", "themeVariables": {"fontSize": "30px", "fontFamily": "arial, sans-serif", "primaryTextColor": "#000000"}}}%%
 flowchart LR
-    A[Raw Manuscript<br/>.md file] --> D[Pandoc<br/>Parser]
-    B[Bibliographic Data<br/>.json or .bib] --> C[Zotero/BBT<br/>Export & Manage]
-    C --> D
-    D --> E[pandoc-citeproc<br/>Resolve Citations]
-    E --> F[pandoc-crossref<br/>Number Figures/Tables/Equations]
-    F --> G[XeLaTeX<br/>Typesetting Engine]
-    G --> H[Final PDF<br/>Output]
-    
-    style A fill:#b3d9ff,stroke:#4a90e2,stroke-width:2px,color:#000000
-    style B fill:#b3d9ff,stroke:#4a90e2,stroke-width:2px,color:#000000
-    style C fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
-    style D fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
-    style E fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
-    style F fill:#ffe0b3,stroke:#f5a623,stroke-width:2px,color:#000000
-    style G fill:#b3ffd9,stroke:#50c878,stroke-width:2px,color:#000000
-    style H fill:#ffb3d9,stroke:#e91e63,stroke-width:2px,color:#000000
+    subgraph Sources ["1. Source & Reference Inputs"]
+        A["Raw Manuscript<br/><code>.md</code> file"]
+        B["Bibliographic Data<br/><code>.bib</code> / <code>.json</code>"]
+        Z["Zotero + BBT<br/><i>(Optional)</i>"] -. Auto-Export .-> B
+    end
+
+    subgraph Pipeline ["2. Pandoc Processing Pipeline"]
+        D["Pandoc Parser"] --> E["pandoc-citeproc<br/>(Citations)"] --> F["pandoc-crossref<br/>(Cross-Refs)"] --> G["XeLaTeX Engine<br/>(Typesetting)"] --> H["Final PDF Output<br/><code>paper.pdf</code>"]
+    end
+
+    A ==> D
+    B ==> D
+
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000000
+    style B fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000000
+    style Z fill:#fff8e1,stroke:#f57c00,stroke-width:3px,stroke-dasharray: 5 5,color:#000000
+    style D fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000000
+    style E fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000000
+    style F fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000000
+    style G fill:#e8f5e9,stroke:#388e3c,stroke-width:3px,color:#000000
+    style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px,color:#000000
 ```
 
 Each stage is discrete and transparent. This contrasts fundamentally with the monolithic, "black box" environment of a word processor, where these processes are intertwined and hidden from the user. The power of this workflow lies in the ability to control this pipeline, to swap out components, insert new processing stages, and debug any issue by inspecting the intermediate output at any point—for instance, by generating the intermediate `.tex` file to diagnose a LaTeX error. This level of control and transparency is the key to solving the complex, bespoke formatting challenges inherent in academic writing.
 
+## Section 1: The Historical Context: From Hot Metal to Typewriters and TeX
+
+Understanding the power of the modern plain-text workflow is enhanced by appreciating the profound technical challenges it solves. Before the advent of TeX and LaTeX, academic typesetting was a highly specialized, manual process defined by severe physical and mechanical constraints. The era of **hot metal typesetting** and later **"typewriter" composition** involved immense manual effort to produce complex documents.
+
+The development of TeX by Knuth in the late 1970s and LaTeX by Lamport in the early 1980s marked a revolutionary shift [@knuth1984tex; @lamport1986latex]. They introduced the concept of programmatic, algorithmic typesetting based on semantic commands. The modern Pandoc user operates at an even higher level of abstraction, using a simple, universal syntax that can be compiled to LaTeX or other formats entirely.
+
 # Part I: The Core Toolchain
 
-## Section 1: Assembling Your Digital Workbench
+## Section 2: Assembling Your Digital Workbench
 
 Before embarking on the plain-text writing process, a robust environment is required. While one can install tools individually, this project demonstrates a modern, **containerized approach** to academic writing.
 
-**Docker: The Reproducible Environment** A significant challenge in academic workflows is dependency management—ensuring that Pandoc, LaTeX packages, and helper scripts work consistently across different machines. To solve this, we utilize **Docker**. The entire toolchain is encapsulated in a Docker image (derived from `dalibo/pandocker`). This ensures that the build process is perfectly reproducible: if it builds on one machine, it will build on any machine with Docker installed. The complex "plumbing" of the workflow is abstracted away behind simple wrapper scripts (`./make-docker.sh`), allowing the author to focus solely on writing.
+**Docker: The Reproducible Environment** A significant challenge in academic workflows is dependency management—ensuring that Pandoc, LaTeX packages, and helper scripts work consistently across different machines. To solve this, we utilize **Docker**. The entire toolchain is encapsulated in a Docker image (derived from `dalibo/pandocker`). This ensures that the build process is perfectly reproducible: if it builds on one machine, it will build on any machine with Docker installed. The complex "plumbing" of the workflow is abstracted away behind simple wrapper scripts (`./devops.sh` / `./devops.ps1`), allowing the author to focus solely on writing.
 
-**The Scripted Build System** Behind the scenes, the `Makefile` orchestrates the build process. To manage complexity and ensure cross-platform compatibility (Linux, macOS, Windows), implementation details have been extracted into modular shell scripts in the `tools/` directory. These scripts handle tasks like font detection, PDF merging, and dependency checks, running transparently inside the Docker container.
+**The Scripted Build System** Behind the scenes, the `devops.sh` script orchestrates the build process. To manage complexity and ensure cross-platform compatibility (Linux, macOS, Windows), implementation details have been extracted into modular shell scripts in the `tools/` directory. These scripts handle tasks like font detection, PDF merging, and dependency checks, running transparently inside the Docker container.
 
 **A Plain-Text Editor: The Writing Environment** The writing itself is done in a plain-text editor. Modern, extensible editors like Visual Studio Code (VSCode), Atom, or the academic-focused Zettlr are ideal choices.
 
-**Zotero: The Reference Manager** Robust reference management is handled by Zotero, a powerful, open-source application. For this workflow, the installation of the **Better BibTeX for Zotero (BBT)** extension is non-negotiable. BBT provides two essential features: the automatic generation of stable, human-readable citation keys and a highly reliable, automated export process that keeps the bibliography file synchronized with the Zotero library.
+**Reference Management: Lightweight Files vs. Automated Integration (Optional)** While citation processing in Pandoc strictly requires only a valid bibliography file (`.bib` or `.json`), managing growing literature collections benefits from dedicated tooling. Authors can choose between two main paths:
+- **Zero-Dependency Manual Approach**: For smaller projects or concise papers, authors can directly maintain a plain-text `references.bib` file by pasting BibTeX entries directly from services like Google Scholar, arXiv, or publisher websites. No external software is required.
+- **Automated Scaled Approach with Zotero and Better BibTeX (BBT)**: For extensive manuscripts such as theses and dissertations, Zotero paired with the **Better BibTeX (BBT)** extension provides invaluable automation. BBT guarantees deterministic, human-readable citation keys (preventing key collisions) and provides background auto-export to keep your bibliography file (`references.json` or `.bib`) synchronized whenever literature is added or modified in the Zotero library.
 
 The components are summarized in @tbl:workbench.
 
-| Component          | Purpose                                                  | Recommended Software | Key Configuration Notes                                                               |
-| ------------------ | -------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------- |
-| Container Runtime  | Provides a consistent, reproducible build environment.   | Docker               | Use `./make-docker.sh` to run builds without local dependency issues.                 |
-| Document Converter | Parses Markdown and orchestrates the conversion process. | Pandoc (in Docker)   | No local installation required when using the Docker workflow.                        |
-| Typesetting Engine | Compiles LaTeX code generated by Pandoc into a PDF.      | TeX Live (in Docker) | Included in the Docker image.                                                         |
-| Text Editor        | The environment for writing in plain-text Markdown.      | VSCode               | Install extensions: Markdown Preview Enhanced and Pandoc Citer.                       |
-| Reference Manager  | Manages bibliographic data and exports it for Pandoc.    | Zotero               | Install the Better BibTeX for Zotero (BBT) extension for stable keys and auto-export. |
+| Component                    | Purpose                                                  | Recommended Software    | Key Configuration Notes                                                               |
+| ---------------------------- | -------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
+| Container Runtime            | Provides a consistent, reproducible build environment.   | Docker                  | Use `./devops.sh` to run builds without local dependency issues.                      |
+| Document Converter           | Parses Markdown and orchestrates the conversion process. | Pandoc (in Docker)      | No local installation required when using the Docker workflow.                        |
+| Typesetting Engine           | Compiles LaTeX code generated by Pandoc into a PDF.      | TeX Live (in Docker)    | Included in the Docker image.                                                         |
+| Text Editor                  | The environment for writing in plain-text Markdown.      | VSCode                  | Install extensions: Markdown Preview Enhanced and Pandoc Citer.                       |
+| Reference Manager (Optional) | Manages bibliographic data and exports it for Pandoc.    | Zotero + BBT (Optional) | Optional for large projects; small projects can directly edit a .bib file.           |
 
 : The Digital Scholar's Workbench. {#tbl:workbench}
 
-## Section 2: The Pandoc Conversion Engine: From Markdown to PDF
+## Section 3: The Pandoc Conversion Engine: From Markdown to PDF
 
 With the toolchain installed, the conversion process is driven by the Pandoc command-line interface, configured primarily through a metadata block within the Markdown file itself, as seen at the top of this very document.
 
@@ -146,19 +158,15 @@ With the toolchain installed, the conversion process is driven by the Pandoc com
 
 # Part II: Managing Scholarly Apparatus
 
-## Section 3: Automated Citations and Bibliographies with `pandoc-citeproc`
+## Section 4: Automated Citations and Bibliographies with `pandoc-citeproc`
 
-A cornerstone of academic writing is the correct management of citations and bibliographies. The Pandoc workflow automates this process with exceptional precision using its citation processor, `pandoc-citeproc`.
+A cornerstone of academic writing is the correct management of citations and bibliographies. The Pandoc workflow automates this process with exceptional precision using its citation processing filter, `pandoc-citeproc`.
 
-**The Role of `pandoc-citeproc`** The citation processor, invoked with the `--citeproc` flag in modern Pandoc versions, is the filter responsible for parsing Markdown citation syntax, transforming it into fully formatted in-text citations, and automatically generating a bibliography at the end of the document.
+**Specifying the Bibliography File** The first step is to tell Pandoc where to find your bibliographic data. This is done in the YAML metadata block using the `bibliography` variable, which can point to a file in one of several supported formats, most commonly CSL-JSON (`.json`) or BibTeX (`.bib`). Pandoc processes these files directly from disk, meaning authors can freely choose between manual `.bib` curation or automated export from reference managers like Zotero.
 
-**Step 1: Configuring Zotero and Better BibTeX (BBT)** The process begins with the reference manager. Within Zotero, the Better BibTeX extension should be configured to automatically export the desired library or collection to a file whenever an entry is added or modified.
+**Formatting Citations with CSL Styles** The visual style of citations and the bibliography (e.g., APA, Chicago, IEEE) is governed by a Citation Style Language (CSL) file. You can download CSL files for almost any journal or style from the official Zotero Style Repository. To apply a style, specify the path to the `.csl` file in your YAML block: `csl: chicago-author-date.csl`.
 
-**Step 2: Choosing the Bibliography Format: CSL JSON vs. BibTeX** To ensure the highest possible fidelity between the reference manager and the final document, it is strongly recommended to export directly from Zotero to a CSL-native format, such as **Better CSL JSON** or **Better CSL YAML**. This eliminates the "man-in-the-middle" conversion and preserves the integrity of the bibliographic data.
-
-**Step 3: Specifying Bibliography and Style in YAML** The connection between the Markdown document and the bibliographic data is made in the YAML metadata block. Two keys are required: `bibliography:` and `csl:`. Thousands of CSL styles for various journals and conventions are available for download from the official Zotero Style Repository.
-
-**Step 4: Mastering Pandoc Citation Syntax** With the setup complete, citing sources in Markdown is simple and expressive. The syntax supports a wide range of scholarly conventions.
+**Citation Syntax in Markdown** In the body of your Markdown document, citations are inserted using an `@` symbol followed by the citation key defined in your bibliography file:
 
 -   **Standard Parenthetical Citations:** `...as has been shown [@knuth1984tex; @lamport1986latex]`.
     
@@ -169,7 +177,7 @@ A cornerstone of academic writing is the correct management of citations and bib
 -   **Prefixes, Locators, and Suffixes:** `[see @knuth1984tex, chap. 3]`.
     
 
-## Section 4: Managing Figures, Tables, and Cross-References
+## Section 5: Managing Figures, Tables, and Cross-References
 
 While vanilla Markdown lacks a native method for sophisticated figure management, this workflow integrates powerful tools for both creation and referencing.
 
@@ -181,7 +189,7 @@ While vanilla Markdown lacks a native method for sophisticated figure management
 
 $$E=mc^2$$ {#eq:relativity}
 
-![Example plot](images/2025-11-17-19-47-43.png){#fig:my-plot width=20%}
+![Example plot](images/2025-11-17-19-47-43.png) {#fig:my-plot width=20%}
 
 **Customization via YAML** The appearance of cross-references can be customized through YAML metadata variables, as demonstrated in the header of this file.
 
@@ -189,7 +197,7 @@ $$E=mc^2$$ {#eq:relativity}
 
 # Part III: Advanced Customization and Multilingual Typesetting
 
-## Section 5: Mastering Document Appearance with LaTeX Templates
+## Section 6: Mastering Document Appearance with LaTeX Templates
 
 The visual appearance of the final PDF is controlled almost entirely by LaTeX. Pandoc provides a powerful and flexible system for interfacing with LaTeX templates.
 
@@ -197,7 +205,7 @@ The visual appearance of the final PDF is controlled almost entirely by LaTeX. P
 
 **Case Study: The Eisvogel Template for a Custom Cover Page** The popular Eisvogel template provides a clear example of how template-specific variables, set in the YAML block, can be used for deep customization [@wandmalfarbe2020eisvogel].
 
-## Section 6: A Guide to Traditional Chinese Typesetting
+## Section 7: A Guide to Traditional Chinese Typesetting
 
 Producing high-quality documents in Traditional Chinese requires specific configuration. The Pandoc and LaTeX toolchain is exceptionally capable in this regard.
 
@@ -209,15 +217,15 @@ Producing high-quality documents in Traditional Chinese requires specific config
 
 This configuration allows for seamless typesetting of Traditional Chinese text, like this: 這是傳統中文的範例文字。
 
-## Section 7: Granular Control over Page Numbering
+## Section 8: Granular Control over Page Numbering
 
 Page numbering is a feature of the final typeset document, and as such, its control resides entirely at the LaTeX level. Pandoc provides several mechanisms to pass the necessary LaTeX commands from the Markdown source to the final compilation stage. The cleanest method is using the `header-includes` YAML field, as shown in this document's metadata, to inject raw LaTeX commands like `\setcounter{page}{1}`.
 
-## Section 8: Automated Multilingual Publishing with LLMs
+## Section 9: Automated Multilingual Publishing with LLMs
 
 A major barrier to internationalizing academic work is the effort required to translate while preserving the rigorous formatting of the manuscript. We have addressed this by integrating an **LLM-powered translation pipeline**.
 
-**The AI-Assisted Workflow**: By running `make zh_tw`, the system employs the Gemini API to translate both the Markdown manuscript and the LaTeX cover page into Traditional Chinese. The pipeline is designed to be **structure-aware**: it protects YAML metadata, citation keys (`[@key]`), cross-reference labels (`@fig:id`), and LaTeX commands, ensuring that the translated output is immediately compilable.
+**The AI-Assisted Workflow**: By running `./devops.sh translate`, the system translates both the Markdown manuscript and the LaTeX cover page into Traditional Chinese (configured via `zh-tw.ini`). The pipeline is designed to be **structure-aware**: it protects YAML metadata, citation keys (`[@key]`), cross-reference labels (`@fig:id`), and LaTeX commands, ensuring that the translated output is immediately compilable.
 
 **Challenges and Methodologies**:
 1.  **Preserving Structure**: The system uses carefully crafted prompts to instruct the LLM to translate only natural language text while leaving syntax markers untouched.
@@ -226,14 +234,8 @@ A major barrier to internationalizing academic work is the effort required to tr
 
 This transforms the translation process from a manual typesetting nightmare into a single-command automated task.
 
-# Part IV: Historical Context and Modern Practice
-
-## Section 9: The 'Old-Fashioned' Workflow: From Hot Metal to Typewriters
-
-Understanding the power of the modern plain-text workflow is enhanced by appreciating the profound technical challenges it solves. Before the advent of TeX and LaTeX, academic typesetting was a highly specialized, manual process defined by severe physical and mechanical constraints. The era of **hot metal typesetting** and later **"typewriter" composition** involved immense manual effort to produce complex documents.
-
-The development of TeX by Knuth in the late 1970s and LaTeX by Lamport in the early 1980s marked a revolutionary shift [@knuth1984tex; @lamport1986latex]. They introduced the concept of programmatic, algorithmic typesetting based on semantic commands. The modern Pandoc user operates at an even higher level of abstraction, using a simple, universal syntax that can be compiled to LaTeX or other formats entirely.
+# Part IV: Conclusion
 
 ## Section 10: Synthesis and Recommendations: Building Your Sustainable Workflow
 
-This report has detailed a comprehensive academic workflow. The very file you are reading is a tangible example of this process. By combining this Markdown file with the accompanying bibliography and `Makefile`, you can reproduce the final PDF with a single command. This demonstrates the power of a plain-text academic workflow: unparalleled control, robust versioning, seamless collaboration, and the assurance of future access to one's own work [@rowleyWisdomHierarchyRepresentations2007].
+This report has detailed a comprehensive academic workflow. The very file you are reading is a tangible example of this process. By combining this Markdown file with the accompanying bibliography and `devops.sh` script, you can reproduce the final PDF with a single command. This demonstrates the power of a plain-text academic workflow: unparalleled control, robust versioning, seamless collaboration, and the assurance of future access to one's own work [@healy2018plain].

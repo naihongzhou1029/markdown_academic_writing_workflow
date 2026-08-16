@@ -20,6 +20,7 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
 
 ### Constraints and Conventions for Agents
 
+- **Default build target**: When the user requests a build or compilation without specifying a target operation, always default to the `pdf` target for `devops.sh` or `devops.ps1` (`./devops.sh pdf` or `./devops.ps1 pdf`).
 - **Do not change the overall structure** of `paper.md`’s YAML metadata or its role as the single source of truth for document configuration, unless explicitly asked.
 - **Preserve operation names and roles** in `devops.sh`/`devops.ps1` (`pdf`, `pdf_date`, `cover`, `printed`, `translate`, `tags`, `ref-list`, `toc-list`, `clean`, `deps`) to avoid breaking existing workflows or documentation.
 - **Keep `README.md` and `AGENTS.md` consistent** with any changes to:
