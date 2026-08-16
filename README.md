@@ -84,7 +84,6 @@ This project uses **Docker** to provide a consistent, reproducible build environ
 
 - **Docker** installed and running on your system
 - **bash** available on `PATH` (Git for Windows / WSL on Windows) — `devops.ps1` shells out to `devops.sh`
-- **Zotero + Better BibTeX extension** for managing and exporting bibliographic data (optional, for local reference sync)
 - A **plain‑text editor** and **Git** for version control
 
 ### Basic Usage: Build the Example PDF
@@ -96,10 +95,10 @@ All build, translation, and utility operations are driven by a single **Developm
 
 ```bash
 # Linux/macOS/WSL
-./devops.sh printed
+./devops.sh pdf
 
 # Windows PowerShell
-./devops.ps1 printed
+./devops.ps1 pdf
 ```
 
 Running an operation will:
