@@ -82,7 +82,7 @@ The choice of writing tools in academic work is not merely a matter of technical
 
 Furthermore, this workflow is uniquely suited for the rigorous demands of modern research. Plain-text files integrate seamlessly with **version control systems** like Git, enabling meticulous tracking of every change, non-destructive experimentation with drafts, and transparent collaboration among authors—a process notoriously fraught with difficulty when using binary files [@healy2018plain]. The entire process, from the initial draft to the final PDF, can be automated with simple scripts, ensuring perfect **reproducibility** at any point in the future, a cornerstone of scientific and scholarly integrity.
 
-This system is best understood not as a collection of disparate tools, but as a linear, modular data processing pipeline. The raw manuscript (`.md`) and bibliographic data (`.json` or `.bib`) serve as the initial inputs. While bibliographic entries can be manually curated or copied directly from scholarly repositories (e.g., Google Scholar, arXiv) into a plain-text `.bib` file, larger research projects often leverage reference managers like Zotero with Better BibTeX (BBT) for automated library synchronization. These inputs are then passed through Pandoc and its filter chain: `pandoc-citeproc` resolves citation markers; `pandoc-crossref` numbers figures and equations [@lierdakil2021crossref]; and finally, a LaTeX engine like XeLaTeX performs the final typesetting to produce a PDF.
+This system is best understood not as a collection of disparate tools, but as a linear, modular data processing pipeline. The raw manuscript (`.md`) and bibliographic data (`.json` or `.bib`) serve as the initial inputs. While bibliographic entries can be manually curated or copied directly from scholarly repositories (e.g., [Google Scholar](https://scholar.google.com/), [arXiv](https://arxiv.org/)) into a plain-text `.bib` file, larger research projects often leverage reference managers like [Zotero](https://www.zotero.org/) with [Better BibTeX (BBT)](https://retorque.re/zotero-better-bibtex/) for automated library synchronization. These inputs are then passed through Pandoc and its filter chain: `pandoc-citeproc` resolves citation markers; `pandoc-crossref` numbers figures and equations [@lierdakil2021crossref]; and finally, a LaTeX engine like XeLaTeX performs the final typesetting to produce a PDF.
 
 ```mermaid
 %%{init: {"theme": "neutral", "themeVariables": {"fontSize": "21px", "fontFamily": "arial, sans-serif", "primaryTextColor": "#000000"}}}%%
@@ -131,27 +131,27 @@ The development of TeX by Knuth in the late 1970s and LaTeX by Lamport in the ea
 
 Before embarking on the plain-text writing process, a robust environment is required. While one can install tools individually, this project demonstrates a modern, **containerized approach** to academic writing.
 
-**Docker: The Reproducible Environment** A significant challenge in academic workflows is dependency management—ensuring that Pandoc, LaTeX packages, and helper scripts work consistently across different machines. To solve this, we utilize **Docker**. The entire toolchain is encapsulated in a Docker image (derived from `dalibo/pandocker`). This ensures that the build process is perfectly reproducible: if it builds on one machine, it will build on any machine with Docker installed. The complex "plumbing" of the workflow is abstracted away behind simple wrapper scripts (`./devops.sh` / `./devops.ps1`), allowing the author to focus solely on writing.
+**Docker: The Reproducible Environment** A significant challenge in academic workflows is dependency management—ensuring that Pandoc, LaTeX packages, and helper scripts work consistently across different machines. To solve this, we utilize **[Docker](https://www.docker.com/)**. The entire toolchain is encapsulated in a Docker image (derived from [dalibo/pandocker](https://github.com/dalibo/pandocker)). This ensures that the build process is perfectly reproducible: if it builds on one machine, it will build on any machine with Docker installed. The complex "plumbing" of the workflow is abstracted away behind simple wrapper scripts (`./devops.sh` / `./devops.ps1`), allowing the author to focus solely on writing.
 
 **The Scripted Build System** Behind the scenes, the `devops.sh` script orchestrates the build process. To manage complexity and ensure cross-platform compatibility (Linux, macOS, Windows), implementation details have been extracted into modular shell scripts in the `tools/` directory. These scripts handle tasks like font detection, PDF merging, and dependency checks, running transparently inside the Docker container.
 
-**A Plain-Text Editor: The Writing Environment** The writing itself is done in a plain-text editor. Modern, extensible editors like Visual Studio Code (VSCode), Atom, or the academic-focused Zettlr are ideal choices.
+**A Plain-Text Editor: The Writing Environment** The writing itself is done in a plain-text editor. Modern, extensible editors like [Visual Studio Code (VSCode)](https://code.visualstudio.com/), [Atom](https://atom-editor.cc/), or the academic-focused [Zettlr](https://www.zettlr.com/) are ideal choices.
 
 **Reference Management: Lightweight Files vs. Automated Integration (Optional)** While citation processing in Pandoc strictly requires only a valid bibliography file (`.bib` or `.json`), managing growing literature collections benefits from dedicated tooling. Authors can choose between two main paths:
 
--   **Zero-Dependency Manual Approach:** For smaller projects or concise papers, authors can directly maintain a plain-text `references.bib` file by pasting BibTeX entries directly from services like Google Scholar, arXiv, or publisher websites. No external software is required.
+-   **Zero-Dependency Manual Approach:** For smaller projects or concise papers, authors can directly maintain a plain-text `references.bib` file by pasting BibTeX entries directly from services like [Google Scholar](https://scholar.google.com/), [arXiv](https://arxiv.org/), or publisher websites. No external software is required.
     
--   **Automated Scaled Approach with Zotero and Better BibTeX (BBT):** For extensive manuscripts such as theses and dissertations, Zotero paired with the **Better BibTeX (BBT)** extension provides invaluable automation. BBT guarantees deterministic, human-readable citation keys (preventing key collisions) and provides background auto-export to keep your bibliography file (`references.json` or `.bib`) synchronized whenever literature is added or modified in the Zotero library.
+-   **Automated Scaled Approach with Zotero and Better BibTeX (BBT):** For extensive manuscripts such as theses and dissertations, [Zotero](https://www.zotero.org/) paired with the **[Better BibTeX (BBT)](https://retorque.re/zotero-better-bibtex/)** extension provides invaluable automation. BBT guarantees deterministic, human-readable citation keys (preventing key collisions) and provides background auto-export to keep your bibliography file (`references.json` or `.bib`) synchronized whenever literature is added or modified in the Zotero library.
 
 The components are summarized in @tbl:workbench.
 
 | Component                    | Purpose                                                  | Recommended Software    | Key Configuration Notes                                                               |
 | ---------------------------- | -------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
-| Container Runtime            | Provides a consistent, reproducible build environment.   | Docker                  | Use `./devops.sh` to run builds without local dependency issues.                      |
-| Document Converter           | Parses Markdown and orchestrates the conversion process. | Pandoc (in Docker)      | No local installation required when using the Docker workflow.                        |
-| Typesetting Engine           | Compiles LaTeX code generated by Pandoc into a PDF.      | TeX Live (in Docker)    | Included in the Docker image.                                                         |
-| Text Editor                  | The environment for writing in plain-text Markdown.      | VSCode                  | Install extensions: Markdown Preview Enhanced and Pandoc Citer.                       |
-| Reference Manager (Optional) | Manages bibliographic data and exports it for Pandoc.    | Zotero + BBT (Optional) | Optional for large projects; small projects can directly edit a .bib file.           |
+| Container Runtime            | Provides a consistent, reproducible build environment.   | [Docker](https://www.docker.com/) | Use `./devops.sh` to run builds without local dependency issues.                      |
+| Document Converter           | Parses Markdown and orchestrates the conversion process. | [Pandoc](https://pandoc.org/) (in Docker) | No local installation required when using the Docker workflow.                        |
+| Typesetting Engine           | Compiles LaTeX code generated by Pandoc into a PDF.      | [TeX Live](https://www.tug.org/texlive/) (in Docker) | Included in the Docker image.                                                         |
+| Text Editor                  | The environment for writing in plain-text Markdown.      | [VSCode](https://code.visualstudio.com/) | Install extensions: [Markdown Preview Enhanced](https://shd101wyy.github.io/markdown-preview-enhanced/) and [Pandoc Citer](https://marketplace.visualstudio.com/items?itemName=notZaki.pandoc-citer). |
+| Reference Manager (Optional) | Manages bibliographic data and exports it for Pandoc.    | [Zotero](https://www.zotero.org/) + [BBT](https://retorque.re/zotero-better-bibtex/) (Optional) | Optional for large projects; small projects can directly edit a .bib file.           |
 
 : The Digital Scholar's Workbench. {#tbl:workbench}
 
@@ -232,9 +232,9 @@ pandoc document.md -s -o document.pdf
 
 A cornerstone of academic writing is the correct management of citations and bibliographies. The Pandoc workflow automates this process with exceptional precision using its citation processing filter, `pandoc-citeproc`.
 
-**Specifying the Bibliography File** The first step is to tell Pandoc where to find your bibliographic data. This is done in the YAML metadata block using the `bibliography` variable, which can point to a file in one of several supported formats, most commonly CSL-JSON (`.json`) or BibTeX (`.bib`). Pandoc processes these files directly from disk, meaning authors can freely choose between manual `.bib` curation or automated export from reference managers like Zotero.
+**Specifying the Bibliography File** The first step is to tell Pandoc where to find your bibliographic data. This is done in the YAML metadata block using the `bibliography` variable, which can point to a file in one of several supported formats, most commonly CSL-JSON (`.json`) or BibTeX (`.bib`). Pandoc processes these files directly from disk, meaning authors can freely choose between manual `.bib` curation or automated export from reference managers like [Zotero](https://www.zotero.org/).
 
-**Formatting Citations with CSL Styles** The visual style of citations and the bibliography (e.g., APA, Chicago, IEEE) is governed by a Citation Style Language (CSL) file. You can download CSL files for almost any journal or style from the official Zotero Style Repository. To apply a style, specify the path to the `.csl` file in your YAML block: `csl: chicago-author-date.csl`.
+**Formatting Citations with CSL Styles** The visual style of citations and the bibliography (e.g., APA, Chicago, IEEE) is governed by a Citation Style Language (CSL) file. You can download CSL files for almost any journal or style from the official [Zotero Style Repository](https://www.zotero.org/styles). To apply a style, specify the path to the `.csl` file in your YAML block: `csl: chicago-author-date.csl`.
 
 **Citation Syntax in Markdown** In the body of your Markdown document, citations are inserted using an `@` symbol followed by the citation key defined in your bibliography file:
 
@@ -321,7 +321,88 @@ $$E=mc^2$$ {#eq:relativity}
 
 **Customization via YAML** The appearance of cross-references can be customized through YAML metadata variables, as demonstrated in the header of this file.
 
-**Programmatic Diagramming with Mermaid** Beyond static images, modern academic writing benefits from programmatic diagrams. This workflow integrates **Mermaid.js**, allowing flowcharts and diagrams to be defined directly in Markdown code blocks. The build system includes a specialized pre-processing step that detects Mermaid code blocks, renders them into high-resolution PNG images (scaled 3x for crisp print quality) using a headless Chrome instance (Puppeteer) inside the Docker container, and seamlessly substitutes them before the final PDF generation. The flowchart in the Introduction of this paper is generated using this exact method.
+**An Illustrative Cross-Referencing Example** To demonstrate how `pandoc-crossref` resolves labels and prefixes in practice:
+
+**1. YAML Metadata Configuration**
+
+> ```yaml
+> ---
+> figPrefix: "Fig."
+> tblPrefix: "Tab."
+> eqnPrefix: "Eq."
+> ---
+> ```
+
+**2. In-Text Markdown Usage (`document.md`)**
+
+> ```markdown
+> As shown in @eq:euler and @tbl:data:
+> 
+> $$e^{i\pi} + 1 = 0$$ {#eq:euler}
+> 
+> | Metric    | Score |
+> | --------- | ----- |
+> | Precision | 0.98  |
+> | Recall    | 0.95  |
+> 
+> : Model Evaluation {#tbl:data}
+> ```
+
+**3. Conversion Command**
+
+```bash
+pandoc document.md --filter pandoc-crossref -s -o document.pdf
+```
+
+**4. Output: Rendered Document in PDF**
+
+> \noindent As shown in Eq. 1 and Tab. 1:
+>
+> \begin{equation}
+> e^{i\pi} + 1 = 0 \tag{1}
+> \end{equation}
+>
+> \begin{center}
+> \small
+> \textbf{Tab. 1: Model Evaluation} \\[0.3em]
+> \begin{tabular}{lc}
+> \hline
+> Metric & Score \\
+> \hline
+> Precision & 0.98 \\
+> Recall & 0.95 \\
+> \hline
+> \end{tabular}
+> \end{center}
+
+**Programmatic Diagramming with Mermaid** Beyond static images, modern academic writing benefits from programmatic diagrams. This workflow integrates **[Mermaid.js](https://mermaid.js.org/)**, allowing flowcharts and diagrams to be defined directly in Markdown code blocks. The build system includes a specialized pre-processing step that detects Mermaid code blocks, renders them into high-resolution PNG images (scaled 3x for crisp print quality) using a headless Chrome instance ([Puppeteer](https://pptr.dev/)) inside the Docker container, and seamlessly substitutes them before the final PDF generation. The flowchart in the Introduction of this paper is generated using this exact method.
+
+**An Illustrative Programmatic Diagramming Example** To illustrate how Mermaid diagrams are defined and rendered:
+
+**1. Markdown Source with Mermaid Block (`document.md`)**
+
+> ````markdown
+> ```mermaid
+> flowchart LR
+>     A[Data Input] --> B[Model Training]
+>     B --> C[Evaluation]
+> ```
+> ````
+
+**2. Pre-processing & Conversion Command**
+
+```bash
+./devops.sh pdf
+```
+
+During the build, `tools/process-mermaid.sh` invokes `mermaid-cli` (`mmdc`) inside the Docker container to compile the Mermaid block into a standalone graphic (`images/mermaid-1.png`) and replaces the block with an image reference before invoking Pandoc.
+
+**3. Output: Rendered Flowchart in PDF**
+
+> \begin{center}
+> \fbox{\textbf{Data Input}} $\;\longrightarrow\;$ \fbox{\textbf{Model Training}} $\;\longrightarrow\;$ \fbox{\textbf{Evaluation}} \\[0.5em]
+> {\small \textit{Figure: Automated Flowchart Generated from Plain-Text Code}}
+> \end{center}
 
 # Part III: Advanced Customization and Multilingual Typesetting
 
@@ -329,9 +410,49 @@ $$E=mc^2$$ {#eq:relativity}
 
 The visual appearance of the final PDF is controlled almost entirely by LaTeX. Pandoc provides a powerful and flexible system for interfacing with LaTeX templates.
 
-**Using a Custom Template** For any serious academic work, a custom template is usually required. A custom template is specified using the `--template` flag: `pandoc mydoc.md -o mydoc.pdf --template=eisvogel`. High-quality templates can be found on publisher websites, in large community repositories like Overleaf, and on code-hosting platforms like GitHub [@wandmalfarbe2020eisvogel].
+**Using a Custom Template** For any serious academic work, a custom template is usually required. A custom template is specified using the `--template` flag: `pandoc mydoc.md -o mydoc.pdf --template=eisvogel`. High-quality templates can be found on publisher websites, in large community repositories like [Overleaf](https://www.overleaf.com/gallery/tagged/templates), and on code-hosting platforms like [GitHub](https://github.com/) [@wandmalfarbe2020eisvogel].
 
-**Case Study: The Eisvogel Template for a Custom Cover Page** The popular Eisvogel template provides a clear example of how template-specific variables, set in the YAML block, can be used for deep customization [@wandmalfarbe2020eisvogel].
+**Case Study: The Eisvogel Template for a Custom Cover Page** The popular [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) template provides a clear example of how template-specific variables, set in the YAML block, can be used for deep customization [@wandmalfarbe2020eisvogel].
+
+**An Illustrative Template Customization Example** To see how template variables shape the final PDF output:
+
+**1. YAML Metadata with Template Variables (`document.md`)**
+
+> ```yaml
+> ---
+> title: "Deep Learning Architectures"
+> author: "Alex Rivers"
+> date: "August 2026"
+> titlepage: true
+> titlepage-color: "1E3A8A"
+> titlepage-text-color: "FFFFFF"
+> toc: true
+> toc-own-page: true
+> ---
+> ```
+
+**2. Compilation Command with Custom Template**
+
+```bash
+pandoc document.md --template=eisvogel -s -o document.pdf
+```
+
+**3. Output: Rendered Title Page in PDF**
+
+> \begin{center}
+> \colorbox[HTML]{1E3A8A}{
+>   \parbox{0.80\linewidth}{
+>     \vspace{1.2em}
+>     \centering \color{white}
+>     {\LARGE \textbf{Deep Learning Architectures}} \\[0.6em]
+>     {\large Alex Rivers} \\[0.3em]
+>     {\small August 2026}
+>     \vspace{1.2em}
+>   }
+> }
+> \end{center}
+>
+> \noindent {\small \textit{(Followed by a dedicated Table of Contents page before Chapter 1.)}}
 
 ## Section 7: A Guide to Traditional Chinese Typesetting
 
