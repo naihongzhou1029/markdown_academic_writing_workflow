@@ -169,20 +169,20 @@ With the toolchain installed, the conversion process is driven by the Pandoc com
 
 **Input: Markdown Source (`document.md`)**
 
-```markdown
----
-title: "Sample Academic Note"
-author: "Alex Rivers"
-date: "August 16, 2026"
----
-
-# Introduction
-
-Plain-text writing separates **content** from *presentation*.
-
-- Clean, human-readable syntax
-- Seamless version control with Git
-```
+> ```markdown
+> ---
+> title: "Sample Academic Note"
+> author: "Alex Rivers"
+> date: "August 16, 2026"
+> ---
+> 
+> # Introduction
+> 
+> Plain-text writing separates **content** from *presentation*.
+> 
+> - Clean, human-readable syntax
+> - Seamless version control with Git
+> ```
 
 **Conversion Command**
 
