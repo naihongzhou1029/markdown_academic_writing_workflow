@@ -102,5 +102,26 @@
                 ]
         },
         "URL": "https://github.com/Wandmalfarbe/pandoc-latex-template"
+    },
+    {
+        "id": "knuth1984literate",
+        "type": "article-journal",
+        "title": "Literate Programming",
+        "author": [
+            {
+                "family": "Knuth",
+                "given": "Donald E."
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                    [1984]
+                ]
+        },
+        "container-title": "The Computer Journal",
+        "volume": "27",
+        "issue": "2",
+        "page": "97-111",
+        "DOI": "10.1093/comjnl/27.2.97"
     }
 ]

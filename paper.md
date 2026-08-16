@@ -58,10 +58,24 @@ header-includes:
       skipabove=12pt,
       skipbelow=12pt
     ]{quote}
-    \AtBeginEnvironment{CSLReferences}{%
-      \newpage\section*{References}%
-      \setlength{\parindent}{0pt}%
+    \makeatletter
+    \AtBeginDocument{%
+      \renewenvironment{CSLReferences}[2]{%
+        \newpage\section*{References}%
+        \begin{list}{}{%
+          \setlength{\leftmargin}{2.2em}%
+          \setlength{\labelwidth}{1.2em}%
+          \setlength{\labelsep}{0.8em}%
+          \setlength{\itemindent}{0pt}%
+          \setlength{\parsep}{0pt}%
+          \setlength{\itemsep}{0.8\baselineskip}%
+        }%
+        \def\@biblabel##1{\textbullet}%
+      }{%
+        \end{list}%
+      }%
     }
+    \makeatother
     \pretocmd{\tableofcontents}{\clearpage}{}{}
     \pretocmd{\listoffigures}{\clearpage}{}{}
     \pretocmd{\listoftables}{\clearpage}{}{}
@@ -73,6 +87,8 @@ header-includes:
     \AtEndEnvironment{figure}{\let\includegraphics\originc}
     \usepackage[normalem]{ulem}
     \AtBeginDocument{\let\oldhref\href\renewcommand{\href}[2]{\uline{\oldhref{#1}{#2}}}}
+nocite: |
+  @*
 numbersections: true
 ---
 
@@ -466,9 +482,116 @@ Producing high-quality documents in Traditional Chinese requires specific config
 
 This configuration allows for seamless typesetting of Traditional Chinese text, like this: 這是傳統中文的範例文字。
 
+**An Illustrative Traditional Chinese Typesetting Example** To see how XeLaTeX and CJK fonts render Traditional Chinese:
+
+**1. YAML Metadata with CJK Configuration (`document.md`)**
+
+> ```yaml
+> ---
+> title: "學術寫作指南"
+> author: "張研究員"
+> date: "2026年8月"
+> pdf-engine: xelatex
+> CJKmainfont: "Noto Serif CJK TC"
+> ---
+> ```
+
+**2. In-Text Markdown Usage (`document.md`)**
+
+> ```markdown
+> # 研究背景與方法
+> 
+> 本研究探討使用 **Markdown** 與 LaTeX
+> 進行純文字學術排版的可行性。
+> 
+> - 確保文字與格式完全分離
+> - 支援 Git 進行精確版本控制
+> ```
+
+**3. Conversion Command**
+
+```bash
+pandoc document.md -s -o document.pdf
+```
+
+**4. Output: Rendered PDF Document**
+
+> \begin{center}
+> {\LARGE \textbf{學術寫作指南}} \\[0.5em]
+> {\large 張研究員} \\[0.3em]
+> {\small 2026年8月}
+> \end{center}
+>
+> \vspace{1em}
+>
+> \noindent {\large \textbf{1 研究背景與方法}}
+>
+> \vspace{0.5em}
+>
+> \noindent 本研究探討使用 \textbf{Markdown} 與 \LaTeX{} 進行純文字學術排版的可行性。
+>
+> \begin{itemize}
+>   \item 確保文字與格式完全分離
+>   \item 支援 Git 進行精確版本控制
+> \end{itemize}
+
 ## Section 8: Granular Control over Page Numbering
 
 Page numbering is a feature of the final typeset document, and as such, its control resides entirely at the LaTeX level. Pandoc provides several mechanisms to pass the necessary LaTeX commands from the Markdown source to the final compilation stage. The cleanest method is using the `header-includes` YAML field, as shown in this document's metadata, to inject raw LaTeX commands like `\setcounter{page}{1}`.
+
+**An Illustrative Page Numbering Configuration Example** To demonstrate how to manage academic page numbering schemes:
+
+**1. YAML Metadata & In-Text LaTeX Commands (`document.md`)**
+
+> ````markdown
+> ---
+> title: "Dissertation Manuscript"
+> header-includes:
+>   - \pagenumbering{roman}
+> ---
+> 
+> # Abstract
+> 
+> Summary of findings...
+> 
+> \newpage
+> \pagenumbering{arabic}
+> \setcounter{page}{1}
+> 
+> # Chapter 1: Introduction
+> 
+> Main thesis text begins here...
+> ````
+
+**2. Conversion Command**
+
+```bash
+pandoc document.md -s -o document.pdf
+```
+
+**3. Output: Rendered Page Structure & Numbering in PDF**
+
+> \noindent \textbf{Front Matter Page (Abstract):}
+> \begin{center}
+> {\large \textbf{Abstract}} \\[0.5em]
+> {\small Summary of findings...}
+> \vspace{1.5em}
+> 
+> {\footnotesize \textit{--- Page Footer: \textbf{i} ---}}
+> \end{center}
+> 
+> \vspace{1em}
+> \hrule
+> \vspace{1em}
+> 
+> \noindent \textbf{Main Body Page (Chapter 1):}
+> \begin{center}
+> {\large \textbf{1 Chapter 1: Introduction}} \\[0.5em]
+> {\small Main thesis text begins here...}
+> \vspace{1.5em}
+> 
+> {\footnotesize \textit{--- Page Footer: \textbf{1} ---}}
+> \end{center}
 
 ## Section 9: Automated Multilingual Publishing with LLMs
 
@@ -484,8 +607,185 @@ A major barrier to internationalizing academic work is the effort required to tr
 
 This transforms the translation process from a manual typesetting nightmare into a single-command automated task.
 
-# Part IV: Conclusion
+**An Illustrative Automated Translation Pipeline Example** To demonstrate how the translation pipeline operates:
 
-## Section 10: Synthesis and Recommendations: Building Your Sustainable Workflow
+**1. Pipeline Configuration (`zh-tw.ini`)**
+
+> ```ini
+> DIR          = translated-zh-tw
+> FROM         = English
+> TO           = Traditional Chinese (zh-TW)
+> FIGURE_LABEL = 圖
+> TABLE_LABEL  = 表
+> ```
+
+**2. Automated Translation & Build Command**
+
+```bash
+./devops.sh translate
+```
+
+The system automatically calls the LLM API to translate `paper.md` while strictly preserving YAML keys, citations (`[@knuth1984tex]`), and cross-reference labels (`@fig:my-plot`), then injects CJK font configurations and compiles the localized PDF.
+
+**3. Output: Source vs. Translated Markdown**
+
+> ````markdown
+> <!-- English Source (paper.md) -->
+> As shown in @fig:my-plot, the plain-text workflow
+> ensures full reproducibility [@healy2018plain].
+> 
+> <!-- Translated Result (translated-zh-tw/paper.md) -->
+> 如 @fig:my-plot 所示，純文字工作流程確保了
+> 完整的可重複性 [@healy2018plain]。
+> ````
+
+**4. Output: Rendered Translated PDF Document**
+
+> \noindent 如 圖 1 所示，純文字工作流程確保了完整的可重複性 (Healy 2018)。
+
+# Part IV: Standalone Cover Page Design and Multi-Document Packaging
+
+## Section 10: Architecting a Dedicated LaTeX Cover Page
+
+While Pandoc templates (e.g., Eisvogel) can generate integrated cover pages, institutional publications, master's theses, and formal research monographs frequently mandate a **standalone cover page** (`cover_page.tex`). A dedicated LaTeX cover page provides total typographic freedom, precise margin calibration, compliance with strict academic institutional guidelines, and seamless integration of high-resolution organizational emblems.
+
+**Structural Anatomy of an Academic Cover Page** A standard academic or technical cover page is built around five essential metadata blocks:
+
+1. Institutional Identification: Declares the parent organization, department, and official series or degree metadata (e.g., `\Organization`, `\DocumentType`, `\SeriesNumber`).
+2. Visual Emblem & Insignia: Embeds an official vector or high-resolution emblem (`\includegraphics`), equipped with defensive conditional logic (`\IfFileExists`) so compilation succeeds even if the asset is temporarily absent.
+3. Bilingual Title Hierarchy: Features the primary title alongside an optional localized translation (e.g., `\EnglishTitle` and `\Title`), separated by clean horizontal divider rules (`\HRule`).
+4. Authorship and Affiliation: Specifies author credentials, research laboratory affiliations, and advisor details (`\Author`, `\Affiliation`).
+5. Dynamic Date Tracking: Employs a dedicated date macro (`\ROCDate`), which the automated build pipeline dynamically updates to match the compilation timestamp.
+
+**Multi-Document Assembly and Packaging** The build script orchestrates the end-to-end packaging via `./devops.sh printed`. It independently compiles `cover_page.tex` into `cover.pdf`, compiles `paper.md` into `paper.pdf`, scans for optional administrative forms (e.g., thesis recommendation or recognition certificates), and fuses them into a unified publication-ready document (`printed.pdf`) using `tools/merge-pdfs.sh` inside Docker.
+
+**An Illustrative Cover Page Implementation Example** To demonstrate how a dedicated LaTeX cover page is structured and merged:
+
+**1. LaTeX Cover Page Structure (`cover_page.tex`)**
+
+> ````latex
+> \documentclass[a4paper,12pt]{article}
+> \usepackage[margin=2.5cm]{geometry}
+> \usepackage{graphicx, xcolor, xeCJK}
+> 
+> \newcommand{\Organization}{Sustainable Group}
+> \newcommand{\DocumentType}{Technical Report}
+> \newcommand{\Title}{永續學術寫作工作流程}
+> \newcommand{\EnglishTitle}{Sustainable Workflow}
+> \newcommand{\Author}{An Old-Fashioned Researcher}
+> \newcommand{\ROCDate}{August 16, 2026}
+> 
+> \begin{document}
+> \thispagestyle{empty}
+> \begin{center}
+>   \includegraphics[width=45mm]{images/scholarship_logo.jpg}\\[3mm]
+>   {\LARGE \bfseries \EnglishTitle}\\[2mm]
+>   {\large \Title}\\[6mm]
+>   \textbf{Author:} \Author \\[3mm]
+>   \vfill
+>   {\small \ROCDate}
+> \end{center}
+> \end{document}
+> ````
+
+**2. Assembly & Merging Command**
+
+```bash
+./devops.sh printed
+```
+
+The script compiles `cover_page.tex` with XeLaTeX, builds `paper.md` with Pandoc, and merges them sequentially into `printed.pdf`.
+
+**3. Output: Rendered Publication Structure in PDF**
+
+> \begin{center}
+> \fbox{
+>   \parbox{0.80\linewidth}{
+>     \centering \vspace{0.8em}
+>     {\small \textsc{Document Cover Page (\texttt{cover.pdf})}} \\[0.4em]
+>     {\textbf{Sustainable Scholarship Workflow}} \\[0.2em]
+>     {\footnotesize Author: An Old-Fashioned Researcher}
+>     \vspace{0.8em}
+>   }
+> }
+> 
+> \vspace{0.6em}
+> $\boldsymbol{\Downarrow}$ \textit{(Automated Docker PDF Merge)}
+> \vspace{0.6em}
+> 
+> \fbox{
+>   \parbox{0.80\linewidth}{
+>     \centering \vspace{0.8em}
+>     {\small \textsc{Manuscript Body (\texttt{paper.pdf})}} \\[0.4em]
+>     {\textbf{1 Introduction $\;\cdot\;$ 2 Core Architecture $\;\dots$}}
+>     \vspace{0.8em}
+>   }
+> }
+> \end{center}
+
+# Part V: Conclusion
+
+## Section 11: Amplifying Scholarly Productivity with AI-Assisted Engineering
+
+The defining advantage of a plain-text academic workflow is that text, citations, metadata, and build configurations exist in human-readable, machine-actionable formats. Unlike binary Word documents (`.docx`) or compiled PDFs, plain-text Markdown and LaTeX are natively parseable by Large Language Models (LLMs) and autonomous AI coding assistants. Integrating generative AI into this pipeline elevates thesis and paper development from manual typesetting into high-efficiency **scholarly software engineering**.
+
+**The Modern Scholar's Toolchain Paradox and Learning Curve** A persistent challenge in academic computer science and higher education is that while tools like Pandoc, XeLaTeX, and Unix CLI filters originated decades ago and possess extraordinary capabilities, their steep learning curve and arcane syntax deter students, researchers, and faculty alike. Most authors resort to brittle, binary WYSIWYG processors simply because configuring TeX packages, bibliography filters, and containerized toolchains feels overwhelming. However, command-line plain-text tools offer unparalleled dual superpowers: **surgical precision** (fine-grained control over micro-typography, custom page metrics, and font fallback chains) and **mass-scale automation** (single-command PDF compilation, programmatic diagram generation, and batch multilingual translation). Autonomous AI agents resolve this paradox by serving as knowledgeable pair-programmers that bridge the gap between human intent and low-level CLI mechanics.
+
+**Key Dimensions of AI Augmentation in Academic Writing**
+
+1. Content Synthesis and Prose Polishing: LLMs excel at transforming rough technical notes into coherent, academically rigorous prose, eliminating passive-voice ambiguities, and restructuring complex argumentative paragraphs while preserving the author's substantive claims.
+2. Bibliographic Curation and Citation Auditing: AI agents can scan a manuscript to ensure every citation key (e.g., `[@knuth1984tex]`) exists in `references.bib` or `references.json`, format missing BibTeX entries from DOI lookups, and detect stale or mismatched citation keys.
+3. Automated Formatting and Semantic Structuring: Agents can rapidly translate raw data tables into Pandoc-compliant pipe tables, convert mathematical concepts into standard LaTeX syntax (`$$...$$`), and draft programmatic Mermaid flowcharts directly from natural language descriptions.
+4. Intelligent Validation and Pipeline Repair: Shell-based AI scripts (such as `tools/validate-and-fix-translated-md.sh`) can autonomously inspect Markdown syntax before compilation, fixing broken table pipes, unescaped delimiters, and corrupted YAML metadata.
+5. Flattening the Toolchain Learning Curve: AI assistants eliminate the intimidation factor of command-line tools by converting high-level author requests (e.g., configuring custom cover templates, adjusting CSL bibliography styles, or debugging Docker volume mounts) directly into executable shell workflows and LaTeX preamble hooks, democratizing institutional-grade typesetting for every scholar.
+
+**An Illustrative AI-Assisted Editing and Validation Example** To demonstrate how an AI assistant refines a draft and repairs syntax:
+
+**1. Unpolished Raw Input with Syntax Deficiencies (`draft.md`)**
+
+> ````markdown
+> We test model accuracy. Result:
+> | Model | Acc |
+> | Baseline | 82.4 |
+> | Ours | 91.2 |
+> (Knuth 1984 says literate code is good)
+> ````
+
+**2. AI Refinement Prompt & Execution**
+
+```bash
+# Prompt agent to polish prose, format table, and insert citation
+agy "Refine draft.md with formal style, table label, and citation @knuth1984literate"
+```
+
+**3. Output: Optimized Plain-Text Source and Rendered PDF**
+
+> ````markdown
+> As evaluated in @tbl:accuracy, our proposed model
+> significantly outperforms the baseline architecture,
+> adhering to literate design principles [@knuth1984literate].
+> 
+> | Architecture | Accuracy (%) |
+> | :----------- | :----------: |
+> | Baseline     |    82.4      |
+> | Proposed     |    91.2      |
+> 
+> : Classification Accuracy Comparison {#tbl:accuracy}
+> ````
+>
+> \begin{center}
+> \small
+> \textbf{Tab. 2: Classification Accuracy Comparison} \\[0.3em]
+> \begin{tabular}{lc}
+> \hline
+> Architecture & Accuracy (\%) \\
+> \hline
+> Baseline & 82.4 \\
+> Proposed & 91.2 \\
+> \hline
+> \end{tabular}
+> \end{center}
+
+## Section 12: Synthesis and Recommendations: Building Your Sustainable Workflow
 
 This report has detailed a comprehensive academic workflow. The very file you are reading is a tangible example of this process. By combining this Markdown file with the accompanying bibliography and `devops.sh` script, you can reproduce the final PDF with a single command. This demonstrates the power of a plain-text academic workflow: unparalleled control, robust versioning, seamless collaboration, and the assurance of future access to one's own work [@healy2018plain].
