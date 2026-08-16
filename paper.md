@@ -85,29 +85,36 @@ Furthermore, this workflow is uniquely suited for the rigorous demands of modern
 This system is best understood not as a collection of disparate tools, but as a linear, modular data processing pipeline. The raw manuscript (`.md`) and bibliographic data (`.json` or `.bib`) serve as the initial inputs. While bibliographic entries can be manually curated or copied directly from scholarly repositories (e.g., Google Scholar, arXiv) into a plain-text `.bib` file, larger research projects often leverage reference managers like Zotero with Better BibTeX (BBT) for automated library synchronization. These inputs are then passed through Pandoc and its filter chain: `pandoc-citeproc` resolves citation markers; `pandoc-crossref` numbers figures and equations [@lierdakil2021crossref]; and finally, a LaTeX engine like XeLaTeX performs the final typesetting to produce a PDF.
 
 ```mermaid
-%%{init: {"theme": "neutral", "themeVariables": {"fontSize": "30px", "fontFamily": "arial, sans-serif", "primaryTextColor": "#000000"}}}%%
-flowchart LR
-    subgraph Sources ["1. Source & Reference Inputs"]
-        A["Raw Manuscript<br/><code>.md</code> file"]
-        B["Bibliographic Data<br/><code>.bib</code> / <code>.json</code>"]
-        Z["Zotero + BBT<br/><i>(Optional)</i>"] -. Auto-Export .-> B
+%%{init: {"theme": "neutral", "themeVariables": {"fontSize": "21px", "fontFamily": "arial, sans-serif", "primaryTextColor": "#000000"}}}%%
+flowchart TD
+    subgraph S1 ["1. Source & Reference Inputs"]
+        direction LR
+        A["Raw Manuscript<br/>(<code>paper.md</code> with <code>@key</code>)"]
+        B["Bibliographic Data<br/>(<code>references.json</code> / <code>.bib</code>)"]
+        Z["Zotero + BBT<br/><i>(Optional Sync)</i>"] -. Auto-Export .-> B
     end
 
-    subgraph Pipeline ["2. Pandoc Processing Pipeline"]
-        D["Pandoc Parser"] --> E["pandoc-citeproc<br/>(Citations)"] --> F["pandoc-crossref<br/>(Cross-Refs)"] --> G["XeLaTeX Engine<br/>(Typesetting)"] --> H["Final PDF Output<br/><code>paper.pdf</code>"]
+    subgraph S2 ["2. Pandoc Filter Pipeline"]
+        direction LR
+        D["Pandoc Parser"] --> E["pandoc-citeproc<br/>(Resolve Citations)"] --> F["pandoc-crossref<br/>(Number Figures/Tables)"]
     end
 
-    A ==> D
-    B ==> D
+    subgraph S3 ["3. Typesetting & Output"]
+        direction LR
+        G["XeLaTeX Engine<br/>(LaTeX Compilation)"] --> H["Final Typeset PDF<br/>(<code>paper.pdf</code>)"]
+    end
 
-    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000000
-    style B fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000000
-    style Z fill:#fff8e1,stroke:#f57c00,stroke-width:3px,stroke-dasharray: 5 5,color:#000000
-    style D fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000000
-    style E fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000000
-    style F fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000000
-    style G fill:#e8f5e9,stroke:#388e3c,stroke-width:3px,color:#000000
-    style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px,color:#000000
+    S1 ==> S2
+    S2 ==> S3
+
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000
+    style B fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000
+    style Z fill:#fff8e1,stroke:#f57c00,stroke-width:2px,stroke-dasharray: 4 4,color:#000000
+    style D fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000000
+    style E fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000000
+    style F fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000000
+    style G fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000000
+    style H fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000000
 ```
 
 Each stage is discrete and transparent. This contrasts fundamentally with the monolithic, "black box" environment of a word processor, where these processes are intertwined and hidden from the user. The power of this workflow lies in the ability to control this pipeline, to swap out components, insert new processing stages, and debug any issue by inspecting the intermediate output at any point—for instance, by generating the intermediate `.tex` file to diagnose a LaTeX error. This level of control and transparency is the key to solving the complex, bespoke formatting challenges inherent in academic writing.
@@ -131,8 +138,10 @@ Before embarking on the plain-text writing process, a robust environment is requ
 **A Plain-Text Editor: The Writing Environment** The writing itself is done in a plain-text editor. Modern, extensible editors like Visual Studio Code (VSCode), Atom, or the academic-focused Zettlr are ideal choices.
 
 **Reference Management: Lightweight Files vs. Automated Integration (Optional)** While citation processing in Pandoc strictly requires only a valid bibliography file (`.bib` or `.json`), managing growing literature collections benefits from dedicated tooling. Authors can choose between two main paths:
-- **Zero-Dependency Manual Approach**: For smaller projects or concise papers, authors can directly maintain a plain-text `references.bib` file by pasting BibTeX entries directly from services like Google Scholar, arXiv, or publisher websites. No external software is required.
-- **Automated Scaled Approach with Zotero and Better BibTeX (BBT)**: For extensive manuscripts such as theses and dissertations, Zotero paired with the **Better BibTeX (BBT)** extension provides invaluable automation. BBT guarantees deterministic, human-readable citation keys (preventing key collisions) and provides background auto-export to keep your bibliography file (`references.json` or `.bib`) synchronized whenever literature is added or modified in the Zotero library.
+
+-   **Zero-Dependency Manual Approach:** For smaller projects or concise papers, authors can directly maintain a plain-text `references.bib` file by pasting BibTeX entries directly from services like Google Scholar, arXiv, or publisher websites. No external software is required.
+    
+-   **Automated Scaled Approach with Zotero and Better BibTeX (BBT):** For extensive manuscripts such as theses and dissertations, Zotero paired with the **Better BibTeX (BBT)** extension provides invaluable automation. BBT guarantees deterministic, human-readable citation keys (preventing key collisions) and provides background auto-export to keep your bibliography file (`references.json` or `.bib`) synchronized whenever literature is added or modified in the Zotero library.
 
 The components are summarized in @tbl:workbench.
 
@@ -155,6 +164,52 @@ With the toolchain installed, the conversion process is driven by the Pandoc com
 **The YAML Metadata Block: The Document's Control Panel** Rather than relying on long and cumbersome command-line flags, Pandoc configurations are best managed within a YAML metadata block at the very top of the Markdown file, delimited by `---` on either side. This approach is superior because it keeps the document's essential metadata and its compilation settings version-controlled alongside the content itself.
 
 **The Standalone Flag (`-s`)** A critical option for generating a complete document is `--standalone` (or its shorthand, `-s`). This flag instructs Pandoc to use a template to wrap the converted content with the necessary header and footer material—for example, the `\documentclass{...}` and `\begin{document}...\end{document}` commands in LaTeX—to create a self-contained, compilable file rather than a mere fragment.
+
+**A Minimal End-to-End Example** To illustrate the complete conversion pipeline, consider a simple Markdown source file (`document.md`):
+
+**Input: Markdown Source (`document.md`)**
+
+```markdown
+---
+title: "Sample Academic Note"
+author: "Alex Rivers"
+date: "August 16, 2026"
+---
+
+# Introduction
+
+Plain-text writing separates **content** from *presentation*.
+
+- Clean, human-readable syntax
+- Seamless version control with Git
+```
+
+**Conversion Command**
+
+```bash
+pandoc document.md -s -o document.pdf
+```
+
+**Output: Rendered Document in PDF**
+
+> \begin{center}
+> {\LARGE \textbf{Sample Academic Note}} \\[0.5em]
+> {\large Alex Rivers} \\[0.3em]
+> {\small \textit{August 16, 2026}}
+> \end{center}
+>
+> \vspace{1em}
+>
+> \noindent {\large \textbf{1 Introduction}}
+>
+> \vspace{0.5em}
+>
+> \noindent Plain-text writing separates \textbf{content} from \textit{presentation}.
+>
+> \begin{itemize}
+>   \item Clean, human-readable syntax
+>   \item Seamless version control with Git
+> \end{itemize}
 
 # Part II: Managing Scholarly Apparatus
 
@@ -189,7 +244,7 @@ While vanilla Markdown lacks a native method for sophisticated figure management
 
 $$E=mc^2$$ {#eq:relativity}
 
-![Example plot](images/2025-11-17-19-47-43.png) {#fig:my-plot width=20%}
+![Example plot](images/2025-11-17-19-47-43.png){#fig:my-plot width=20%}
 
 **Customization via YAML** The appearance of cross-references can be customized through YAML metadata variables, as demonstrated in the header of this file.
 
@@ -228,6 +283,7 @@ A major barrier to internationalizing academic work is the effort required to tr
 **The AI-Assisted Workflow**: By running `./devops.sh translate`, the system translates both the Markdown manuscript and the LaTeX cover page into Traditional Chinese (configured via `zh-tw.ini`). The pipeline is designed to be **structure-aware**: it protects YAML metadata, citation keys (`[@key]`), cross-reference labels (`@fig:id`), and LaTeX commands, ensuring that the translated output is immediately compilable.
 
 **Challenges and Methodologies**:
+
 1.  **Preserving Structure**: The system uses carefully crafted prompts to instruct the LLM to translate only natural language text while leaving syntax markers untouched.
 2.  **Font Handling**: The workflow automatically detects and switches to CJK-compatible fonts (e.g., Noto Serif CJK TC) for the translated build, avoiding "tofu" characters.
 3.  **Cross-Reference Localization**: It translates the labels (e.g., "Figure" to "圖") in the metadata, ensuring the scholarly apparatus feels native to the target language.
