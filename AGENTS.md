@@ -12,7 +12,7 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
 
 - **`README.md`**: High-level description of the workflow, toolchain, build operations (`./devops.sh printed`, `./devops.sh translate`), and the translation pipeline.
 - **`paper.md`**: Primary English manuscript; contains YAML metadata that configures Pandoc, citations, cross-references, and typesetting options.
-- **`devops.sh`** / **`devops.ps1`**: The single build entry point (replaces the old `Makefile` + `make-docker.*` wrapper pair). `devops.sh` runs on Linux/macOS/WSL and does all the Docker orchestration and build logic; `devops.ps1` is a thin Windows wrapper that delegates to `bash ./devops.sh`. Operations: `pdf`, `pdf_date`, `cover`, `printed`, `translate [step]`, `tags`, `ref-list`, `toc-list`, `clean`, `deps`.
+- **`devops.sh`** / **`devops.ps1`**: The single build entry point (replaces the old `Makefile` + `make-docker.*` wrapper pair). `devops.sh` runs on Linux/macOS/WSL and does all the Docker orchestration and build logic; `devops.ps1` is a thin Windows wrapper that delegates to `bash ./devops.sh`. Operations: `pdf`, `pdf_date`, `cover`, `printed`, `translate [step]`, `tags`, `ref-list`, `toc-list`, `clean`, `deps`, `env`.
 - **`zh-tw.ini`**: Single INI config file at the repo root for the translation pipeline (`DIR`, `FROM`, `TO`, `MODEL`, optional `FIGURE_LABEL`/`TABLE_LABEL`). See the comments in that file for the full key list.
 - **`tools/` scripts**: Linux-based helpers for font detection, translation, validation, post-processing, logo download, PDF merging, and dependency installation. All scripts run inside the Docker container.
   - **`validate-and-fix-translated-md.sh`**: AI-powered validation that reviews translated Markdown files for formatting errors (malformed tables, broken syntax, corrupted YAML) and automatically fixes them.
@@ -22,7 +22,7 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
 
 - **Default build target**: When the user requests a build or compilation without specifying a target operation, always default to the `pdf` target for `devops.sh` or `devops.ps1` (`./devops.sh pdf` or `./devops.ps1 pdf`).
 - **Do not change the overall structure** of `paper.md`’s YAML metadata or its role as the single source of truth for document configuration, unless explicitly asked.
-- **Preserve operation names and roles** in `devops.sh`/`devops.ps1` (`pdf`, `pdf_date`, `cover`, `printed`, `translate`, `set-api-key`, `get-api-key`, `delete-api-key`, `tags`, `ref-list`, `toc-list`, `clean`, `deps`) to avoid breaking existing workflows or documentation.
+- **Preserve operation names and roles** in `devops.sh`/`devops.ps1` (`pdf`, `pdf_date`, `cover`, `printed`, `translate`, `set-api-key`, `get-api-key`, `delete-api-key`, `tags`, `ref-list`, `toc-list`, `clean`, `deps`, `env`) to avoid breaking existing workflows or documentation.
 - **Keep `README.md` and `AGENTS.md` consistent** with any changes to:
   - Build commands and primary operations (use `./devops.sh`/`./devops.ps1` for Docker-based builds).
   - Translation pipeline behavior (`zh-tw.ini`'s `DIR`/`FROM`/`TO`/`MODEL`, OS credential manager / `GEMINI_API_KEY` usage).

@@ -139,6 +139,7 @@ Run `./devops.sh help` (or `./devops.ps1 help`) to see all available operations:
 | `toc-list`                    | Extract table of contents from a PDF to clipboard       |
 | `clean`                       | Remove all generated intermediate and PDF files         |
 | `deps`                        | Show information about local (non-Docker) dependencies  |
+| `env`                         | Check environment and guide toolchain/Docker setup      |
 
 ### Optional: Translate to Other Languages (`translate` target)
 

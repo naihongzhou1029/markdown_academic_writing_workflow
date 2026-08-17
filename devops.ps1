@@ -30,6 +30,7 @@ if ($Operation -in @("help", "--help", "-h")) {
     Write-Host ""
     Write-Host "Available operations:"
     Write-Host "  help            - Show this help message [default]"
+    Write-Host "  env             - Check environment and guide toolchain/Docker setup"
     Write-Host "  pdf             - Build the main paper PDF (paper.pdf)"
     Write-Host "  pdf_date        - Build the paper PDF with date suffix"
     Write-Host "  cover           - Build the cover page PDF"
@@ -52,8 +53,8 @@ if (-not (Test-Command "bash")) {
     exit 1
 }
 
-# Credential management operations do not require Docker
-$dockerRequiredOps = @("pdf", "pdf_date", "cover", "printed", "translate", "tags", "ref-list", "toc-list", "clean", "deps")
+# Environment check, dependency info, and credential management operations do not require Docker
+$dockerRequiredOps = @("pdf", "pdf_date", "cover", "printed", "translate", "tags", "ref-list", "toc-list", "clean")
 if ($Operation -in $dockerRequiredOps -and -not (Test-Command "docker")) {
     Write-Err "Docker is not installed or not in PATH"
     exit 1

@@ -888,6 +888,322 @@ toc_list() {
     python3 tools/extract-toc.py "$WORK_DIR/$pdf_file" "$WORK_DIR/$toc_md"
 }
 
+# Prompt user for confirmation (interactive)
+prompt_confirm() {
+    local prompt_msg="$1"
+    local default_ans="${2:-n}"
+    local reply=""
+
+    if [ "$default_ans" = "y" ]; then
+        printf "${YELLOW}[?]${NC} %s [Y/n] " "$prompt_msg"
+    else
+        printf "${YELLOW}[?]${NC} %s [y/N] " "$prompt_msg"
+    fi
+
+    if ! read -r reply; then
+        echo ""
+        if [ "$default_ans" = "y" ]; then return 0; else return 1; fi
+    fi
+    reply="$(echo "$reply" | tr '[:upper:]' '[:lower:]')"
+
+    if [ -z "$reply" ]; then
+        if [ "$default_ans" = "y" ]; then
+            return 0
+        else
+            return 1
+        fi
+    fi
+
+    case "$reply" in
+        y|yes) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# Environment check and setup operation
+env_setup() {
+    echo "============================================================"
+    echo "       Development Operations - Environment Setup           "
+    echo "============================================================"
+    echo ""
+
+    local os_type
+    os_type="$(uname -s)"
+    local os_name="Unknown ($os_type)"
+    local arch
+    arch="$(uname -m)"
+
+    case "$os_type" in
+        Darwin)
+            os_name="macOS ($arch)"
+            ;;
+        Linux)
+            if grep -qi microsoft /proc/version 2>/dev/null; then
+                os_name="Linux (WSL2 / $arch)"
+            elif [ -f /etc/os-release ]; then
+                local dist_name
+                dist_name="$(grep '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d= -f2 | tr -d '\"' || true)"
+                [ -z "$dist_name" ] && dist_name="Linux"
+                os_name="$dist_name ($arch)"
+            else
+                os_name="Linux ($arch)"
+            fi
+            ;;
+        MINGW*|MSYS*|CYGWIN*)
+            os_name="Windows ($os_type / $arch)"
+            ;;
+    esac
+
+    print_info "Operating System: $os_name"
+    echo ""
+
+    # 1. Docker CLI Check & Installation
+    print_info "Step 1/4: Checking Docker CLI..."
+    local docker_installed=0
+    if command -v docker &>/dev/null; then
+        local docker_ver
+        docker_ver="$(docker --version 2>/dev/null || echo 'installed')"
+        print_info "✓ Docker CLI is installed: $docker_ver"
+        docker_installed=1
+    else
+        print_warn "✗ Docker CLI is not installed or not in PATH."
+        case "$os_type" in
+            Darwin)
+                if command -v brew &>/dev/null; then
+                    if prompt_confirm "Install Docker Desktop via Homebrew (brew install --cask docker)?"; then
+                        print_info "Running: brew install --cask docker ..."
+                        brew install --cask docker || print_warn "Homebrew installation exited with an error."
+                        if command -v docker &>/dev/null; then
+                            docker_installed=1
+                        fi
+                    fi
+                else
+                    print_info "Homebrew not found. You can install Docker Desktop manually from:"
+                    echo "  https://www.docker.com/products/docker-desktop/"
+                fi
+                ;;
+            Linux)
+                if command -v apt-get &>/dev/null; then
+                    if prompt_confirm "Install Docker using official Docker script (curl -fsSL https://get.docker.com | sh)?"; then
+                        print_info "Running official Docker installer script..."
+                        curl -fsSL https://get.docker.com | sh || print_warn "Docker script exited with an error."
+                        sudo usermod -aG docker "$USER" 2>/dev/null || true
+                        print_info "Added $USER to docker group. Note: You may need to restart your shell for group changes to take effect."
+                        if command -v docker &>/dev/null; then
+                            docker_installed=1
+                        fi
+                    elif prompt_confirm "Install docker.io package via apt (sudo apt-get update && sudo apt-get install -y docker.io)?"; then
+                        sudo apt-get update && sudo apt-get install -y docker.io || print_warn "apt install failed."
+                        sudo usermod -aG docker "$USER" 2>/dev/null || true
+                        if command -v docker &>/dev/null; then
+                            docker_installed=1
+                        fi
+                    fi
+                elif command -v dnf &>/dev/null; then
+                    if prompt_confirm "Install Docker via dnf (sudo dnf install -y docker)?"; then
+                        sudo dnf install -y docker || print_warn "dnf install failed."
+                        sudo systemctl enable --now docker 2>/dev/null || true
+                        sudo usermod -aG docker "$USER" 2>/dev/null || true
+                        if command -v docker &>/dev/null; then
+                            docker_installed=1
+                        fi
+                    fi
+                elif command -v pacman &>/dev/null; then
+                    if prompt_confirm "Install Docker via pacman (sudo pacman -S --noconfirm docker)?"; then
+                        sudo pacman -S --noconfirm docker || print_warn "pacman install failed."
+                        sudo systemctl enable --now docker 2>/dev/null || true
+                        sudo usermod -aG docker "$USER" 2>/dev/null || true
+                        if command -v docker &>/dev/null; then
+                            docker_installed=1
+                        fi
+                    fi
+                else
+                    print_info "Please install Docker from: https://docs.docker.com/engine/install/"
+                fi
+                ;;
+            MINGW*|MSYS*|CYGWIN*)
+                if command -v winget.exe &>/dev/null || command -v winget &>/dev/null; then
+                    if prompt_confirm "Install Docker Desktop via winget (winget install Docker.DockerDesktop)?"; then
+                        winget install Docker.DockerDesktop || print_warn "winget install failed."
+                    fi
+                else
+                    print_info "Please install Docker Desktop from: https://www.docker.com/products/docker-desktop/"
+                fi
+                ;;
+        esac
+    fi
+    echo ""
+
+    # 2. Docker Daemon Check & Startup
+    print_info "Step 2/4: Checking Docker Daemon..."
+    local daemon_running=0
+    if [ "$docker_installed" -eq 1 ] || command -v docker &>/dev/null; then
+        if docker info &>/dev/null; then
+            print_info "✓ Docker daemon is running and accessible."
+            daemon_running=1
+        else
+            local docker_err
+            docker_err="$(docker info 2>&1 || true)"
+            if echo "$docker_err" | grep -qi "permission denied"; then
+                print_warn "✗ Permission denied when accessing Docker daemon socket."
+                print_info "Run: sudo usermod -aG docker $USER, then log out and log back in."
+            else
+                print_warn "✗ Docker daemon is not running."
+                case "$os_type" in
+                    Darwin)
+                        if prompt_confirm "Launch Docker Desktop now (open -a Docker)?" "y"; then
+                            print_info "Launching Docker Desktop..."
+                            open -a Docker 2>/dev/null || open -a "Docker Desktop" 2>/dev/null || true
+                            print_info "Waiting for Docker daemon to become ready (up to 30s)..."
+                            local count=0
+                            while [ $count -lt 30 ]; do
+                                if docker info &>/dev/null; then
+                                    print_info "✓ Docker daemon is now running."
+                                    daemon_running=1
+                                    break
+                                fi
+                                sleep 2
+                                count=$((count + 2))
+                            done
+                            if [ "$daemon_running" -ne 1 ]; then
+                                print_warn "Docker daemon is still starting up. Please wait a moment."
+                            fi
+                        fi
+                        ;;
+                    Linux)
+                        if prompt_confirm "Start Docker daemon now (sudo systemctl start docker)?" "y"; then
+                            sudo systemctl start docker 2>/dev/null || sudo service docker start 2>/dev/null || true
+                            if docker info &>/dev/null; then
+                                print_info "✓ Docker daemon started successfully."
+                                daemon_running=1
+                            else
+                                print_warn "Failed to start Docker daemon automatically. Please check system logs."
+                            fi
+                        fi
+                        ;;
+                    MINGW*|MSYS*|CYGWIN*)
+                        print_info "Please start the Docker Desktop application on Windows."
+                        ;;
+                esac
+            fi
+        fi
+    else
+        print_warn "Docker CLI is not available; skipping daemon check."
+    fi
+    echo ""
+
+    # 3. Docker Images Pre-pull / Build Check
+    print_info "Step 3/4: Checking Docker Images..."
+    if [ "$daemon_running" -eq 1 ]; then
+        local has_base=0
+        local has_derived=0
+        if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^${BASE_IMAGE}$"; then
+            has_base=1
+        fi
+        if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^${DERIVED_IMAGE}$"; then
+            has_derived=1
+        fi
+
+        if [ "$has_base" -eq 1 ] && [ "$has_derived" -eq 1 ]; then
+            print_info "✓ Base image ($BASE_IMAGE) is present."
+            print_info "✓ Derived image ($DERIVED_IMAGE) is present."
+        else
+            [ "$has_base" -eq 1 ] && print_info "✓ Base image ($BASE_IMAGE) is present." || print_warn "✗ Base image ($BASE_IMAGE) is not yet pulled."
+            [ "$has_derived" -eq 1 ] && print_info "✓ Derived image ($DERIVED_IMAGE) is present." || print_warn "✗ Derived image ($DERIVED_IMAGE) is not yet built."
+
+            if prompt_confirm "Would you like to pull base image and build derived image now?" "y"; then
+                ensure_base_image
+                ensure_derived_image
+            else
+                print_info "Skipping image preparation. Images will be automatically prepared upon first build."
+            fi
+        fi
+    else
+        print_warn "Docker daemon is not running; skipping Docker image verification."
+    fi
+    echo ""
+
+    # 4. OS Helpers & Credential Manager Check
+    print_info "Step 4/4: Checking OS Helpers & Credential Tools..."
+    # Credential helper
+    case "$os_type" in
+        Darwin)
+            print_info "✓ OS Credential Manager: macOS Keychain (built-in security CLI)"
+            ;;
+        Linux)
+            if command -v secret-tool &>/dev/null; then
+                print_info "✓ OS Credential Manager: libsecret (secret-tool available)"
+            elif command -v pass &>/dev/null; then
+                print_info "✓ OS Credential Manager: pass available"
+            elif grep -qi microsoft /proc/version 2>/dev/null && command -v powershell.exe &>/dev/null; then
+                print_info "✓ OS Credential Manager: Windows PasswordVault via WSL PowerShell"
+            else
+                print_warn "✗ OS Credential Manager: Neither secret-tool nor pass is installed."
+                if command -v apt-get &>/dev/null; then
+                    if prompt_confirm "Install libsecret-tools via apt (for secure API key storage)?"; then
+                        sudo apt-get update && sudo apt-get install -y libsecret-tools || true
+                    fi
+                elif command -v dnf &>/dev/null; then
+                    if prompt_confirm "Install libsecret via dnf?"; then
+                        sudo dnf install -y libsecret || true
+                    fi
+                elif command -v pacman &>/dev/null; then
+                    if prompt_confirm "Install libsecret via pacman?"; then
+                        sudo pacman -S --noconfirm libsecret || true
+                    fi
+                else
+                    print_info "Tip: You can use the GEMINI_API_KEY environment variable if credential manager is not configured."
+                fi
+            fi
+            ;;
+        MINGW*|MSYS*|CYGWIN*)
+            print_info "✓ OS Credential Manager: Windows PasswordVault (via PowerShell)"
+            ;;
+    esac
+
+    # Clipboard tool (for ref-list / toc-list)
+    case "$os_type" in
+        Darwin)
+            print_info "✓ Clipboard Tool: macOS pbcopy (built-in)"
+            ;;
+        Linux)
+            if command -v xclip &>/dev/null || command -v wl-copy &>/dev/null; then
+                print_info "✓ Clipboard Tool: Available ($(command -v xclip || command -v wl-copy))"
+            else
+                print_warn "- Clipboard Tool: xclip / wl-copy not found (optional, for ref-list/toc-list clipboard copy)"
+                if command -v apt-get &>/dev/null; then
+                    if prompt_confirm "Install xclip via apt?"; then
+                        sudo apt-get install -y xclip || true
+                    fi
+                fi
+            fi
+            ;;
+        MINGW*|MSYS*|CYGWIN*)
+            print_info "✓ Clipboard Tool: Windows clip.exe (built-in)"
+            ;;
+    esac
+
+    # API key check
+    local existing_key
+    existing_key="$(get_credential 2>/dev/null || true)"
+    if [ -n "$existing_key" ]; then
+        print_info "✓ Gemini API Key: Configured in OS credential manager or environment"
+    else
+        print_warn "- Gemini API Key: Not configured (needed only for './devops.sh translate')"
+        print_info "  To configure: ./devops.sh set-api-key"
+    fi
+
+    echo ""
+    echo "============================================================"
+    print_info "Environment check completed."
+    echo "Quick start:"
+    echo "  ./devops.sh pdf          - Build the main paper PDF"
+    echo "  ./devops.sh printed      - Build cover + paper merged PDF"
+    echo "  ./devops.sh translate    - Run the LLM translation pipeline"
+    echo "============================================================"
+    return 0
+}
+
 # Install dependencies (informational only)
 deps() {
     print_info "Note: This operation is for local development."
@@ -904,6 +1220,7 @@ Usage: ./devops.sh [operation]
 
 Available operations:
   help                     - Show this help message [default]
+  env                      - Check environment and guide toolchain/Docker setup
   pdf                      - Build the main paper PDF (paper.pdf)
   pdf_date                 - Build the paper PDF with date suffix
   cover                    - Build the cover page PDF
@@ -920,6 +1237,7 @@ Available operations:
 
 Examples:
   ./devops.sh                        # Show this help message
+  ./devops.sh env                    # Check environment and setup Docker/tools
   ./devops.sh pdf                    # Build paper.pdf
   ./devops.sh pdf_date               # Build thesisYYYYMMDD.pdf
   ./devops.sh cover                  # Build only the cover page
@@ -944,11 +1262,19 @@ main() {
     # Default operation is 'help'
     OPERATION="${1:-help}"
 
-    # Handle help and credential commands immediately without Docker checks
+    # Handle help, credential, deps, and env commands immediately without Docker checks
     case "$OPERATION" in
         help|--help|-h)
             show_help
             return 0
+            ;;
+        env|check-env|setup-env)
+            env_setup
+            return $?
+            ;;
+        deps)
+            deps
+            return $?
             ;;
         set-api-key|set_api_key|set-key)
             set_api_key_cmd "$2"
@@ -999,9 +1325,6 @@ main() {
             ;;
         clean)
             clean
-            ;;
-        deps)
-            deps
             ;;
         *)
             print_error "Unknown operation: $OPERATION"
