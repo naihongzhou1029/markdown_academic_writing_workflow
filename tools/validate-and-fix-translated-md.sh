@@ -5,15 +5,15 @@
 
 set -e
 
-if [ $# -ne 4 ]; then
-    echo "Usage: $0 <original_md_file> <translated_md_file> <llm_model> <api_key_file>" >&2
-    exit 1
-fi
-
 ORIGINAL_MD="$1"
 TRANSLATED_MD="$2"
 LLM_MODEL="$3"
-API_KEY_FILE="$4"
+API_KEY_ARG="${4:-}"
+
+if [ $# -lt 3 ]; then
+    echo "Usage: $0 <original_md_file> <translated_md_file> <llm_model> [api_key_or_file]" >&2
+    exit 1
+fi
 
 if [ ! -f "$ORIGINAL_MD" ]; then
     echo "Error: Original markdown file not found: $ORIGINAL_MD" >&2
@@ -25,14 +25,22 @@ if [ ! -f "$TRANSLATED_MD" ]; then
     exit 1
 fi
 
-if [ ! -f "$API_KEY_FILE" ]; then
-    echo "Error: API key file not found: $API_KEY_FILE" >&2
-    exit 1
+# Determine API key from argument, file, or GEMINI_API_KEY env var
+API_KEY=""
+if [ -n "$API_KEY_ARG" ]; then
+    if [ -f "$API_KEY_ARG" ]; then
+        API_KEY=$(cat "$API_KEY_ARG")
+    else
+        API_KEY="$API_KEY_ARG"
+    fi
+fi
+if [ -z "$API_KEY" ]; then
+    API_KEY="${GEMINI_API_KEY:-}"
 fi
 
-API_KEY=$(cat "$API_KEY_FILE")
 if [ -z "$API_KEY" ]; then
-    echo "Error: API key file is empty" >&2
+    echo "Error: Gemini API key not found." >&2
+    echo "Set GEMINI_API_KEY environment variable or pass an API key/file as argument." >&2
     exit 1
 fi
 

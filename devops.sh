@@ -21,7 +21,7 @@ DERIVED_IMAGE="${DERIVED_IMAGE_NAME}:${DERIVED_IMAGE_TAG}"
 DATE_SUFFIX="$(date +%Y%m%d)"
 PDF="thesis${DATE_SUFFIX}.pdf"
 SRC="paper.md"
-BIB="references.json"
+BIB="references.bib"
 CSL="chicago-author-date.csl"
 COVER_TEX="cover_page.tex"
 COVER_PDF="cover.pdf"
@@ -40,7 +40,10 @@ TRANSLATE_CONFIG_FILE="zh-tw.ini"
 
 # Get absolute path of current directory
 WORK_DIR=$(pwd)
-API_KEY_FILE="$WORK_DIR/.api_key"
+
+# Credential Manager configuration
+CRED_SERVICE="markpaper"
+CRED_ACCOUNT="gemini-api-key"
 
 # Color codes for output
 RED='\033[0;31m'
@@ -102,11 +105,16 @@ ensure_derived_image() {
 
 # Run command in Docker container
 run_in_docker() {
+    local docker_env=()
+    if [ -n "${API_KEY:-}" ]; then
+        docker_env+=(-e "GEMINI_API_KEY=$API_KEY")
+    fi
     docker run --rm \
         --entrypoint="" \
         -u "$(id -u):$(id -g)" \
         -v "$WORK_DIR":/workspace \
         -w /workspace \
+        "${docker_env[@]}" \
         "$DERIVED_IMAGE" \
         bash -c "$1"
 }
@@ -249,6 +257,245 @@ load_ini_file() {
     done < "$file"
 }
 
+# Retrieve API key from environment, OS credential manager, or fallback
+get_credential() {
+    # 1. Environment variable
+    if [ -n "${GEMINI_API_KEY:-}" ]; then
+        printf "%s" "$GEMINI_API_KEY"
+        return 0
+    fi
+    if [ -n "${API_KEY:-}" ]; then
+        printf "%s" "$API_KEY"
+        return 0
+    fi
+
+    # 2. macOS Keychain
+    if [ "$(uname -s)" = "Darwin" ]; then
+        local key
+        key=$(security find-generic-password -s "$CRED_SERVICE" -a "$CRED_ACCOUNT" -w 2>/dev/null)
+        if [ -n "$key" ]; then
+            printf "%s" "$key"
+            return 0
+        fi
+    fi
+
+    # 3. Linux Secret Service / pass / WSL
+    if [ "$(uname -s)" = "Linux" ]; then
+        if command -v secret-tool &>/dev/null; then
+            local key
+            key=$(secret-tool lookup service "$CRED_SERVICE" account "$CRED_ACCOUNT" 2>/dev/null)
+            if [ -n "$key" ]; then
+                printf "%s" "$key"
+                return 0
+            fi
+        fi
+        if command -v pass &>/dev/null; then
+            local key
+            key=$(pass show "$CRED_SERVICE/$CRED_ACCOUNT" 2>/dev/null)
+            if [ -n "$key" ]; then
+                printf "%s" "$key"
+                return 0
+            fi
+        fi
+        # WSL fallback to Windows Credential Manager
+        if grep -qi microsoft /proc/version 2>/dev/null && command -v powershell.exe &>/dev/null; then
+            local key
+            key=$(powershell.exe -NoProfile -Command "[Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime] > \$null; \$vault = New-Object Windows.Security.Credentials.PasswordVault; try { \$cred = \$vault.Retrieve('$CRED_SERVICE', '$CRED_ACCOUNT'); \$cred.RetrievePassword(); [Console]::Out.Write(\$cred.Password) } catch { exit 1 }" 2>/dev/null | tr -d '\r')
+            if [ -n "$key" ]; then
+                printf "%s" "$key"
+                return 0
+            fi
+        fi
+    fi
+
+    # 4. Windows (Git Bash / MSYS / CYGWIN)
+    case "$(uname -s)" in
+        MINGW*|MSYS*|CYGWIN*)
+            local ps_cmd=""
+            if command -v powershell.exe &>/dev/null; then
+                ps_cmd="powershell.exe"
+            elif command -v powershell &>/dev/null; then
+                ps_cmd="powershell"
+            fi
+            if [ -n "$ps_cmd" ]; then
+                local key
+                key=$($ps_cmd -NoProfile -Command "[Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime] > \$null; \$vault = New-Object Windows.Security.Credentials.PasswordVault; try { \$cred = \$vault.Retrieve('$CRED_SERVICE', '$CRED_ACCOUNT'); \$cred.RetrievePassword(); [Console]::Out.Write(\$cred.Password) } catch { exit 1 }" 2>/dev/null | tr -d '\r')
+                if [ -n "$key" ]; then
+                    printf "%s" "$key"
+                    return 0
+                fi
+            fi
+            ;;
+    esac
+
+    # 5. Legacy .api_key file (backward compatibility fallback)
+    if [ -f "$WORK_DIR/.api_key" ]; then
+        local key
+        key=$(cat "$WORK_DIR/.api_key" 2>/dev/null | tr -d '\r\n')
+        if [ -n "$key" ]; then
+            printf "%s" "$key"
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+# Store API key in OS credential manager
+set_credential() {
+    local key="$1"
+    if [ -z "$key" ]; then
+        return 1
+    fi
+
+    # macOS Keychain
+    if [ "$(uname -s)" = "Darwin" ]; then
+        security add-generic-password -U -s "$CRED_SERVICE" -a "$CRED_ACCOUNT" -w "$key" >/dev/null 2>&1
+        return $?
+    fi
+
+    # Linux Secret Service / pass / WSL
+    if [ "$(uname -s)" = "Linux" ]; then
+        if command -v secret-tool &>/dev/null; then
+            printf '%s' "$key" | secret-tool store --label="MarkPaper Gemini API Key" service "$CRED_SERVICE" account "$CRED_ACCOUNT" >/dev/null 2>&1
+            return $?
+        elif command -v pass &>/dev/null; then
+            printf '%s\n' "$key" | pass insert -m -f "$CRED_SERVICE/$CRED_ACCOUNT" >/dev/null 2>&1
+            return $?
+        fi
+        if grep -qi microsoft /proc/version 2>/dev/null && command -v powershell.exe &>/dev/null; then
+            powershell.exe -NoProfile -Command "[Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime] > \$null; \$vault = New-Object Windows.Security.Credentials.PasswordVault; try { \$old = \$vault.Retrieve('$CRED_SERVICE', '$CRED_ACCOUNT'); \$vault.Remove(\$old) } catch {}; \$cred = New-Object Windows.Security.Credentials.PasswordCredential('$CRED_SERVICE', '$CRED_ACCOUNT', '$key'); \$vault.Add(\$cred)" >/dev/null 2>&1
+            return $?
+        fi
+    fi
+
+    # Windows (Git Bash / MSYS / CYGWIN)
+    case "$(uname -s)" in
+        MINGW*|MSYS*|CYGWIN*)
+            local ps_cmd=""
+            if command -v powershell.exe &>/dev/null; then
+                ps_cmd="powershell.exe"
+            elif command -v powershell &>/dev/null; then
+                ps_cmd="powershell"
+            fi
+            if [ -n "$ps_cmd" ]; then
+                $ps_cmd -NoProfile -Command "[Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime] > \$null; \$vault = New-Object Windows.Security.Credentials.PasswordVault; try { \$old = \$vault.Retrieve('$CRED_SERVICE', '$CRED_ACCOUNT'); \$vault.Remove(\$old) } catch {}; \$cred = New-Object Windows.Security.Credentials.PasswordCredential('$CRED_SERVICE', '$CRED_ACCOUNT', '$key'); \$vault.Add(\$cred)" >/dev/null 2>&1
+                return $?
+            fi
+            ;;
+    esac
+
+    return 1
+}
+
+# Delete API key from OS credential manager
+delete_credential() {
+    local deleted=1
+
+    # macOS Keychain
+    if [ "$(uname -s)" = "Darwin" ]; then
+        if security delete-generic-password -s "$CRED_SERVICE" -a "$CRED_ACCOUNT" >/dev/null 2>&1; then
+            deleted=0
+        fi
+    fi
+
+    # Linux Secret Service / pass / WSL
+    if [ "$(uname -s)" = "Linux" ]; then
+        if command -v secret-tool &>/dev/null; then
+            if secret-tool clear service "$CRED_SERVICE" account "$CRED_ACCOUNT" >/dev/null 2>&1; then
+                deleted=0
+            fi
+        fi
+        if command -v pass &>/dev/null; then
+            if pass rm -f "$CRED_SERVICE/$CRED_ACCOUNT" >/dev/null 2>&1; then
+                deleted=0
+            fi
+        fi
+        if grep -qi microsoft /proc/version 2>/dev/null && command -v powershell.exe &>/dev/null; then
+            if powershell.exe -NoProfile -Command "[Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime] > \$null; \$vault = New-Object Windows.Security.Credentials.PasswordVault; try { \$cred = \$vault.Retrieve('$CRED_SERVICE', '$CRED_ACCOUNT'); \$vault.Remove(\$cred); exit 0 } catch { exit 1 }" >/dev/null 2>&1; then
+                deleted=0
+            fi
+        fi
+    fi
+
+    # Windows (Git Bash / MSYS / CYGWIN)
+    case "$(uname -s)" in
+        MINGW*|MSYS*|CYGWIN*)
+            local ps_cmd=""
+            if command -v powershell.exe &>/dev/null; then
+                ps_cmd="powershell.exe"
+            elif command -v powershell &>/dev/null; then
+                ps_cmd="powershell"
+            fi
+            if [ -n "$ps_cmd" ]; then
+                if $ps_cmd -NoProfile -Command "[Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime] > \$null; \$vault = New-Object Windows.Security.Credentials.PasswordVault; try { \$cred = \$vault.Retrieve('$CRED_SERVICE', '$CRED_ACCOUNT'); \$vault.Remove(\$cred); exit 0 } catch { exit 1 }" >/dev/null 2>&1; then
+                    deleted=0
+                fi
+            fi
+            ;;
+    esac
+
+    return $deleted
+}
+
+# CLI command: set API key
+set_api_key_cmd() {
+    local key="$1"
+    if [ -z "$key" ]; then
+        printf "Enter Gemini API key: "
+        stty -echo 2>/dev/null || true
+        read -r key
+        stty echo 2>/dev/null || true
+        echo ""
+    fi
+
+    if [ -z "$key" ]; then
+        print_error "API key cannot be empty"
+        return 1
+    fi
+
+    if set_credential "$key"; then
+        print_info "Successfully saved Gemini API key to OS credential manager (service: $CRED_SERVICE, account: $CRED_ACCOUNT)"
+        return 0
+    else
+        print_error "Failed to save API key to OS credential manager"
+        print_info "You can set the GEMINI_API_KEY environment variable instead:"
+        echo "  export GEMINI_API_KEY=\"<your-api-key>\""
+        return 1
+    fi
+}
+
+# CLI command: get API key status
+get_api_key_cmd() {
+    local key
+    key=$(get_credential 2>/dev/null || true)
+    if [ -n "$key" ]; then
+        local len=${#key}
+        if [ "$len" -gt 8 ]; then
+            local masked="${key:0:4}...${key: -4}"
+            print_info "Gemini API key is configured ($masked)"
+        else
+            print_info "Gemini API key is configured"
+        fi
+        return 0
+    else
+        print_warn "No Gemini API key found in OS credential manager or environment"
+        print_info "Run './devops.sh set-api-key' to store your API key"
+        return 1
+    fi
+}
+
+# CLI command: delete API key
+delete_api_key_cmd() {
+    if delete_credential; then
+        print_info "Successfully removed Gemini API key from OS credential manager"
+        return 0
+    else
+        print_warn "No API key entry found in OS credential manager to delete"
+        return 1
+    fi
+}
+
 # Load the translation config into the TR_* variables
 load_translate_config() {
     if [ ! -f "$TRANSLATE_CONFIG_FILE" ]; then
@@ -273,23 +520,34 @@ load_translate_config() {
 
     TR_SRC="$TR_DIR/paper.md"
     TR_COVER="$TR_DIR/cover_page.tex"
-    TR_PDF="$TR_DIR/thesis.pdf"
+    TR_PDF="$TR_DIR/paper.pdf"
     TR_COVER_PDF="$TR_DIR/cover.pdf"
     TR_PRINTED_PDF="$TR_DIR/printed.pdf"
 }
 
 # Translate main manuscript (Markdown) using the loaded config
 translate_markdown() {
-    print_info "Translating $SRC to $TR_TO markdown in $TR_DIR/"
+    local force="${1:-false}"
+
+    if [ "$force" != "true" ] && [ -s "$WORK_DIR/$TR_SRC" ]; then
+        print_info "Translated markdown '$TR_SRC' already exists. Skipping translation (use --force to re-translate)."
+        return 0
+    fi
+
+    if [ "$force" = "true" ] && [ -f "$WORK_DIR/$TR_SRC" ]; then
+        print_info "Force re-translating $SRC to $TR_TO markdown in $TR_DIR/..."
+    else
+        print_info "Translating $SRC to $TR_TO markdown in $TR_DIR/..."
+    fi
 
     run_in_docker "
         mkdir -p $TR_DIR
         CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
         CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
         echo 'Translating $SRC to $TR_TO...'
-        bash tools/translate.sh $SRC $TR_SRC '$TR_FROM' '$TR_TO' '$TR_MODEL' '.api_key'
+        bash tools/translate.sh $SRC $TR_SRC '$TR_FROM' '$TR_TO' '$TR_MODEL'
         echo 'Validating and fixing formatting errors in translation...'
-        bash tools/validate-and-fix-translated-md.sh $SRC $TR_SRC '$TR_MODEL' '.api_key'
+        bash tools/validate-and-fix-translated-md.sh $SRC $TR_SRC '$TR_MODEL'
         echo 'Post-processing translated markdown...'
         bash tools/postprocess-translated-md.sh $TR_SRC \"\$CJK_FONT_TC\" '$TR_FIGURE_LABEL' '$TR_TABLE_LABEL'
     "
@@ -297,14 +555,25 @@ translate_markdown() {
 
 # Translate cover LaTeX using the loaded config
 translate_cover() {
-    print_info "Translating $COVER_TEX to $TR_TO LaTeX in $TR_DIR/"
+    local force="${1:-false}"
+
+    if [ "$force" != "true" ] && [ -s "$WORK_DIR/$TR_COVER" ]; then
+        print_info "Translated cover LaTeX '$TR_COVER' already exists. Skipping translation (use --force to re-translate)."
+        return 0
+    fi
+
+    if [ "$force" = "true" ] && [ -f "$WORK_DIR/$TR_COVER" ]; then
+        print_info "Force re-translating $COVER_TEX to $TR_TO LaTeX in $TR_DIR/..."
+    else
+        print_info "Translating $COVER_TEX to $TR_TO LaTeX in $TR_DIR/..."
+    fi
 
     run_in_docker "
         mkdir -p $TR_DIR
         CJK_FONT_TC=\$(bash tools/detect-fonts.sh 2>/dev/null | grep '^CJK_FONT_TC=' | cut -d= -f2)
         CJK_FONT_TC=\${CJK_FONT_TC:-AR PL UMing TW}
         echo 'Translating $COVER_TEX to $TR_TO...'
-        bash tools/translate.sh $COVER_TEX $TR_COVER '$TR_FROM' '$TR_TO' '$TR_MODEL' '.api_key'
+        bash tools/translate.sh $COVER_TEX $TR_COVER '$TR_FROM' '$TR_TO' '$TR_MODEL'
         echo 'Post-processing translated LaTeX...'
         bash tools/postprocess-translated-tex.sh $TR_COVER 'PingFang TC' \"\$CJK_FONT_TC\"
     "
@@ -318,7 +587,7 @@ build_translated_pdf() {
         echo 'Building PDF from translated markdown...'
         echo 'Processing Mermaid diagrams...'
         mkdir -p images
-        bash tools/create-symlinks.sh $TR_DIR $BIB $CSL 'bibliography.bib'
+        bash tools/create-symlinks.sh $TR_DIR $BIB $CSL 'references.bib'
         if [ -d images ]; then
             if [ -e $TR_DIR/images ]; then rm -rf $TR_DIR/images; fi
             ( cd $TR_DIR && ln -sf ../images images )
@@ -332,6 +601,9 @@ build_translated_pdf() {
         bash tools/fix-latex-csl.sh $TR_DIR/paper.tex
         ( cd $TR_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
         ( cd $TR_DIR && xelatex -interaction=nonstopmode paper.tex >/dev/null 2>&1 )
+        if [ -f $TR_DIR/paper.pdf ] && [ '$TR_DIR/paper.pdf' != '$TR_PDF' ]; then
+            mv $TR_DIR/paper.pdf $TR_PDF
+        fi
         if [ ! -f '$TR_PDF' ]; then exit 1; fi
         bash tools/cleanup-temp.sh $TR_DIR/paper.mermaid.tmp.md $TR_DIR/paper.tmp.md $TR_DIR/paper.tex $TR_DIR/paper.aux $TR_DIR/paper.log
         echo 'Cleaned up intermediate translation files'
@@ -402,37 +674,89 @@ build_translated_printed() {
 
 # Run the translation pipeline, optionally limited to a single step
 run_translate() {
-    local step="${1:-all}"
+    local step="all"
+    local force=false
+
+    for arg in "$@"; do
+        case "$arg" in
+            --force|-f|--retranslate)
+                force=true
+                ;;
+            all|markdown|cover|pdf|cover_pdf|printed)
+                step="$arg"
+                ;;
+            "")
+                ;;
+            *)
+                print_error "Unknown argument for translate: $arg"
+                print_error "Valid steps: all, markdown, cover, pdf, cover_pdf, printed"
+                print_error "Options: --force, -f (force re-translation even if translated files exist)"
+                exit 1
+                ;;
+        esac
+    done
 
     load_translate_config
     print_info "Translation config: $TRANSLATE_CONFIG_FILE ($TR_FROM -> $TR_TO, dir: $TR_DIR)"
 
-    # Require API key file before running translation operations
-    if [ ! -f "$API_KEY_FILE" ]; then
-        print_error "API key file not found: $API_KEY_FILE"
-        print_error "Create it with your Gemini API key before running translate."
-        echo "Example: echo \"<your-key>\" > .api_key && chmod 600 .api_key" >&2
-        exit 1
+    # Determine if actual LLM translation is required
+    local need_translate=false
+    case "$step" in
+        all)
+            if [ "$force" = "true" ] || [ ! -s "$WORK_DIR/$TR_SRC" ] || [ ! -s "$WORK_DIR/$TR_COVER" ]; then
+                need_translate=true
+            fi
+            ;;
+        markdown)
+            if [ "$force" = "true" ] || [ ! -s "$WORK_DIR/$TR_SRC" ]; then
+                need_translate=true
+            fi
+            ;;
+        cover)
+            if [ "$force" = "true" ] || [ ! -s "$WORK_DIR/$TR_COVER" ]; then
+                need_translate=true
+            fi
+            ;;
+    esac
+
+    if [ "$need_translate" = "true" ]; then
+        API_KEY=$(get_credential 2>/dev/null || true)
+        if [ -z "$API_KEY" ]; then
+            print_warn "No Gemini API key found in OS credential manager or environment."
+            if [ -t 0 ]; then
+                print_info "Translation requires a Gemini API key. Starting interactive setup..."
+                if set_api_key_cmd; then
+                    API_KEY=$(get_credential 2>/dev/null || true)
+                fi
+            fi
+
+            if [ -z "$API_KEY" ]; then
+                print_error "Gemini API key setup was not completed."
+                echo ""
+                print_info "Store it securely in your OS credential manager by running:"
+                echo "  ./devops.sh set-api-key"
+                echo ""
+                print_info "Or set the environment variable in your terminal:"
+                echo "  export GEMINI_API_KEY=\"<your-api-key>\""
+                exit 1
+            fi
+        fi
+        export API_KEY
     fi
 
     case "$step" in
         all)
-            translate_markdown
-            translate_cover
+            translate_markdown "$force"
+            translate_cover "$force"
             build_translated_pdf
             build_translated_cover_pdf
             build_translated_printed
             ;;
-        markdown) translate_markdown ;;
-        cover) translate_cover ;;
+        markdown) translate_markdown "$force" ;;
+        cover) translate_cover "$force" ;;
         pdf) build_translated_pdf ;;
         cover_pdf) build_translated_cover_pdf ;;
         printed) build_translated_printed ;;
-        *)
-            print_error "Unknown step: $step"
-            print_error "Valid steps: all, markdown, cover, pdf, cover_pdf, printed"
-            exit 1
-            ;;
     esac
 
     print_info "Translation step '$step' completed. Output in $TR_DIR/"
@@ -483,7 +807,7 @@ ref_list() {
     if [ "$out_dir" != "." ]; then
         run_in_docker "
             mkdir -p $out_dir
-            bash tools/create-symlinks.sh $out_dir $BIB $CSL 'bibliography.bib'
+            bash tools/create-symlinks.sh $out_dir $BIB $CSL 'references.bib'
             python3 tools/extract-references-pandoc.py $out_dir/paper.md $out_dir/ref_list.md
         "
     else
@@ -584,7 +908,10 @@ Available operations:
   pdf_date                 - Build the paper PDF with date suffix
   cover                    - Build the cover page PDF
   printed                  - Build the printed version (cover + paper)
-  translate [step]         - Run the translation pipeline (see zh-tw.ini)
+  translate [step] [-f]    - Run translation pipeline (skips existing by default, --force to re-translate)
+  set-api-key [key]        - Save Gemini API key to OS credential manager
+  get-api-key              - Check configured Gemini API key in OS credential manager
+  delete-api-key           - Remove Gemini API key from OS credential manager
   tags                     - Generate .tags from all Markdown files
   ref-list                - Extract references from PDF and copy to clipboard
   toc-list                - Extract table of contents from PDF and copy to clipboard
@@ -596,8 +923,11 @@ Examples:
   ./devops.sh pdf                    # Build paper.pdf
   ./devops.sh pdf_date               # Build thesisYYYYMMDD.pdf
   ./devops.sh cover                  # Build only the cover page
-  ./devops.sh translate               # Run the full translation pipeline
+  ./devops.sh translate               # Run pipeline (reuses existing translated markdown/cover)
+  ./devops.sh translate --force       # Force full re-translation and rebuild
   ./devops.sh translate pdf           # Rebuild only the translated paper PDF
+  ./devops.sh set-api-key            # Securely store API key in OS credential manager
+  ./devops.sh get-api-key            # Check API key configuration
   ./devops.sh ref-list                # Extract and copy references
   ./devops.sh toc-list                # Extract and copy table of contents
   ./devops.sh clean                   # Clean all generated files
@@ -614,11 +944,23 @@ main() {
     # Default operation is 'help'
     OPERATION="${1:-help}"
 
-    # Handle help immediately without Docker checks
+    # Handle help and credential commands immediately without Docker checks
     case "$OPERATION" in
         help|--help|-h)
             show_help
             return 0
+            ;;
+        set-api-key|set_api_key|set-key)
+            set_api_key_cmd "$2"
+            return $?
+            ;;
+        get-api-key|get_api_key|get-key)
+            get_api_key_cmd
+            return $?
+            ;;
+        delete-api-key|delete_api_key|del-api-key)
+            delete_api_key_cmd
+            return $?
             ;;
     esac
 
@@ -643,7 +985,8 @@ main() {
             build_printed
             ;;
         translate)
-            run_translate "$2"
+            shift
+            run_translate "$@"
             ;;
         tags)
             build_tags

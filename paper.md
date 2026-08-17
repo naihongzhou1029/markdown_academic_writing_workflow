@@ -3,7 +3,7 @@ title: "Sustainable Scholarship: A Robust Academic Workflow with Markdown, Pando
 author: An Old-Fashioned Researcher
 abstract: This document serves as a complete, self-referential example of the Pandoc academic workflow. It demonstrates the use of a YAML metadata block for configuration, automated citations with pandoc-citeproc, cross-references for figures, tables, and equations with pandoc-crossref, and advanced customization for multilingual typesetting and page numbering through LaTeX. Furthermore, it details recent extensions to the system, including a Docker-based reproducible build environment, programmatic diagramming with Mermaid, and an automated LLM-powered translation pipeline for multilingual publishing.
 bibliography:
-  - references.json
+  - references.bib
 csl: chicago-author-date.csl 
 link-citations: true
 colorlinks: true
@@ -106,7 +106,7 @@ flowchart TD
     subgraph S1 ["1. Source & Reference Inputs"]
         direction LR
         A["Raw Manuscript<br/>(<code>paper.md</code> with <code>@key</code>)"]
-        B["Bibliographic Data<br/>(<code>references.json</code> / <code>.bib</code>)"]
+        B["Bibliographic Data<br/>(<code>references.bib</code>)"]
         Z["Zotero + BBT<br/><i>(Optional Sync)</i>"] -. Auto-Export .-> B
     end
 
@@ -157,7 +157,7 @@ Before embarking on the plain-text writing process, a robust environment is requ
 
 -   **Zero-Dependency Manual Approach:** For smaller projects or concise papers, authors can directly maintain a plain-text `references.bib` file by pasting BibTeX entries directly from services like [Google Scholar](https://scholar.google.com/), [arXiv](https://arxiv.org/), or publisher websites. No external software is required.
     
--   **Automated Scaled Approach with Zotero and Better BibTeX (BBT):** For extensive manuscripts such as theses and dissertations, [Zotero](https://www.zotero.org/) paired with the **[Better BibTeX (BBT)](https://retorque.re/zotero-better-bibtex/)** extension provides invaluable automation. BBT guarantees deterministic, human-readable citation keys (preventing key collisions) and provides background auto-export to keep your bibliography file (`references.json` or `.bib`) synchronized whenever literature is added or modified in the Zotero library.
+-   **Automated Scaled Approach with Zotero and Better BibTeX (BBT):** For extensive manuscripts such as theses and dissertations, [Zotero](https://www.zotero.org/) paired with the **[Better BibTeX (BBT)](https://retorque.re/zotero-better-bibtex/)** extension provides invaluable automation. BBT guarantees deterministic, human-readable citation keys (preventing key collisions) and provides background auto-export to keep your bibliography file (`references.bib`) synchronized whenever literature is added or modified in the Zotero library.
 
 The components are summarized in @tbl:workbench.
 
@@ -734,7 +734,7 @@ The defining advantage of a plain-text academic workflow is that text, citations
 **Key Dimensions of AI Augmentation in Academic Writing**
 
 1. Content Synthesis and Prose Polishing: LLMs excel at transforming rough technical notes into coherent, academically rigorous prose, eliminating passive-voice ambiguities, and restructuring complex argumentative paragraphs while preserving the author's substantive claims.
-2. Bibliographic Curation and Citation Auditing: AI agents can scan a manuscript to ensure every citation key (e.g., `[@knuth1984tex]`) exists in `references.bib` or `references.json`, format missing BibTeX entries from DOI lookups, and detect stale or mismatched citation keys.
+2. Bibliographic Curation and Citation Auditing: AI agents can scan a manuscript to ensure every citation key (e.g., `[@knuth1984tex]`) exists in `references.bib`, format missing BibTeX entries from DOI lookups, and detect stale or mismatched citation keys.
 3. Automated Formatting and Semantic Structuring: Agents can rapidly translate raw data tables into Pandoc-compliant pipe tables, convert mathematical concepts into standard LaTeX syntax (`$$...$$`), and draft programmatic Mermaid flowcharts directly from natural language descriptions.
 4. Intelligent Validation and Pipeline Repair: Shell-based AI scripts (such as `tools/validate-and-fix-translated-md.sh`) can autonomously inspect Markdown syntax before compilation, fixing broken table pipes, unescaped delimiters, and corrupted YAML metadata.
 5. Flattening the Toolchain Learning Curve: AI assistants eliminate the intimidation factor of command-line tools by converting high-level author requests (e.g., configuring custom cover templates, adjusting CSL bibliography styles, or debugging Docker volume mounts) directly into executable shell workflows and LaTeX preamble hooks, democratizing institutional-grade typesetting for every scholar.
@@ -755,7 +755,8 @@ The defining advantage of a plain-text academic workflow is that text, citations
 
 ```bash
 # Prompt agent to polish prose, format table, and insert citation
-agy "Refine draft.md with formal style, table label, and citation @knuth1984literate"
+agy "Refine draft.md with formal style, table label, \\
+     and citation @knuth1984literate"
 ```
 
 **3. Output: Optimized Plain-Text Source and Rendered PDF**

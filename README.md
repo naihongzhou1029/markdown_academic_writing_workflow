@@ -24,7 +24,7 @@ The `main` branch itself is that example: `paper.md` is a tutorial/methodology p
 - **Pandoc**: The central document converter, transforming `paper.md` into LaTeX and then to PDF.
 - **LaTeX distribution (TeX Live / XeLaTeX)**: Provides the Unicode-aware typesetting engine and packages needed for advanced layouts, micro-typography, and multilingual text.
 - **Plain‑text editor**: Any modern editor (VS Code, Zettlr, etc.) used for authoring the Markdown source.
-- **Reference managers (Zotero + Better BibTeX)**: Manages bibliographic data and exports it automatically as `references.json` or `references.bib` for Pandoc to consume (optional; authors can also create and maintain bibliography files manually).
+- **Reference managers (Zotero + Better BibTeX)**: Manages bibliographic data and exports it automatically as `references.bib` for Pandoc to consume (optional; authors can also create and maintain bibliography files manually).
 - **CSL styles**: Citation Style Language definitions (e.g., `chicago-author-date.csl`) governing in-text citations and the bibliography.
 - **Pandoc filters**:
   - `--citeproc` for automated citation processing and bibliography generation.
@@ -36,7 +36,7 @@ The `main` branch itself is that example: `paper.md` is a tutorial/methodology p
 
 - **YAML metadata block as control panel**: At the top of `paper.md`, a rich YAML header configures:
   - Document metadata (title, author, abstract).
-  - Bibliography files (`references.json`, `references.bib`) and CSL style (`chicago-author-date.csl`).
+  - Bibliography file (`references.bib`) and CSL style (`chicago-author-date.csl`).
   - PDF engine (`xelatex`) and LaTeX header includes (`header-includes`).
   - Cross‑reference prefixes (`figPrefix`, `tblPrefix`, `eqnPrefix`) and formatting conventions.
   - Section numbering (`numbersections: true`), table of contents (`toc`), and page numbering behavior.
@@ -57,7 +57,6 @@ The `main` branch itself is that example: `paper.md` is a tutorial/methodology p
 ```
 ├── paper.md                    # Primary manuscript (with embedded examples)
 ├── cover_page.tex              # Standalone LaTeX cover page template
-├── references.json             # Bibliographic database in CSL-JSON format
 ├── references.bib              # Bibliographic database in BibTeX format
 ├── chicago-author-date.csl     # CSL style definition (Chicago author-date)
 ├── zh-tw.ini                   # Single configuration file for translation pipeline
@@ -96,7 +95,7 @@ Writing your thesis with this framework is straightforward:
 
 1. **Write the manuscript body**: Open `paper.md`, locate the content body beneath the YAML front matter, and write your paper using standard Markdown syntax. Run `./devops.sh pdf` (or `./devops.ps1 pdf` on Windows) to compile and review the generated PDF for any issues.
 2. **Insert and cross-reference figures**: Place image files in `images/` (or write Mermaid diagram blocks directly), then insert and cross-reference them by checking the syntax examples demonstrated in `paper.md` itself (such as `![Caption](images/foo.png){#fig:foo}` and `@fig:foo`).
-3. **Add citations**: Add your bibliographic entries to `references.json` or `references.bib` (manually or via Zotero + BBT), and cite them in the text using `[@key]` syntax following the examples in `paper.md`.
+3. **Add citations**: Add your bibliographic entries to `references.bib` (manually or via Zotero + BBT), and cite them in the text using `[@key]` syntax following the examples in `paper.md`.
 4. **Let the framework handle typesetting**: Once you are familiar with these core writing steps, you don't need to worry about complex layout details. The framework automatically handles heading numbering, cross-references, footnotes, page numbers, table of contents, and bibliography formatting.
 
 ### Basic Usage: Build the Example PDF
@@ -131,7 +130,10 @@ Run `./devops.sh help` (or `./devops.ps1 help`) to see all available operations:
 | `pdf_date`                    | Build the paper PDF with a `YYYYMMDD` date suffix        |
 | `cover`                       | Build the standalone cover page PDF (`cover.pdf`)       |
 | `printed`                     | Build the printed version (cover + paper merged)        |
-| `translate [step]`           | Run the translation pipeline (see below)                |
+| `translate [step] [-f]`      | Run translation pipeline (skips existing by default, `--force` to re-translate) |
+| `set-api-key [key]`          | Save Gemini API key to OS credential manager            |
+| `get-api-key`                | Check configured Gemini API key in OS credential store  |
+| `delete-api-key`             | Remove Gemini API key from OS credential manager        |
 | `tags`                        | Generate `.tags` from all Markdown files                |
 | `ref-list`                    | Extract references from a PDF to clipboard              |
 | `toc-list`                    | Extract table of contents from a PDF to clipboard       |
@@ -144,22 +146,23 @@ This project demonstrates how to leverage an LLM-backed translation pipeline, dr
 
 - **Source**: The original English manuscript in `paper.md` and the cover page in `cover_page.tex`.
 - **Config**: The translation target is defined in a single INI config file, `zh-tw.ini` at the repo root (source/target language names, output directory, LLM model, and optional pandoc-crossref label overrides).
-- **LLM translation**: `./devops.sh translate` calls `tools/translate.sh`, which invokes a large language model (default `gemini-2.5-flash`, configurable in `zh-tw.ini`) using an API key stored in `.api_key`. The translated Markdown and LaTeX are written into the configured output directory.
+- **LLM translation & caching**: `./devops.sh translate` calls `tools/translate.sh`, which invokes a large language model (default `gemini-2.5-flash`, configurable in `zh-tw.ini`) using an API key retrieved securely from the native OS credential manager (macOS Keychain, Windows Credential Manager, or Linux Secret Service via `./devops.sh set-api-key`) or the `GEMINI_API_KEY` environment variable. If translated source files (`paper.md`, `cover_page.tex`) already exist in the target directory, translation is automatically skipped to save API tokens and avoid overwriting manual edits (use `--force` / `-f` to force a full re-translation).
 - **AI-powered validation**: After initial translation, `tools/validate-and-fix-translated-md.sh` automatically reviews the translated Markdown for formatting errors (malformed tables, broken syntax, corrupted YAML) and fixes them while preserving the translated content.
 - **Post-processing and typesetting**: Additional scripts fix fonts and crossref labels, then Pandoc and XeLaTeX compile the translated sources into fully typeset PDFs with cover pages.
 
 ```bash
-./devops.sh translate                # run the full translation pipeline
+./devops.sh translate                # run pipeline (reuses existing translated markdown/cover to save tokens)
+./devops.sh translate --force        # force full re-translation and rebuild from scratch
 ./devops.sh translate pdf            # rebuild only the translated paper PDF (re-run one step)
 ```
 
-`step` may be `all` (default), `markdown`, `cover`, `pdf`, `cover_pdf`, or `printed`.
+`step` may be `all` (default), `markdown`, `cover`, `pdf`, `cover_pdf`, or `printed`. Optional flag `--force` (or `-f`) forces full re-translation.
 
 The resulting files are written under the configured `DIR` (e.g. `translated-zh-tw/`), mirroring the structure of the original English workflow.
 
 ### Conceptual Overview of the Workflow
 
-- **Input layer**: `paper.md` (manuscript) + JSON/BibTeX bibliography files (`references.json`, `references.bib`) + CSL style + `cover_page.tex`.
+- **Input layer**: `paper.md` (manuscript) + BibTeX bibliography file (`references.bib`) + CSL style + `cover_page.tex`.
 - **Processing layer**:
   - `tools/process-mermaid.sh` renders Mermaid diagrams to high-resolution PNGs.
   - Pandoc parses the Markdown and YAML metadata.

@@ -9,22 +9,31 @@ OUTPUT_FILE="$2"
 SOURCE_LANG="$3"
 TARGET_LANG="$4"
 MODEL="$5"
-API_KEY_FILE="$6"
+API_KEY_ARG="${6:-}"
 
-if [ $# -ne 6 ]; then
-    echo "Usage: $0 <input_file> <output_file> <source_lang> <target_lang> <model> <api_key_file>" >&2
+if [ $# -lt 5 ]; then
+    echo "Usage: $0 <input_file> <output_file> <source_lang> <target_lang> <model> [api_key_or_file]" >&2
     exit 1
 fi
 
-# Check if API key file exists; fail fast in non-interactive mode
-if [ ! -f "$API_KEY_FILE" ]; then
-    echo "Error: API key file not found: $API_KEY_FILE" >&2
-    echo "Create this file with your Gemini API key before running translation." >&2
-    echo "Example: echo \"<your-key>\" > $API_KEY_FILE && chmod 600 $API_KEY_FILE" >&2
-    exit 1
+# Determine API key from argument, file, or GEMINI_API_KEY env var
+API_KEY=""
+if [ -n "$API_KEY_ARG" ]; then
+    if [ -f "$API_KEY_ARG" ]; then
+        API_KEY=$(cat "$API_KEY_ARG")
+    else
+        API_KEY="$API_KEY_ARG"
+    fi
+fi
+if [ -z "$API_KEY" ]; then
+    API_KEY="${GEMINI_API_KEY:-}"
 fi
 
-API_KEY=$(cat "$API_KEY_FILE")
+if [ -z "$API_KEY" ]; then
+    echo "Error: Gemini API key not found." >&2
+    echo "Set GEMINI_API_KEY environment variable or pass an API key/file as argument." >&2
+    exit 1
+fi
 
 # Check for required tools and install if missing (works for root or sudo)
 if ! command -v curl &> /dev/null; then

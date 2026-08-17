@@ -155,14 +155,16 @@ def translate_srt_file(input_file, output_file, source_lang, target_lang, model,
     Translate an SRT file and write the result to output_file.
     """
     # Read API key
-    if not os.path.exists(api_key_file):
-        print(f"Error: API key file not found: {api_key_file}", file=sys.stderr)
-        print(f"Create it with your Gemini API key before running translation.", file=sys.stderr)
-        print(f'Example: echo "<your-key>" > {api_key_file}', file=sys.stderr)
-        sys.exit(1)
+    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not api_key:
+        if api_key_file and os.path.exists(api_key_file):
+            with open(api_key_file, 'r') as f:
+                api_key = f.read().strip()
     
-    with open(api_key_file, 'r') as f:
-        api_key = f.read().strip()
+    if not api_key:
+        print("Error: Gemini API key not found.", file=sys.stderr)
+        print("Please set GEMINI_API_KEY environment variable or provide a valid API key file.", file=sys.stderr)
+        sys.exit(1)
     
     # Read input SRT file
     if not os.path.exists(input_file):

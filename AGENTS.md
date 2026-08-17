@@ -22,14 +22,15 @@ This project is a worked example of a Markdown → Pandoc → LaTeX academic wri
 
 - **Default build target**: When the user requests a build or compilation without specifying a target operation, always default to the `pdf` target for `devops.sh` or `devops.ps1` (`./devops.sh pdf` or `./devops.ps1 pdf`).
 - **Do not change the overall structure** of `paper.md`’s YAML metadata or its role as the single source of truth for document configuration, unless explicitly asked.
-- **Preserve operation names and roles** in `devops.sh`/`devops.ps1` (`pdf`, `pdf_date`, `cover`, `printed`, `translate`, `tags`, `ref-list`, `toc-list`, `clean`, `deps`) to avoid breaking existing workflows or documentation.
+- **Preserve operation names and roles** in `devops.sh`/`devops.ps1` (`pdf`, `pdf_date`, `cover`, `printed`, `translate`, `set-api-key`, `get-api-key`, `delete-api-key`, `tags`, `ref-list`, `toc-list`, `clean`, `deps`) to avoid breaking existing workflows or documentation.
 - **Keep `README.md` and `AGENTS.md` consistent** with any changes to:
   - Build commands and primary operations (use `./devops.sh`/`./devops.ps1` for Docker-based builds).
-  - Translation pipeline behavior (`zh-tw.ini`'s `DIR`/`FROM`/`TO`/`MODEL`, `.api_key` usage).
+  - Translation pipeline behavior (`zh-tw.ini`'s `DIR`/`FROM`/`TO`/`MODEL`, OS credential manager / `GEMINI_API_KEY` usage).
   - Docker container usage and requirements.
 - As a rule of thumb: **if you add or change `devops.sh` operations, translation scripts/profiles, API key usage, or primary documentation**, update this file accordingly.
 - **Be cautious with translation scripts**:
-  - Treat `.api_key` as a secret; don't hardcode keys or log them.
+  - Secure credential handling: API keys are securely managed via native OS credential stores (macOS Keychain, Windows Credential Manager, Linux Secret Service via `./devops.sh set-api-key`) or `GEMINI_API_KEY`; never hardcode or log credentials.
+  - Translation caching & cost saving: `./devops.sh translate` automatically skips LLM translation if target source files already exist, avoiding token waste and preserving manual edits; use `--force` / `-f` to force re-translation.
   - Keep language directions and font/label assumptions (e.g., CJK fonts, `FIGURE_LABEL`/`TABLE_LABEL`) driven by `zh-tw.ini` — don't hardcode a specific target language back into `devops.sh` or the `tools/` scripts.
   - All scripts run inside the Docker container; ensure they use Linux-compatible commands (bash, standard Unix utilities).
   - The translation pipeline includes automatic validation: after initial translation, the system uses AI to detect and fix formatting errors in the translated content while preserving the translation itself.
