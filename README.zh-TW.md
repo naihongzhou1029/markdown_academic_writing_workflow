@@ -24,7 +24,7 @@
 - Pandoc：核心文件轉換器，將 `paper.md` 轉換為 LaTeX，隨後編譯為 PDF。
 - LaTeX 發行版（TeX Live / XeLaTeX）：提供支援 Unicode 的排版引擎與套件，用於進階版面配置、微排版（micro-typography）與多語言文字。
 - 純文字編輯器：任何用於編寫 Markdown 原始碼的現代編輯器（VS Code、Zettlr 等）。
-- 參考文獻管理工具（Zotero + Better BibTeX）：管理書目資料，並自動匯出為 `references.json` 或 `references.bib` 供 Pandoc 使用。
+- 參考文獻管理工具（Zotero + Better BibTeX）：管理書目資料，並自動匯出為 `references.json` 或 `references.bib` 供 Pandoc 使用（選用；作者亦可直接手動建立與維護書目檔案）。
 - CSL 樣式：引文樣式語言定義（例如 `chicago-author-date.csl`），規範正文引文與參考文獻清單的格式。
 - Pandoc 過濾器：
   - `--citeproc` 用於自動化引文處理與參考文獻清單產生。
@@ -89,6 +89,15 @@
 - 系統中已安裝並正在執行 **Docker**
 - `PATH` 中可使用 **bash** （Windows 上需有 Git for Windows / WSL）— `devops.ps1` 會調用 `devops.sh`
 - 用於版本控制的 **純文字編輯器** 與 **Git**
+
+### 快速入門
+
+使用本框架撰寫論文非常直接且直覺：
+
+1. 撰寫論文內文：開啟 `paper.md`，在頂部 YAML 標頭下方找到內文區段，使用標準 Markdown 語法開始撰寫論文內容。執行 `./devops.sh pdf`（Windows 則執行 `./devops.ps1 pdf`）編譯並預覽產生的 PDF，確認排版與內容無誤。
+2. 插入與交叉引用圖片：將圖片檔案放入 `images/`（或直接撰寫 Mermaid 圖表程式碼區塊），並參考 `paper.md` 自身的語法範例（如 `![說明](images/foo.png){#fig:foo}` 與 `@fig:foo`）進行插入與引用。
+3. 加入引文與文獻：將書目資料加入至 `references.json` 或 `references.bib`（可手動維護或由 Zotero + BBT 匯出），並依照 `paper.md` 中的範例在文中以 `[@key]` 語法進行引用。
+4. 交由框架處理其餘排版：熟悉上述最常見的論文寫作步驟後，其餘學術排版細節均由框架自動完成，包含章節標題自動編號、圖表標籤與交叉引用、腳註、頁碼以及參考文獻清單產生等。
 
 ### 基本用法：建置範例 PDF
 

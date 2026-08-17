@@ -24,7 +24,7 @@ The `main` branch itself is that example: `paper.md` is a tutorial/methodology p
 - **Pandoc**: The central document converter, transforming `paper.md` into LaTeX and then to PDF.
 - **LaTeX distribution (TeX Live / XeLaTeX)**: Provides the Unicode-aware typesetting engine and packages needed for advanced layouts, micro-typography, and multilingual text.
 - **Plain‑text editor**: Any modern editor (VS Code, Zettlr, etc.) used for authoring the Markdown source.
-- **Reference managers (Zotero + Better BibTeX)**: Manages bibliographic data and exports it automatically as `references.json` or `references.bib` for Pandoc to consume.
+- **Reference managers (Zotero + Better BibTeX)**: Manages bibliographic data and exports it automatically as `references.json` or `references.bib` for Pandoc to consume (optional; authors can also create and maintain bibliography files manually).
 - **CSL styles**: Citation Style Language definitions (e.g., `chicago-author-date.csl`) governing in-text citations and the bibliography.
 - **Pandoc filters**:
   - `--citeproc` for automated citation processing and bibliography generation.
@@ -89,6 +89,15 @@ This project uses **Docker** to provide a consistent, reproducible build environ
 - **Docker** installed and running on your system
 - **bash** available on `PATH` (Git for Windows / WSL on Windows) — `devops.ps1` shells out to `devops.sh`
 - A **plain‑text editor** and **Git** for version control
+
+### Quick Start
+
+Writing your thesis with this framework is straightforward:
+
+1. **Write the manuscript body**: Open `paper.md`, locate the content body beneath the YAML front matter, and write your paper using standard Markdown syntax. Run `./devops.sh pdf` (or `./devops.ps1 pdf` on Windows) to compile and review the generated PDF for any issues.
+2. **Insert and cross-reference figures**: Place image files in `images/` (or write Mermaid diagram blocks directly), then insert and cross-reference them by checking the syntax examples demonstrated in `paper.md` itself (such as `![Caption](images/foo.png){#fig:foo}` and `@fig:foo`).
+3. **Add citations**: Add your bibliographic entries to `references.json` or `references.bib` (manually or via Zotero + BBT), and cite them in the text using `[@key]` syntax following the examples in `paper.md`.
+4. **Let the framework handle typesetting**: Once you are familiar with these core writing steps, you don't need to worry about complex layout details. The framework automatically handles heading numbering, cross-references, footnotes, page numbers, table of contents, and bibliography formatting.
 
 ### Basic Usage: Build the Example PDF
 
