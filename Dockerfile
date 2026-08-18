@@ -1,5 +1,8 @@
 FROM dalibo/pandocker:latest-full
 
+# Ensure Node.js runs reliably across all architectures (including QEMU emulation on ARM64 Linux)
+ENV NODE_OPTIONS="--jitless"
+
 # Install jq and curl for translation scripts
 # Install Node.js and npm for mermaid-cli
 # Install basic dependencies for Puppeteer/Chrome (required by mermaid-cli)
